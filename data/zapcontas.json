@@ -1,0 +1,370 @@
+{
+  "users": [
+    {
+      "id": "usr_n1duay6",
+      "phone": "5511999993333",
+      "name": "Jo�o PRO",
+      "accountId": "acc_080oz3d",
+      "plan": "pro",
+      "createdAt": "2026-10-11T17:35:50.369Z",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150"
+    },
+    {
+      "id": "usr_x6ekqoe",
+      "phone": "5511999992222",
+      "name": "Maria",
+      "accountId": "acc_yqtaaej",
+      "plan": "free",
+      "createdAt": "2026-10-11T18:36:55.538Z"
+    },
+    {
+      "id": "usr_8m14cyk",
+      "phone": "5511999998888",
+      "name": "Carlos",
+      "accountId": "acc_ey8xe72",
+      "plan": "free",
+      "trialUsed": true,
+      "trialEndsAt": "2026-10-18T19:57:22.720Z",
+      "deviceFingerprint": "device_abc_123",
+      "createdAt": "2026-10-11T19:57:22.720Z"
+    },
+    {
+      "id": "usr_q7y0qoc",
+      "phone": "5511999997777",
+      "name": "Fraude",
+      "accountId": "acc_lp5i6od",
+      "plan": "free",
+      "trialUsed": true,
+      "trialEndsAt": "2026-10-11T19:57:40.978Z",
+      "deviceFingerprint": "device_abc_123",
+      "createdAt": "2026-10-11T19:57:40.978Z"
+    },
+    {
+      "id": "usr_94k2d2g",
+      "phone": "5511983392602",
+      "name": "Israel Silva",
+      "accountId": "acc_pe0h9t2",
+      "plan": "free",
+      "trialUsed": true,
+      "trialEndsAt": "2026-10-18T20:42:00.893Z",
+      "createdAt": "2026-10-11T20:42:00.893Z",
+      "email": "israel@gmail.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+    },
+    {
+      "id": "usr_2kca61t",
+      "phone": "5511999991111",
+      "name": "João",
+      "accountId": "acc_rxjxp5m",
+      "plan": "free",
+      "trialUsed": true,
+      "trialEndsAt": "2026-10-18T21:23:55.343Z",
+      "createdAt": "2026-10-11T21:23:55.343Z"
+    },
+    {
+      "id": "usr_2uulfll",
+      "phone": "5511999999999",
+      "name": "Usuário",
+      "accountId": "acc_8dnik8t",
+      "plan": "free",
+      "trialUsed": true,
+      "trialEndsAt": "2026-10-18T22:14:11.917Z",
+      "createdAt": "2026-10-11T22:14:11.917Z"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "acc_080oz3d",
+      "name": "Finanças de Jo�o PRO",
+      "type": "individual",
+      "token": "p4wv799daisdgslp1app",
+      "members": [
+        "5511999993333"
+      ],
+      "monthlyBudget": 350,
+      "createdAt": "2026-10-11T17:35:50.368Z",
+      "subscriptionStatus": "active",
+      "planType": "individual_monthly",
+      "expiresAt": "2026-11-10T20:07:41.187Z"
+    },
+    {
+      "id": "acc_yqtaaej",
+      "name": "Finanças de Maria",
+      "type": "individual",
+      "token": "k40j39zdy3dc089ox7lh",
+      "members": [
+        "5511999992222"
+      ],
+      "monthlyBudget": 2500,
+      "createdAt": "2026-10-11T18:36:55.538Z"
+    },
+    {
+      "id": "acc_ey8xe72",
+      "name": "Finanças de Carlos",
+      "type": "individual",
+      "token": "k8ne5kcmbdc5exbl4ena",
+      "members": [
+        "5511999998888"
+      ],
+      "monthlyBudget": 2500,
+      "subscriptionStatus": "trialing",
+      "planType": "free",
+      "expiresAt": "2026-10-18T19:57:22.720Z",
+      "createdAt": "2026-10-11T19:57:22.720Z"
+    },
+    {
+      "id": "acc_lp5i6od",
+      "name": "Finanças de Fraude",
+      "type": "individual",
+      "token": "9tpjrtu9ge90lzf0s8tj",
+      "members": [
+        "5511999997777"
+      ],
+      "monthlyBudget": 2500,
+      "subscriptionStatus": "past_due",
+      "planType": "free",
+      "expiresAt": "2026-10-11T19:57:40.978Z",
+      "createdAt": "2026-10-11T19:57:40.978Z"
+    },
+    {
+      "id": "acc_pe0h9t2",
+      "name": "Finanças de Israel Silva",
+      "type": "individual",
+      "token": "l5doimg1zbc9kexyeitz",
+      "members": [
+        "5511983392602"
+      ],
+      "monthlyBudget": 5000,
+      "subscriptionStatus": "trialing",
+      "planType": "free",
+      "expiresAt": "2026-10-18T20:42:00.893Z",
+      "createdAt": "2026-10-11T20:42:00.893Z"
+    },
+    {
+      "id": "acc_rxjxp5m",
+      "name": "Finanças de João",
+      "type": "individual",
+      "token": "573n42dguzrrh9ec0vro",
+      "members": [
+        "5511999991111"
+      ],
+      "monthlyBudget": 2500,
+      "subscriptionStatus": "trialing",
+      "planType": "free",
+      "expiresAt": "2026-10-18T21:23:55.343Z",
+      "createdAt": "2026-10-11T21:23:55.343Z"
+    },
+    {
+      "id": "acc_8dnik8t",
+      "name": "Finanças de Usuário",
+      "type": "individual",
+      "token": "1j0ugw1azvele8nijzx2",
+      "members": [
+        "5511999999999"
+      ],
+      "monthlyBudget": 2500,
+      "subscriptionStatus": "trialing",
+      "planType": "free",
+      "expiresAt": "2026-10-18T22:14:11.917Z",
+      "createdAt": "2026-10-11T22:14:11.917Z"
+    }
+  ],
+  "transactions": [
+    {
+      "accountId": "acc_080oz3d",
+      "senderPhone": "5511999993333",
+      "senderName": "Jo�o PRO",
+      "amount": 45,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Almo�o no d�bito",
+      "rawMessage": "Almo�o 45 no d�bito",
+      "date": "2026-10-11T17:35:50.372Z",
+      "monthKey": "2026-10",
+      "id": "tx_zdejvus"
+    },
+    {
+      "accountId": "acc_080oz3d",
+      "senderPhone": "5511999993333",
+      "senderName": "Jo�o PRO",
+      "amount": 150,
+      "type": "income",
+      "category": "Renda & Entradas",
+      "paymentMethod": "PIX",
+      "description": "Recebi 0 freela",
+      "rawMessage": "Recebi 1500 freela",
+      "date": "2026-10-11T17:36:04.073Z",
+      "monthKey": "2026-10",
+      "id": "tx_ukr03jr"
+    },
+    {
+      "accountId": "acc_080oz3d",
+      "senderPhone": "5511999993333",
+      "senderName": "Jo�o PRO",
+      "amount": 43,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Carro",
+      "rawMessage": "43 carro",
+      "date": "2026-10-11T17:43:36.088Z",
+      "monthKey": "2026-10",
+      "id": "tx_ly6osaw"
+    },
+    {
+      "accountId": "acc_yqtaaej",
+      "senderPhone": "5511999992222",
+      "senderName": "Maria",
+      "amount": 320,
+      "type": "expense",
+      "category": "Alimentação",
+      "paymentMethod": "PIX",
+      "description": "Supermercado no cr�dito",
+      "rawMessage": "Supermercado 320 no cr�dito",
+      "date": "2026-10-11T18:36:55.541Z",
+      "monthKey": "2026-10",
+      "id": "tx_d41sl8i"
+    },
+    {
+      "accountId": "acc_080oz3d",
+      "senderPhone": "5511999993333",
+      "senderName": "Jo�o PRO",
+      "amount": 38,
+      "type": "expense",
+      "category": "Transporte",
+      "paymentMethod": "PIX",
+      "description": "Uber no cart�o",
+      "rawMessage": "Uber 38 no cart�o",
+      "date": "2026-10-11T18:37:15.784Z",
+      "monthKey": "2026-10",
+      "id": "tx_irawjsj"
+    },
+    {
+      "accountId": "acc_ey8xe72",
+      "senderPhone": "5511999998888",
+      "senderName": "Carlos",
+      "amount": 50,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Almoco",
+      "rawMessage": "Almoco 50",
+      "date": "2026-10-11T19:57:22.725Z",
+      "monthKey": "2026-10",
+      "id": "tx_ebh1oyy"
+    },
+    {
+      "accountId": "acc_ey8xe72",
+      "senderPhone": "5511999998888",
+      "senderName": "Israel",
+      "amount": 710,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 710572",
+      "date": "2026-10-11T20:39:04.779Z",
+      "monthKey": "2026-10",
+      "id": "tx_2d4sp6i"
+    },
+    {
+      "accountId": "acc_ey8xe72",
+      "senderPhone": "5511999998888",
+      "senderName": "Israel",
+      "amount": 472,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 472654",
+      "date": "2026-10-11T20:40:53.595Z",
+      "monthKey": "2026-10",
+      "id": "tx_bmcsjp8"
+    },
+    {
+      "accountId": "acc_pe0h9t2",
+      "senderPhone": "5511983392602",
+      "senderName": "ISRAEL",
+      "amount": 818,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 818325",
+      "date": "2026-10-11T20:42:00.896Z",
+      "monthKey": "2026-10",
+      "id": "tx_z1vtpuq"
+    },
+    {
+      "accountId": "acc_pe0h9t2",
+      "senderPhone": "5511983392602",
+      "senderName": "israel",
+      "amount": 611,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 611794",
+      "date": "2026-10-11T20:48:14.032Z",
+      "monthKey": "2026-10",
+      "id": "tx_5gfzx0b"
+    },
+    {
+      "accountId": "acc_pe0h9t2",
+      "senderPhone": "5511983392602",
+      "senderName": "israel",
+      "amount": 356,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 356257",
+      "date": "2026-10-11T21:04:16.234Z",
+      "monthKey": "2026-10",
+      "id": "tx_ulvqdfg"
+    },
+    {
+      "accountId": "acc_pe0h9t2",
+      "senderPhone": "5511983392602",
+      "senderName": "israel",
+      "amount": 720,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Código de verificação gerado:",
+      "rawMessage": "Código de verificação gerado: 720255",
+      "date": "2026-10-11T21:27:44.346Z",
+      "monthKey": "2026-10",
+      "id": "tx_sxocooa"
+    },
+    {
+      "accountId": "acc_pe0h9t2",
+      "senderPhone": "5511983392602",
+      "senderName": "Israel Silva",
+      "amount": 45,
+      "type": "expense",
+      "category": "Alimentação",
+      "paymentMethod": "Cartão de Débito",
+      "description": "Almoço",
+      "rawMessage": "Almoço 45 no débito",
+      "date": "2026-10-11T22:22:13.743Z",
+      "monthKey": "2026-10",
+      "id": "tx_23cnk6j"
+    },
+    {
+      "accountId": "acc_rxjxp5m",
+      "senderPhone": "5511999991111",
+      "senderName": "João",
+      "amount": 23,
+      "type": "expense",
+      "category": "Outros",
+      "paymentMethod": "PIX",
+      "description": "Almoco",
+      "rawMessage": "almoco 23",
+      "date": "2026-10-11T22:27:22.639Z",
+      "monthKey": "2026-10",
+      "id": "tx_orhmpqs"
+    }
+  ]
+}

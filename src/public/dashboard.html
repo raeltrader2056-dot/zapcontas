@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZapContas • Gestão Financeira Inteligente</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+      background-color: #060A14;
+      color: #F8FAFC;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .dot-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    .glass-card {
+      background: rgba(14, 22, 42, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .header-dark {
+      background: rgba(6, 10, 20, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Scrollbar estilizada */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #060A14; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+  </style>
+</head>
+<body class="min-h-screen relative flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
+
+  <!-- Fundo com Dot Pattern -->
+  <div class="fixed inset-0 dot-pattern pointer-events-none z-0"></div>
+
+  <!-- Header Superior -->
+  <header class="header-dark sticky top-0 z-40 relative z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between py-3 sm:py-0">
+      
+      <!-- Marca & Identidade -->
+      <div class="flex items-center gap-3.5">
+        <a href="/lp" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
+              <rect width="40" height="40" rx="10" fill="#0E1726" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+              <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
+                    stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
+                    fill="#10B981" fill-opacity="0.9" stroke="#047857" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <span class="font-extrabold text-lg text-white tracking-tight">ZapContas</span>
+        </a>
+
+        <div class="h-4 w-px bg-white/10 hidden sm:block"></div>
+
+        <!-- Tag da Carteira Ativa -->
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+          <span id="accountName" class="text-xs font-semibold text-slate-300">Carregando carteira...</span>
+          <span id="accountTypePill" class="text-[10px] font-bold tracking-wider bg-white/[0.06] text-slate-400 px-2 py-0.5 rounded-md border border-white/10">
+            Individual
+          </span>
+        </div>
+      </div>
+
+      <!-- Ações no Topo -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Exportar CSV -->
+        <button onclick="exportCSV()" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 text-slate-300 transition cursor-pointer">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span>CSV</span>
+        </button>
+
+        <!-- Botão de Perfil do Cliente -->
+        <button id="btnUserProfile" onclick="openProfileModal()" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 hover:border-white/20 transition group cursor-pointer text-left">
+          <div class="relative shrink-0">
+            <img id="headerUserAvatar" src="" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-emerald-500/40 hidden">
+            <div id="headerUserAvatarFallback" class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-slate-950 font-black text-xs flex items-center justify-center border border-white/20 shadow-xs">
+              U
+            </div>
+            <span id="headerPlanDot" class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#060A14]" title="Status"></span>
+          </div>
+          <div class="hidden sm:block text-left">
+            <div class="flex items-center gap-1.5">
+              <span id="headerUserName" class="text-xs font-bold text-white group-hover:text-emerald-400 transition max-w-[120px] truncate">Meu Perfil</span>
+              <span id="headerUserPlanBadge" class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">PRO</span>
+            </div>
+            <span class="text-[10px] text-slate-400">Configurar perfil</span>
+          </div>
+        </button>
+
+        <!-- Botão Sair -->
+        <button onclick="logoutUser()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-300 hover:text-rose-400 transition cursor-pointer" title="Sair da Conta">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Sair</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-7 w-full space-y-6 relative z-10">
+
+    <!-- Barra de Contexto & Filtros Rápidos -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+          <span>Resumo & Extrato Mensal</span>
+        </h1>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Tudo que você envia pelo WhatsApp é organizado e recalculado automaticamente em tempo real.
+        </p>
+      </div>
+
+      <!-- Filtro Rápido de Período -->
+      <div class="flex items-center gap-1 self-start sm:self-auto bg-slate-900/90 p-1 rounded-xl text-xs font-semibold text-slate-400 border border-white/10 shadow-inner">
+        <button id="filterAll" class="period-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-bold shadow-xs">Tudo</button>
+        <button id="filterExpenses" class="period-btn px-3 py-1.5 rounded-lg hover:text-white transition">Apenas Gastos</button>
+        <button id="filterIncomes" class="period-btn px-3 py-1.5 rounded-lg hover:text-white transition">Apenas Entradas</button>
+      </div>
+    </div>
+
+    <!-- Barra de Meta de Gastos / Orçamento (Quando Ativa) -->
+    <div id="budgetBanner" class="glass-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hidden border-l-4 border-l-amber-500">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
+          <i data-lucide="target" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 class="text-xs sm:text-sm font-bold text-white">Teto de Gastos Mensal</h4>
+            <span id="budgetPercentLabel" class="text-[11px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30">
+              0% do teto
+            </span>
+          </div>
+          <p id="budgetDescription" class="text-xs text-slate-400 mt-0.5">
+            Definido via WhatsApp. O bot avisa quando você se aproximar do limite.
+          </p>
+        </div>
+      </div>
+
+      <!-- Barra de Progresso Visual -->
+      <div class="w-full sm:w-64 space-y-1.5">
+        <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/10">
+          <div id="budgetProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+          <span>0%</span>
+          <span id="budgetRemainingLabel" class="text-amber-400 font-bold">R$ 0,00 restantes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Cards Principais de Indicadores Financeiros -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      
+      <!-- Saldo Líquido -->
+      <div class="glass-card p-5 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Saldo Líquido</span>
+          <div class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
+            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+        <p id="netBalance" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 0,00</p>
+        <p class="text-[11px] text-slate-400">Diferença de receitas e despesas</p>
+      </div>
+
+      <!-- Total de Entradas -->
+      <div class="glass-card p-5 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entradas no Mês</span>
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+        <p id="totalIncome" class="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight">+ R$ 0,00</p>
+        <p class="text-[11px] text-slate-400">Salários, comissões e rendas</p>
+      </div>
+
+      <!-- Total de Despesas -->
+      <div class="glass-card p-5 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gastos no Mês</span>
+          <div class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+        <p id="totalExpense" class="text-2xl sm:text-3xl font-black text-rose-400 tracking-tight">- R$ 0,00</p>
+        <p class="text-[11px] text-slate-400">Total acumulado da carteira</p>
+      </div>
+
+    </div>
+
+    <!-- Divisão de Gastos (Modo Casal / Múltiplos Usuários) -->
+    <div class="glass-card p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+            <span>Divisão de Gastos por Pessoa</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Veja quanto cada pessoa lançou pelo WhatsApp neste mês.</p>
+        </div>
+        <span class="text-[10px] font-bold bg-white/5 border border-white/10 text-slate-300 px-2 py-1 rounded-md">
+          Modo Casal & Sócios
+        </span>
+      </div>
+
+      <div id="personList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Grid: Transações Recentes + Gráfico por Categorias -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Tabela de Lançamentos (8 Colunas) -->
+      <div class="lg:col-span-8 glass-card p-5 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-bold text-white">Extrato de Lançamentos</h3>
+            <p id="txCountLabel" class="text-xs text-slate-400 mt-0.5">0 lançamentos listados</p>
+          </div>
+
+          <!-- Busca Rápida -->
+          <div class="relative w-full sm:w-60">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input 
+              id="searchTx" 
+              type="text" 
+              placeholder="Buscar gasto, autor..." 
+              class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+            >
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/10 text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                <th class="pb-2.5">Autor</th>
+                <th class="pb-2.5">Descrição</th>
+                <th class="pb-2.5">Categoria</th>
+                <th class="pb-2.5">Forma</th>
+                <th class="pb-2.5 text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody id="transactionTable" class="divide-y divide-white/[0.04]">
+              <!-- Inserido dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gráfico de Categorias (4 Colunas) -->
+      <div class="lg:col-span-4 glass-card p-5 sm:p-6 space-y-5">
+        <div>
+          <h3 class="text-sm font-bold text-white">Distribuição por Categoria</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Para onde está indo o dinheiro este mês.</p>
+        </div>
+
+        <div class="h-48 relative flex items-center justify-center">
+          <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div id="categoryProgressList" class="space-y-3 pt-2 text-xs">
+          <!-- Inserido dinamicamente -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="border-t border-white/[0.08] bg-[#060A14] py-8 relative z-10 text-xs text-slate-500 mt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 shrink-0">
+          <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
+            <rect width="40" height="40" rx="10" fill="#0E1726"/>
+            <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
+                  stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
+                  fill="#10B981" fill-opacity="0.9"/>
+          </svg>
+        </div>
+        <span class="font-bold text-white">ZapContas</span>
+        <span class="text-slate-600 hidden sm:inline">•</span>
+        <span class="text-[11px] sm:text-xs">Seu controle financeiro descomplicado pelo WhatsApp</span>
+      </div>
+
+      <div class="flex items-center gap-4 text-slate-400 text-[11px] sm:text-xs">
+        <button onclick="exportCSV()" class="hover:text-white font-semibold cursor-pointer">Exportar CSV</button>
+        <span>•</span>
+        <a href="/lp" class="hover:text-white font-semibold">Página Principal</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal de Perfil do Cliente -->
+  <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-all duration-200">
+    <div class="glass-card w-full max-w-lg bg-[#0E1528] border border-white/10 rounded-2xl p-5 sm:p-7 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="flex items-center justify-between pb-3.5 border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white tracking-tight">Perfil do Cliente</h3>
+            <p class="text-xs text-slate-400">Personalize sua foto, nome e telefone</p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Seção da Foto de Perfil -->
+      <div class="space-y-3">
+        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">Foto do Perfil</label>
+        <div class="flex items-center gap-4">
+          <!-- Preview da Imagem -->
+          <div class="relative shrink-0">
+            <img id="modalAvatarPreview" src="" alt="Avatar Preview" class="w-20 h-20 rounded-full object-cover border-2 border-emerald-500/50 shadow-md hidden">
+            <div id="modalAvatarFallback" class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-slate-950 font-black text-2xl flex items-center justify-center border-2 border-emerald-500/30 shadow-md">
+              U
+            </div>
+            <button onclick="document.getElementById('avatarFileInput').click()" class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-slate-900 border border-white/20 text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center shadow transition cursor-pointer" title="Enviar Foto">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Ações de Foto -->
+          <div class="flex-1 space-y-2">
+            <div class="flex flex-wrap gap-2">
+              <input type="file" id="avatarFileInput" accept="image/*" class="hidden" onchange="handleAvatarFileUpload(event)">
+              <button type="button" onclick="document.getElementById('avatarFileInput').click()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/15 text-white border border-white/10 transition inline-flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Enviar Foto</span>
+              </button>
+              <button type="button" onclick="removeAvatarPhoto()" class="px-2.5 py-1.5 text-xs font-medium rounded-lg text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 transition cursor-pointer">
+                Remover
+              </button>
+            </div>
+            
+            <!-- Avatares Rápidos Prontos -->
+            <div>
+              <p class="text-[11px] text-slate-400 mb-1">Ou selecione um avatar rápido:</p>
+              <div class="flex items-center gap-2">
+                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Feminino 1">
+                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Masculino 1">
+                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Feminino 2">
+                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Masculino 2">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de Informações -->
+      <div class="space-y-4 pt-2">
+        <!-- Nome -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nome Completo</label>
+          <input type="text" id="profileNameInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="Seu nome">
+        </div>
+
+        <!-- E-mail -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">E-mail para Notificações</label>
+          <input type="email" id="profileEmailInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="seuemail@exemplo.com">
+        </div>
+
+        <!-- WhatsApp com Restrição Estrita PRO -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-semibold text-slate-300">Número do WhatsApp</label>
+            <span id="phoneProBadge" class="text-[10px] font-bold px-2 py-0.5 rounded border"></span>
+          </div>
+
+          <input type="text" id="profilePhoneInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-950/70" placeholder="(11) 99999-9999">
+
+          <!-- Aviso para Free / Trial -->
+          <div id="phoneLockNotice" class="mt-2.5 p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl space-y-2 hidden">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="lock" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div class="text-[11px] text-slate-300 leading-relaxed">
+                A alteração do número de WhatsApp conectado é <strong>exclusiva para clientes do Plano PRO</strong>. Faça o upgrade agora para alterar seu número.
+              </div>
+            </div>
+            <div class="pt-1 flex justify-end">
+              <a href="/checkout" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition shadow-sm">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                <span>Fazer Upgrade para PRO</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de Status do Plano -->
+        <div id="modalPlanStatusCard" class="p-3.5 rounded-xl border border-white/10 bg-slate-900/50 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div id="modalPlanIconBox" class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <p id="modalPlanTitle" class="text-xs font-bold text-white">Carregando plano...</p>
+              <p id="modalPlanSubtitle" class="text-[11px] text-slate-400">Status da sua conta</p>
+            </div>
+          </div>
+          <span id="modalPlanExpires" class="text-[11px] font-semibold text-slate-300"></span>
+        </div>
+      </div>
+
+      <!-- Feedback de Salvamento -->
+      <div id="profileSaveAlert" class="hidden p-3 rounded-xl text-xs font-semibold flex items-center gap-2"></div>
+
+      <!-- Botões de Ação do Rodapé -->
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+        <button type="button" onclick="closeProfileModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition cursor-pointer">
+          Cancelar
+        </button>
+        <button type="button" id="btnSaveProfile" onclick="saveUserProfile()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 transition shadow-lg shadow-emerald-500/20 flex items-center gap-2 cursor-pointer">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Salvar Alterações</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Bloqueador de Paywall (Exibido quando os 7 dias de teste encerram) -->
+  <div id="paywallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl hidden">
+    <div class="glass-card w-full max-w-md bg-[#0E1528] border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 text-center">
+      
+      <!-- Ícone de Alerta / Cadeado -->
+      <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/10">
+        <i data-lucide="lock" class="w-8 h-8"></i>
+      </div>
+
+      <!-- Títulos -->
+      <div class="space-y-2">
+        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+          Período de Teste Concluído
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">Seus 7 Dias Grátis Encerraram</h3>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
+          Seu histórico de lançamentos e divisões continuam 100% salvos e protegidos com a gente. Para continuar registrando despesas pelo WhatsApp e desbloquear o acesso total aos seus relatórios, ative sua assinatura:
+        </p>
+      </div>
+
+      <!-- Recursos Inclusos -->
+      <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-left space-y-2 text-xs text-slate-300">
+        <div class="flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>Lançamentos ilimitados via áudio e texto</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>Bot do WhatsApp disponível 24h</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>Exportação de relatórios para o Excel</span>
+        </div>
+      </div>
+
+      <!-- Botão de Ação -->
+      <div class="space-y-3 pt-2">
+        <a id="btnPaywallCheckout" href="/checkout" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition shadow-xl shadow-emerald-500/25">
+          <i data-lucide="zap" class="w-4 h-4 fill-slate-950"></i>
+          <span>Desbloquear Acesso (R$ 14,90/mês)</span>
+        </a>
+        <p class="text-[11px] text-slate-400">Ativação instantânea via PIX ou Cartão • Sem fidelidade</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token') || localStorage.getItem('zap_token');
+
+    // Validação estrita de acesso
+    if (!token || token === 'demo') {
+      localStorage.removeItem('zap_token');
+      window.location.replace('/login');
+    } else {
+      if (urlParams.get('token') && urlParams.get('token') !== 'demo') {
+        localStorage.setItem('zap_token', urlParams.get('token'));
+      }
+      loadData();
+    }
+
+    let allTransactions = [];
+    let currentFilter = 'all';
+    let categoryChartInstance = null;
+    let currentUser = null;
+    let currentAccount = null;
+    let selectedAvatarDataUrl = '';
+
+    const COLORS = [
+      '#10B981', '#3B82F6', '#F59E0B', '#EF4444', 
+      '#8B5CF6', '#EC4899', '#06B6D4', '#64748B'
+    ];
+
+    async function loadData() {
+      try {
+        const res = await fetch(`/api/dashboard/${token}`);
+        if (!res.ok) {
+          localStorage.removeItem('zap_token');
+          window.location.replace('/login');
+          return;
+        }
+
+        const data = await res.json();
+        allTransactions = data.transactions || [];
+        currentUser = data.user;
+        currentAccount = data.account;
+
+        if (!currentAccount) {
+          localStorage.removeItem('zap_token');
+          window.location.replace('/login');
+          return;
+        }
+
+        // Topbar Carteira
+        document.getElementById('accountName').textContent = currentAccount.name || 'Minha Carteira';
+        document.getElementById('accountTypePill').textContent = currentAccount.type === 'shared' ? 'Casal / Sócios' : 'Individual';
+
+        // Atualiza perfil no Header
+        updateHeaderProfileUI();
+
+        // Se o período de teste de 7 dias estiver encerrado, ativa o Paywall Modal
+        if (data.expired) {
+          const paywallModal = document.getElementById('paywallModal');
+          if (paywallModal) {
+            paywallModal.classList.remove('hidden');
+            const btnPaywall = document.getElementById('btnPaywallCheckout');
+            if (btnPaywall) {
+              btnPaywall.href = data.checkoutUrl || `/checkout?token=${token}&reason=trial_expired`;
+            }
+          }
+        }
+
+        // Meta / Orçamento
+        const budget = currentAccount.budget || 0;
+        const banner = document.getElementById('budgetBanner');
+        if (budget > 0) {
+          banner.classList.remove('hidden');
+          const pct = Math.min(100, Math.round((data.summary.totalExpense / budget) * 100));
+          const remaining = Math.max(0, budget - data.summary.totalExpense);
+
+          document.getElementById('budgetProgressBar').style.width = `${pct}%`;
+          document.getElementById('budgetPercentLabel').textContent = `${pct}% do teto`;
+          document.getElementById('budgetDescription').textContent = `Teto: R$ ${budget.toFixed(2).replace('.', ',')} • Gasto acumulado: R$ ${data.summary.totalExpense.toFixed(2).replace('.', ',')}`;
+          document.getElementById('budgetRemainingLabel').textContent = `R$ ${remaining.toFixed(2).replace('.', ',')} restantes`;
+          
+          if (pct >= 85) {
+            document.getElementById('budgetProgressBar').className = 'h-full bg-rose-500 rounded-full transition-all duration-500';
+            document.getElementById('budgetPercentLabel').className = 'text-[11px] font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-500/30';
+          }
+        } else {
+          banner.classList.add('hidden');
+        }
+
+        // Saldos Principais
+        document.getElementById('netBalance').textContent = `R$ ${data.summary.balance.toFixed(2).replace('.', ',')}`;
+        document.getElementById('totalIncome').textContent = `+ R$ ${data.summary.totalIncome.toFixed(2).replace('.', ',')}`;
+        document.getElementById('totalExpense').textContent = `- R$ ${data.summary.totalExpense.toFixed(2).replace('.', ',')}`;
+
+        // Divisão por Pessoa
+        renderPersons(data.summary.byPerson, data.summary.totalExpense);
+
+        // Transações
+        applyFilters();
+
+        // Categorias
+        renderCategories(data.summary.byCategory, data.summary.totalExpense);
+
+        lucide.createIcons();
+
+      } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+      }
+    }
+
+    function updateHeaderProfileUI() {
+      if (!currentUser) return;
+      const isPro = currentUser.plan === 'pro' || (currentAccount && currentAccount.subscriptionStatus === 'active');
+
+      document.getElementById('headerUserName').textContent = currentUser.name || 'Meu Perfil';
+
+      const badge = document.getElementById('headerUserPlanBadge');
+      const dot = document.getElementById('headerPlanDot');
+      if (isPro) {
+        badge.textContent = 'PRO';
+        badge.className = 'text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#060A14]';
+      } else {
+        badge.textContent = 'TESTE';
+        badge.className = 'text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-[#060A14]';
+      }
+
+      const img = document.getElementById('headerUserAvatar');
+      const fallback = document.getElementById('headerUserAvatarFallback');
+      if (currentUser.avatarUrl) {
+        img.src = currentUser.avatarUrl;
+        img.classList.remove('hidden');
+        fallback.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fallback.classList.remove('hidden');
+        fallback.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+      }
+    }
+
+    function openProfileModal() {
+      if (!currentUser) return;
+      const isPro = currentUser.plan === 'pro' || (currentAccount && currentAccount.subscriptionStatus === 'active');
+
+      document.getElementById('profileNameInput').value = currentUser.name || '';
+      document.getElementById('profileEmailInput').value = currentUser.email || '';
+      
+      let phoneClean = (currentUser.phone || '').replace(/^55/, '');
+      if (phoneClean.length === 11) {
+        document.getElementById('profilePhoneInput').value = `(${phoneClean.substring(0, 2)}) ${phoneClean.substring(2, 7)}-${phoneClean.substring(7)}`;
+      } else {
+        document.getElementById('profilePhoneInput').value = currentUser.phone || '';
+      }
+
+      selectedAvatarDataUrl = currentUser.avatarUrl || '';
+      updateModalAvatarPreview(selectedAvatarDataUrl);
+
+      const phoneInput = document.getElementById('profilePhoneInput');
+      const phoneBadge = document.getElementById('phoneProBadge');
+      const lockNotice = document.getElementById('phoneLockNotice');
+
+      if (isPro) {
+        phoneInput.disabled = false;
+        phoneBadge.textContent = '✓ Liberado para Assinante PRO';
+        phoneBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400';
+        lockNotice.classList.add('hidden');
+      } else {
+        phoneInput.disabled = true;
+        phoneBadge.textContent = '🔒 Exclusivo para Assinantes PRO';
+        phoneBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded border border-amber-500/30 bg-amber-500/10 text-amber-400';
+        lockNotice.classList.remove('hidden');
+      }
+
+      const modalPlanTitle = document.getElementById('modalPlanTitle');
+      const modalPlanSubtitle = document.getElementById('modalPlanSubtitle');
+      const modalPlanExpires = document.getElementById('modalPlanExpires');
+      const modalPlanIconBox = document.getElementById('modalPlanIconBox');
+
+      if (isPro) {
+        modalPlanTitle.textContent = 'Plano PRO Ativo';
+        modalPlanSubtitle.textContent = 'Alteração de número e limites ilimitados';
+        modalPlanExpires.textContent = currentAccount.expiresAt ? `Até ${new Date(currentAccount.expiresAt).toLocaleDateString('pt-BR')}` : 'Ativo';
+        modalPlanIconBox.className = 'w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center';
+      } else {
+        modalPlanTitle.textContent = 'Período de Teste Gratuito';
+        modalPlanSubtitle.textContent = 'Troca de número exclusiva para assinantes PRO';
+        modalPlanExpires.textContent = currentUser.trialEndsAt ? `Teste até ${new Date(currentUser.trialEndsAt).toLocaleDateString('pt-BR')}` : '7 dias de teste';
+        modalPlanIconBox.className = 'w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center';
+      }
+
+      const alertBox = document.getElementById('profileSaveAlert');
+      alertBox.className = 'hidden';
+
+      document.getElementById('profileModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.add('hidden');
+    }
+
+    function updateModalAvatarPreview(url) {
+      const img = document.getElementById('modalAvatarPreview');
+      const fallback = document.getElementById('modalAvatarFallback');
+      if (url) {
+        img.src = url;
+        img.classList.remove('hidden');
+        fallback.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fallback.classList.remove('hidden');
+        fallback.textContent = (document.getElementById('profileNameInput').value || currentUser?.name || 'U').charAt(0).toUpperCase();
+      }
+    }
+
+    function handleAvatarFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert('A foto deve ter no máximo 2MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        selectedAvatarDataUrl = e.target.result;
+        updateModalAvatarPreview(selectedAvatarDataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectPresetAvatar(url) {
+      selectedAvatarDataUrl = url;
+      updateModalAvatarPreview(url);
+    }
+
+    function removeAvatarPhoto() {
+      selectedAvatarDataUrl = '';
+      updateModalAvatarPreview('');
+    }
+
+    async function saveUserProfile() {
+      const btn = document.getElementById('btnSaveProfile');
+      const alertBox = document.getElementById('profileSaveAlert');
+      const isPro = currentUser.plan === 'pro' || (currentAccount && currentAccount.subscriptionStatus === 'active');
+
+      const name = document.getElementById('profileNameInput').value.trim();
+      const email = document.getElementById('profileEmailInput').value.trim();
+      const phoneRaw = document.getElementById('profilePhoneInput').value.trim();
+
+      if (!name) {
+        alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+        alertBox.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>O nome não pode estar vazio.</span>';
+        alertBox.classList.remove('hidden');
+        lucide.createIcons();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Salvando...</span>';
+
+      try {
+        const payload = {
+          token,
+          name,
+          email,
+          avatarUrl: selectedAvatarDataUrl
+        };
+
+        if (isPro && phoneRaw) {
+          payload.phone = phoneRaw;
+        }
+
+        const res = await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          currentUser = data.user;
+          currentAccount = data.account;
+
+          document.getElementById('accountName').textContent = data.account.name;
+          updateHeaderProfileUI();
+
+          alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400';
+          alertBox.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i><span>Perfil atualizado com sucesso!</span>';
+          alertBox.classList.remove('hidden');
+          lucide.createIcons();
+
+          setTimeout(() => {
+            closeProfileModal();
+          }, 1000);
+        } else {
+          alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+          alertBox.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>${data.error || 'Erro ao atualizar dados'}</span>`;
+          alertBox.classList.remove('hidden');
+          lucide.createIcons();
+        }
+      } catch (e) {
+        alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+        alertBox.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>Falha na comunicação com o servidor.</span>';
+        alertBox.classList.remove('hidden');
+        lucide.createIcons();
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Salvar Alterações</span>';
+        lucide.createIcons();
+      }
+    }
+
+    function logoutUser() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        localStorage.removeItem('zap_token');
+        window.location.replace('/login');
+      }
+    }
+
+    function renderPersons(byPerson = {}, totalExpense = 0) {
+      const container = document.getElementById('personList');
+      container.innerHTML = '';
+
+      const entries = Object.entries(byPerson);
+      if (entries.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-slate-400 text-xs py-2">Nenhuma despesa lançada ainda para dividir.</p>`;
+        return;
+      }
+
+      entries.forEach(([name, stats]) => {
+        const pct = totalExpense > 0 ? Math.round((stats.total / totalExpense) * 100) : 0;
+        const card = document.createElement('div');
+        card.className = 'p-4 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-900 transition flex items-center justify-between';
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-800 border border-white/10 text-white font-black text-xs flex items-center justify-center shadow-xs">
+              ${name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p class="font-bold text-xs text-white">${name}</p>
+              <p class="text-[11px] text-slate-400">${stats.count} gastos registrados</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-xs text-rose-400">R$ ${stats.total.toFixed(2).replace('.', ',')}</p>
+            <span class="text-[10px] font-bold text-slate-300 bg-white/10 border border-white/10 px-1.5 py-0.5 rounded shadow-xs">
+              ${pct}%
+            </span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderTransactions(list) {
+      const tbody = document.getElementById('transactionTable');
+      tbody.innerHTML = '';
+      document.getElementById('txCountLabel').textContent = `${list.length} lançamentos listados`;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">Nenhum lançamento encontrado para os filtros atuais.</td></tr>`;
+        return;
+      }
+
+      list.forEach(tx => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/[0.02] transition-colors';
+        const isInc = tx.type === 'income';
+
+        tr.innerHTML = `
+          <td class="py-3 font-semibold text-white">
+            <span class="inline-flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-white/10 text-slate-200 font-bold text-[10px] flex items-center justify-center border border-white/10">
+                ${tx.senderName.charAt(0)}
+              </span>
+              ${tx.senderName}
+            </span>
+          </td>
+          <td class="py-3 text-slate-300 font-medium">${tx.description}</td>
+          <td class="py-3">
+            <span class="px-2 py-0.5 rounded text-[11px] bg-white/[0.05] text-slate-300 font-medium border border-white/10">
+              ${tx.category}
+            </span>
+          </td>
+          <td class="py-3 text-slate-400 text-[11px]">${tx.paymentMethod}</td>
+          <td class="py-3 text-right font-bold ${isInc ? 'text-emerald-400' : 'text-rose-400'}">
+            ${isInc ? '+' : '-'} R$ ${tx.amount.toFixed(2).replace('.', ',')}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderCategories(byCategory = {}, totalExpense = 0) {
+      const labels = Object.keys(byCategory);
+      const values = Object.values(byCategory);
+
+      const listContainer = document.getElementById('categoryProgressList');
+      listContainer.innerHTML = '';
+
+      labels.forEach((cat, idx) => {
+        const val = values[idx];
+        const pct = totalExpense > 0 ? Math.round((val / totalExpense) * 100) : 0;
+        const color = COLORS[idx % COLORS.length];
+
+        const row = document.createElement('div');
+        row.className = 'space-y-1.5';
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-slate-300 flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full shadow-xs" style="background-color: ${color}"></span>
+              ${cat}
+            </span>
+            <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')} (${pct}%)</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/10">
+            <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${color}"></div>
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+
+      if (categoryChartInstance) categoryChartInstance.destroy();
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+
+      if (labels.length === 0) return;
+
+      categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: COLORS.slice(0, labels.length),
+            borderWidth: 2,
+            borderColor: '#0E1528'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '72%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0E1528',
+              titleColor: '#F8FAFC',
+              bodyColor: '#94A3B8',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx) => ` R$ ${ctx.parsed.toFixed(2).replace('.', ',')}`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function applyFilters() {
+      const query = document.getElementById('searchTx').value.toLowerCase().trim();
+      let list = allTransactions;
+
+      if (currentFilter === 'expense') {
+        list = list.filter(t => t.type === 'expense');
+      } else if (currentFilter === 'income') {
+        list = list.filter(t => t.type === 'income');
+      }
+
+      if (query) {
+        list = list.filter(t => 
+          t.description.toLowerCase().includes(query) ||
+          t.senderName.toLowerCase().includes(query) ||
+          t.category.toLowerCase().includes(query)
+        );
+      }
+
+      renderTransactions(list);
+    }
+
+    document.getElementById('searchTx').addEventListener('input', applyFilters);
+
+    const filterAll = document.getElementById('filterAll');
+    const filterExpenses = document.getElementById('filterExpenses');
+    const filterIncomes = document.getElementById('filterIncomes');
+
+    function setFilter(type, activeBtn) {
+      currentFilter = type;
+      [filterAll, filterExpenses, filterIncomes].forEach(btn => {
+        btn.className = 'period-btn px-3 py-1.5 rounded-lg hover:text-white transition';
+      });
+      activeBtn.className = 'period-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-bold shadow-xs';
+      applyFilters();
+    }
+
+    filterAll.addEventListener('click', () => setFilter('all', filterAll));
+    filterExpenses.addEventListener('click', () => setFilter('expense', filterExpenses));
+    filterIncomes.addEventListener('click', () => setFilter('income', filterIncomes));
+
+    function exportCSV() {
+      if (allTransactions.length === 0) {
+        alert('Nenhum dado disponível para exportar.');
+        return;
+      }
+      let csv = 'Data;Autor;Descricao;Categoria;Forma;Tipo;Valor\n';
+      allTransactions.forEach(t => {
+        csv += `${t.date};${t.senderName};${t.description};${t.category};${t.paymentMethod};${t.type};${t.amount}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ZapContas_Extrato_${new Date().toISOString().substring(0, 10)}.csv`;
+      a.click();
+    }
+  </script>
+</body>
+</html>

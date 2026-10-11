@@ -1,0 +1,241 @@
+import { ParsedMessage, TransactionType } from '../types.js';
+
+interface CategoryRule {
+  category: string;
+  keywords: string[];
+}
+
+const CATEGORY_RULES: CategoryRule[] = [
+  {
+    category: 'Alimentação',
+    keywords: ['almoço', 'jantar', 'lanche', 'pizza', 'hamburguer', 'restaurante', 'ifood', 'padaria', 'cafe', 'café', 'comida', 'mercado', 'supermercado', 'aougue', 'açougue', 'feira']
+  },
+  {
+    category: 'Transporte',
+    keywords: ['gasolina', 'combustivel', 'combustível', 'uber', '99', 'taxi', 'ônibus', 'onibus', 'metrô', 'metro', 'estacionamento', 'pedagio', 'pedágio', 'ipva', 'mecanico', 'mecânico']
+  },
+  {
+    category: 'Moradia / Contas',
+    keywords: ['aluguel', 'condomínio', 'condominio', 'luz', 'energia', 'agua', 'água', 'internet', 'gas', 'gás', 'iptu', 'faxina']
+  },
+  {
+    category: 'Lazer & Entretenimento',
+    keywords: ['cinema', 'show', 'netflix', 'spotify', 'jogo', 'steam', 'bar', 'cerveja', 'churrasco', 'viagem', 'praia']
+  },
+  {
+    category: 'Saúde & Farmácia',
+    keywords: ['farmacia', 'farmácia', 'remedio', 'remédio', 'médico', 'medico', 'dentista', 'consulta', 'exame', 'academia']
+  },
+  {
+    category: 'Educação',
+    keywords: ['curso', 'livro', 'faculdade', 'escola', 'mensalidade', 'apostila']
+  },
+  {
+    category: 'Compras Pessoais',
+    keywords: ['roupa', 'sapato', 'tenis', 'tênis', 'shopee', 'shein', 'amazon', 'mercado livre', 'perfume', 'corte', 'barba', 'cabelo']
+  },
+  {
+    category: 'Renda & Entradas',
+    keywords: ['salario', 'salário', 'freela', 'freelance', 'pix recebido', 'venda', 'comissao', 'comissão', 'rendimento', 'recebi']
+  }
+];
+
+export class MessageAIParser {
+  /**
+   * Interpreta o texto em linguagem natural de forma precisa e rápida.
+   * Suporta números em formatos variados: "45,50", "45.50", "45", "R$ 45", "45 reais", "quarenta e cinco"
+   */
+  public parse(text: string): ParsedMessage {
+    const raw = text.trim();
+    const clean = raw.toLowerCase();
+
+    // 1. Comandos de Dashboard / Link
+    if (clean.includes('dashboard') || clean.includes('painel') || clean.includes('link') || clean.includes('grafico') || clean.includes('gráfico')) {
+      return {
+        intent: 'dashboard_link'
+      };
+    }
+
+    // 2. Comandos de Assinatura / Planos / Pagamento
+    if (
+      clean.includes('assinar') || 
+      clean.includes('plano') || 
+      clean.includes('planos') || 
+      clean.includes('pagar') || 
+      clean.includes('pix pro') ||
+      clean.includes('virar pro') ||
+      clean === 'pro'
+    ) {
+      return {
+        intent: 'subscribe'
+      };
+    }
+
+    // 2. Zerar / Limpar Saldo
+    if (
+      clean.includes('zerar saldo') || 
+      clean.includes('limpar saldo') || 
+      clean.includes('resetar saldo') || 
+      clean.includes('zerar gastos') ||
+      clean === 'zerar' ||
+      clean === 'resetar'
+    ) {
+      return {
+        intent: 'reset_balance'
+      };
+    }
+
+    // 3. Desfazer / Apagar Último Gasto
+    if (
+      clean.includes('desfazer') || 
+      clean.includes('apagar ultimo') || 
+      clean.includes('apagar último') || 
+      clean.includes('cancelar ultimo') ||
+      clean.includes('apagar gasto') ||
+      clean === 'desfazer'
+    ) {
+      return {
+        intent: 'delete_last'
+      };
+    }
+
+    // 4. Adicionar Saldo Inicial / Ajuste ("definir saldo 2000", "meu saldo inicial é 3000", "adicionar saldo 500")
+    if (
+      clean.includes('adicionar saldo') || 
+      clean.includes('add saldo') || 
+      clean.includes('colocar saldo') ||
+      clean.includes('saldo inicial') ||
+      clean.includes('definir saldo')
+    ) {
+      const val = this.extractAmount(clean);
+      if (val) {
+        return {
+          intent: 'set_initial_balance',
+          targetAmount: val
+        };
+      }
+    }
+
+    // 5. Definir Meta / Limite de Gastos ("meta 3000", "limite do mes 2500")
+    if (clean.includes('meta') || clean.includes('limite')) {
+      const val = this.extractAmount(clean);
+      if (val) {
+        return {
+          intent: 'set_budget',
+          targetAmount: val
+        };
+      }
+    }
+
+    // 6. Consultas de Relatório / Divisão de quem gastou
+    if (clean.includes('quem gastou') || clean.includes('divisao') || clean.includes('divisão') || clean.includes('por pessoa')) {
+      return {
+        intent: 'report_query',
+        queryPeriod: 'by_person'
+      };
+    }
+
+    // 7. Consultas de Saldo / Extrato
+    if (
+      clean.startsWith('saldo') ||
+      clean.includes('quanto gastei') ||
+      clean.includes('quanto gastamos') ||
+      clean.includes('resumo') ||
+      clean.includes('extrato') ||
+      clean.includes('balanco') ||
+      clean.includes('balanço')
+    ) {
+      let period: 'today' | 'week' | 'month' = 'month';
+      if (clean.includes('hoje')) period = 'today';
+      if (clean.includes('semana')) period = 'week';
+
+      return {
+        intent: 'balance_query',
+        queryPeriod: period
+      };
+    }
+
+    // 4. Comandos de Ajuda
+    if (clean === 'ajuda' || clean === 'help' || clean === 'como funciona' || clean === 'menu') {
+      return {
+        intent: 'help'
+      };
+    }
+
+    // 5. Tenta extrair transação financeira
+    const tx = this.extractTransaction(raw, clean);
+    if (tx) {
+      return {
+        intent: 'transaction',
+        transaction: tx
+      };
+    }
+
+    return {
+      intent: 'unknown',
+      explanation: 'Não entendi o lançamento. Você pode mandar por exemplo: "Almoço 35 no débito" ou "Gasolina 100".'
+    };
+  }
+
+  public extractAmount(text: string): number | null {
+    const match = text.match(/(?:r\$\s*)?(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:[,\.]\d{1,2})?|\d+)\s*(?:reais|conto)?/i);
+    if (!match) return null;
+    let str = match[1];
+    if (str.includes('.') && str.includes(',')) {
+      str = str.replace(/\./g, '').replace(',', '.');
+    } else if (str.includes(',')) {
+      str = str.replace(',', '.');
+    }
+    const val = parseFloat(str);
+    return isNaN(val) ? null : val;
+  }
+
+  private extractTransaction(raw: string, clean: string) {
+    // Detectar se é receita/entrada
+    const isIncomeKeywords = ['recebi', 'salario', 'salário', 'caiu', 'freela', 'vendi', 'entrada', 'recebimento'];
+    const isIncome = isIncomeKeywords.some(kw => clean.includes(kw));
+
+    const amount = this.extractAmount(clean);
+    if (!amount || amount <= 0) return null;
+
+    // Detectar método de pagamento
+    let paymentMethod = 'PIX';
+    if (clean.includes('credito') || clean.includes('crédito')) paymentMethod = 'Cartão de Crédito';
+    else if (clean.includes('debito') || clean.includes('débito')) paymentMethod = 'Cartão de Débito';
+    else if (clean.includes('dinheiro')) paymentMethod = 'Dinheiro';
+    else if (clean.includes('pix')) paymentMethod = 'PIX';
+    else if (clean.includes('boleto')) paymentMethod = 'Boleto';
+
+    // Detectar categoria
+    let category = isIncome ? 'Renda Extra / Salário' : 'Outros';
+    for (const rule of CATEGORY_RULES) {
+      if (rule.keywords.some(kw => clean.includes(kw))) {
+        category = rule.category;
+        break;
+      }
+    }
+
+    // Criar descrição amigável (remove o valor da mensagem para gerar o resumo)
+    let description = raw
+      .replace(/(?:r\$\s*)?(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:[,\.]\d{1,2})?|\d+)\s*(?:reais|conto)?/gi, '')
+      .replace(/reais|conto|no debito|no débito|no credito|no crédito|via pix|no pix|recebi|salario|salário/gi, '')
+      .trim();
+
+    if (!description || description.length < 2) {
+      description = category;
+    } else {
+      // Capitalizar primeira letra
+      description = description.charAt(0).toUpperCase() + description.slice(1);
+    }
+
+    return {
+      type: (isIncome ? 'income' : 'expense') as TransactionType,
+      amount,
+      category,
+      paymentMethod,
+      description
+    };
+  }
+}
+
+export const aiParser = new MessageAIParser();

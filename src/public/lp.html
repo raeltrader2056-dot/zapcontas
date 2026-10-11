@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZapContas • Gestão Financeira Inteligente no WhatsApp</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#060A14',
+              surface: '#0B1222',
+              card: '#0F182E',
+              border: 'rgba(255, 255, 255, 0.08)',
+              emerald: '#10B981',
+              emeraldHover: '#059669',
+              teal: '#14B8A6'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #060A14;
+      color: #F8FAFC;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Padrão pontilhado sutil e nobre */
+    .dot-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Iluminação ambiente discreta */
+    .ambient-glow-emerald {
+      position: absolute;
+      width: min(700px, 90vw);
+      height: min(700px, 90vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(6, 10, 20, 0) 70%);
+      pointer-events: none;
+    }
+
+    .ambient-glow-blue {
+      position: absolute;
+      width: min(500px, 80vw);
+      height: min(500px, 80vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(6, 10, 20, 0) 70%);
+      pointer-events: none;
+    }
+
+    /* Cards com Glassmorphism refinado */
+    .glass-card {
+      background: rgba(15, 24, 46, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+    }
+
+    /* Animação de mensagem entrando */
+    .bubble-in {
+      animation: bubbleSlideIn 0.25s ease-out forwards;
+    }
+    @keyframes bubbleSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ondas de áudio do WhatsApp */
+    .audio-bar {
+      width: 2.5px;
+      height: 12px;
+      background: #10B981;
+      border-radius: 999px;
+      animation: audioWave 1.1s ease-in-out infinite alternate;
+    }
+    @keyframes audioWave {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+
+    /* Pontos de digitação */
+    .typing-dot {
+      width: 4px;
+      height: 4px;
+      background: #94A3B8;
+      border-radius: 50%;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    #liveChatBox::-webkit-scrollbar { width: 4px; }
+    #liveChatBox::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
+  </style>
+</head>
+<body class="min-h-screen relative flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
+
+  <!-- Fundo com Dot Matrix e Luzes de Fundo -->
+  <div class="fixed inset-0 dot-pattern pointer-events-none z-0"></div>
+  <div class="ambient-glow-emerald -top-40 left-1/2 -translate-x-1/2"></div>
+  <div class="ambient-glow-blue top-[1200px] -left-40"></div>
+
+  <!-- Header Superior Fixo -->
+  <header class="sticky top-0 z-50 border-b border-white/[0.08] bg-[#060A14]/90 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between relative z-10 py-3 sm:py-0">
+      
+      <!-- Marca & Logo Oficial -->
+      <a href="/lp" class="flex items-center gap-2.5 sm:gap-3 group">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
+            <rect width="40" height="40" rx="10" fill="#0E1726" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
+                  stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
+                  fill="#10B981" fill-opacity="0.9" stroke="#047857" stroke-width="0.5"/>
+          </svg>
+        </div>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="font-extrabold text-lg sm:text-xl text-white tracking-tight">ZapContas</span>
+          <span class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
+            OFICIAL
+          </span>
+        </div>
+      </a>
+
+      <!-- Menu de Navegação -->
+      <nav class="hidden md:flex items-center gap-7 text-xs font-semibold text-slate-400">
+        <a href="#demo-ao-vivo" class="hover:text-white transition">Simulador</a>
+        <a href="#como-funciona" class="hover:text-white transition">Como Funciona</a>
+        <a href="#recursos" class="hover:text-white transition">Vantagens</a>
+        <a href="#seguranca" class="hover:text-white transition">Segurança</a>
+        <a href="#precos" class="hover:text-white transition">Planos</a>
+      </nav>
+
+      <!-- Ações do Cabeçalho -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a id="navDashboardLink" href="/login" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white transition px-3 py-2 rounded-xl border border-white/10 hover:border-white/20 bg-slate-900/60">
+          <i data-lucide="log-in" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span>Entrar</span>
+        </a>
+        <a href="#precos" class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20">
+          <span>7 Dias Grátis</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative z-10 pt-12 pb-14 sm:pt-20 sm:pb-24 max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-3xl mx-auto space-y-4 sm:space-y-6">
+      
+      <!-- Badge de Destaque -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs font-semibold text-emerald-400 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Zero apps para baixar. Funciona direto no seu WhatsApp oficial.</span>
+      </div>
+
+      <!-- Título Principal -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12]">
+        O controle financeiro que você <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">não desiste de usar</span> no 4º dia.
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="text-sm sm:text-base md:text-lg text-slate-400 font-normal leading-relaxed max-w-2xl mx-auto">
+        Envie um áudio de 3 segundos na padaria, divida despesas em casal automaticamente e consulte seu saldo livre na hora. Sem planilhas chatas e <strong>zero senhas de banco</strong>.
+      </p>
+
+      <!-- Botões de Ação -->
+      <div class="pt-2 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto">
+        <a href="#precos" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm transition-all shadow-xl shadow-emerald-500/25">
+          <i data-lucide="message-circle" class="w-5 h-5 fill-slate-950"></i>
+          <span>Experimentar 7 Dias Grátis</span>
+        </a>
+
+        <a href="#demo-ao-vivo" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-white font-semibold text-sm transition">
+          <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
+          <span>Ver Demonstração</span>
+        </a>
+      </div>
+
+      <!-- Selos de Confiança -->
+      <div class="pt-5 flex flex-wrap items-center justify-center gap-5 sm:gap-8 text-xs text-slate-400 font-medium">
+        <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> 100% Sem Senhas de Banco</span>
+        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4 text-emerald-400"></i> Modo Casal & Sócios</span>
+        <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i> Resposta em 1 Segundo</span>
+      </div>
+
+    </div>
+
+    <!-- CHAT AO VIVO WHATSAPP + DASHBOARD DINÂMICO -->
+    <div id="demo-ao-vivo" class="mt-12 sm:mt-18 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+      
+      <!-- Coluna Esquerda: Smartphone WhatsApp Simulator (5 Colunas) -->
+      <div class="lg:col-span-5 bg-[#0F1829] border border-white/[0.12] rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[500px] sm:h-[580px] relative w-full">
+        
+        <!-- Header do WhatsApp -->
+        <div class="bg-[#1A253A] px-4 py-3 flex items-center justify-between border-b border-white/[0.08] shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-sm shadow-sm shrink-0">
+              ⚡
+            </div>
+            <div>
+              <h3 class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5">
+                ZapContas Bot <i data-lucide="check-check" class="w-3.5 h-3.5 text-sky-400 inline"></i>
+              </h3>
+              <p id="chatStatusText" class="text-[10px] sm:text-[11px] text-emerald-400 font-medium">online agora</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full animate-pulse">
+            ● Tempo Real
+          </span>
+        </div>
+
+        <!-- Área de Conversa -->
+        <div id="liveChatBox" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 bg-[#080E1A] text-xs">
+          <!-- Mensagens geradas proceduralmente -->
+        </div>
+
+        <!-- Indicador de Digitação -->
+        <div id="typingIndicator" class="bg-[#1A253A] px-4 py-2 flex items-center gap-2 text-xs text-slate-400 border-t border-white/[0.05] hidden shrink-0">
+          <span class="text-emerald-400 font-semibold text-xs">ZapContas</span> está calculando
+          <div class="flex items-center gap-1 ml-1">
+            <div class="typing-dot" style="animation-delay: 0s"></div>
+            <div class="typing-dot" style="animation-delay: 0.2s"></div>
+            <div class="typing-dot" style="animation-delay: 0.4s"></div>
+          </div>
+        </div>
+
+        <!-- Barra Inferior Fake do WhatsApp -->
+        <div class="bg-[#1A253A] p-3 flex items-center gap-2 border-t border-white/[0.08] shrink-0">
+          <div class="flex-1 bg-[#0F1829] rounded-xl px-3.5 py-2 text-slate-400 text-xs flex items-center justify-between">
+            <span id="fakeInputText" class="truncate pr-2 text-slate-400">Aguardando mensagem...</span>
+            <i data-lucide="mic" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Coluna Direita: Dashboard Web Interativo Refletindo em Tempo Real (7 Colunas) -->
+      <div class="lg:col-span-7 glass-card rounded-3xl p-5 sm:p-7 space-y-5 w-full">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <h3 class="font-bold text-sm sm:text-base text-white">Dashboard Sincronizado Instantaneamente</h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Veja seus números recalculando a cada mensagem recebida.</p>
+          </div>
+          <span class="text-[10px] bg-white/10 text-slate-300 font-bold px-2 py-1 rounded-lg border border-white/10 shrink-0">
+            AUTO-SYNC
+          </span>
+        </div>
+
+        <!-- Cards de Saldos Dinâmicos -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+          <div class="bg-slate-900/90 border border-white/[0.08] rounded-2xl p-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Saldo Livre</p>
+            <p id="liveNetBalance" class="text-xl sm:text-2xl font-black text-white mt-1">R$ 3.250,00</p>
+            <p class="text-[10px] text-emerald-400 font-semibold mt-0.5">Disponível para gastar</p>
+          </div>
+
+          <div class="bg-slate-900/90 border border-white/[0.08] rounded-2xl p-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gastos no Mês</p>
+            <p id="liveTotalExpense" class="text-xl sm:text-2xl font-black text-rose-400 mt-1">R$ 1.120,00</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Total consolidado</p>
+          </div>
+
+          <div class="col-span-2 sm:col-span-1 bg-slate-900/90 border border-white/[0.08] rounded-2xl p-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Meta / Teto</p>
+            <p id="liveBudgetMeta" class="text-xl sm:text-2xl font-black text-amber-400 mt-1">R$ 3.500</p>
+            <p id="liveBudgetPct" class="text-[10px] text-slate-400 mt-0.5">32% do teto atingido</p>
+          </div>
+        </div>
+
+        <!-- Modo Casal: Barra de Divisão em Tempo Real -->
+        <div class="bg-slate-900/90 border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="text-white flex items-center gap-1.5">
+              <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+              <span>Divisão Proporcional do Casal</span>
+            </span>
+            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+              Sem DR Financeira
+            </span>
+          </div>
+
+          <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+            <div id="liveBarJoao" class="bg-emerald-500 h-full transition-all duration-700" style="width: 50%" title="João"></div>
+            <div id="liveBarMaria" class="bg-indigo-500 h-full transition-all duration-700" style="width: 50%" title="Maria"></div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-semibold gap-1.5 pt-1">
+            <span class="flex items-center gap-1.5 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              João: <strong id="liveValJoao" class="text-white">R$ 560,00 (50%)</strong>
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+              Maria: <strong id="liveValMaria" class="text-white">R$ 560,00 (50%)</strong>
+            </span>
+          </div>
+        </div>
+
+        <!-- Notificação de Evento do Simulador -->
+        <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center justify-between gap-2">
+          <span class="flex items-center gap-2 font-medium truncate">
+            <i data-lucide="sparkles" class="w-4 h-4 shrink-0 text-emerald-400"></i>
+            <span id="liveEventNotice" class="truncate">Conversa dinâmica em andamento...</span>
+          </span>
+          <span class="text-[10px] text-emerald-400 font-mono shrink-0">100% AUTOMÁTICO</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Seção Bento Grid: Vantagens Exclusivas -->
+  <section id="recursos" class="relative z-10 py-16 sm:py-24 max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
+      <span class="text-xs font-bold text-emerald-400 tracking-wider uppercase">Por Que o ZapContas é Superior</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Construído para quem tem rotina corrida</h2>
+      <p class="text-slate-400 text-sm">Esqueça aplicativos cheios de formulários que você abandona na primeira semana.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <!-- Card 1 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">100% Sem Senhas de Banco</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Nunca pedimos suas senhas, tokens bancários ou conexões invasivas de Open Finance. Seus dados financeiros são sigilosos e pertencem exclusivamente a você.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center">
+          <i data-lucide="mic" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Áudios e Textos Naturais</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Nossa inteligência artificial compreende qualquer áudio ou mensagem rápida: "Paguei 54 reais no almoço no cartão" ou "PIX de 150 pro condomínio".
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center">
+          <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Modo Casal & Sócios</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Dois números de WhatsApp conectados na mesma carteira. Cada um registra seus gastos no seu próprio celular e o sistema calcula a divisão justa sem discussões.
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Teto de Gastos com Alerta</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Defina quanto quer gastar no mês (ex: R$ 3.000). Quando você se aproximar do limite, o bot avisa no seu WhatsApp antes que você entre no vermelho.
+        </p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
+          <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Dashboard Web Elegante</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Acesse gráficos interativos, filtro por categorias, resumo mensal e exportação de relatórios em CSV para o Excel em apenas um clique no computador ou celular.
+        </p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="glass-card rounded-2xl p-6 sm:p-7 space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+          <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Comando Desfazer Instantâneo</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Digitou um valor errado? Basta enviar a palavra "desfazer" ou "apagar" no WhatsApp e a última despesa é cancelada na mesma hora sem complicação.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona em 3 Passos -->
+  <section id="como-funciona" class="relative z-10 py-16 sm:py-20 border-t border-white/[0.08] bg-[#070D1C]/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+        <span class="text-xs font-bold text-emerald-400 tracking-wider uppercase">Passo a Passo</span>
+        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Simples como mandar mensagem para um amigo</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">1</div>
+          <h4 class="text-base font-bold text-white">Inicie pelo WhatsApp</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Basta digitar seu número e receber o código seguro de acesso em segundos. Sem formulários longos.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">2</div>
+          <h4 class="text-base font-bold text-white">Mande seus gastos na hora</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Gastou no almoço ou no mercado? Mande um texto ou áudio rápido e deixe a IA categorizar tudo.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">3</div>
+          <h4 class="text-base font-bold text-white">Assuma o controle</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Consulte seu saldo a qualquer instante e abra sua dashboard privada para ver gráficos e médias.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabela de Preços -->
+  <section id="precos" class="relative z-10 py-16 sm:py-24 max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
+      <span class="text-xs font-bold text-emerald-400 tracking-wider uppercase">Planos Transparentes</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Menos de R$ 0,50 por dia para nunca mais se perder</h2>
+      <p class="text-slate-400 text-sm">Comece com 7 dias grátis sem compromisso. Cancele quando quiser.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch">
+      
+      <!-- Plano Individual -->
+      <div class="glass-card rounded-3xl p-7 sm:p-9 flex flex-col justify-between space-y-6">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white">Plano Individual</h3>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-white/10 text-slate-300">7 Dias Grátis</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl sm:text-4xl font-black text-white">R$ 14,90</span>
+            <span class="text-xs text-slate-400">/mês após o teste</span>
+          </div>
+          <p class="text-xs text-slate-400">Ideal para organizar suas finanças pessoais de forma 100% prática.</p>
+
+          <ul class="space-y-2.5 pt-4 text-xs text-slate-300">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Lançamentos ilimitados via áudio e texto</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Dashboard Web completa e responsiva</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Alertas e teto de gastos configurável</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Exportação ilimitada de extratos em CSV</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Suporte prioritário no WhatsApp</li>
+          </ul>
+        </div>
+
+        <a href="/login" class="w-full py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs text-center transition border border-white/10">
+          Iniciar 7 Dias Grátis Individual
+        </a>
+      </div>
+
+      <!-- Plano Casal / Sócios PRO -->
+      <div class="glass-card rounded-3xl p-7 sm:p-9 flex flex-col justify-between space-y-6 border-emerald-500/40 relative bg-gradient-to-b from-emerald-950/20 to-slate-900/80">
+        <div class="absolute -top-3.5 right-6 px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[10px] font-black rounded-full uppercase tracking-wider shadow">
+          Mais Escolhido
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>Casal & Sócios PRO</span>
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+            </h3>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">2 Pessoas</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl sm:text-4xl font-black text-emerald-400">R$ 19,90</span>
+            <span class="text-xs text-slate-400">/mês total (menos de R$ 10 cada)</span>
+          </div>
+          <p class="text-xs text-slate-400">A solução definitiva para casais e sócios dividirem contas sem estresse.</p>
+
+          <ul class="space-y-2.5 pt-4 text-xs text-slate-300">
+            <li class="flex items-center gap-2 font-semibold text-emerald-300"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> <strong>2 números de WhatsApp</strong> sincronizados</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Divisão percentual automática (50/50 ou proporcional)</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Troca e migração de número liberada a qualquer momento</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Dashboard conjunta com histórico detalhado por pessoa</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Todos os recursos do Plano Individual inclusos</li>
+          </ul>
+        </div>
+
+        <a href="/login" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs text-center transition shadow-lg shadow-emerald-500/25">
+          Iniciar 7 Dias Grátis do Casal
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Rodapé Oficial -->
+  <footer class="border-t border-white/[0.08] bg-[#060A14] py-10 relative z-10 text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 shrink-0">
+          <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
+            <rect width="40" height="40" rx="10" fill="#0E1726"/>
+            <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
+                  stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
+                  fill="#10B981" fill-opacity="0.9"/>
+          </svg>
+        </div>
+        <span class="font-bold text-white">ZapContas</span>
+        <span class="text-slate-600 hidden sm:inline">•</span>
+        <span class="text-[11px] sm:text-xs">Gestão financeira descomplicada pelo WhatsApp Oficial</span>
+      </div>
+
+      <div class="flex items-center gap-4 text-slate-400 text-xs">
+        <a href="#como-funciona" class="hover:text-white">Como Funciona</a>
+        <span>•</span>
+        <a href="#precos" class="hover:text-white">Planos</a>
+        <span>•</span>
+        <a id="footerDashboardLink" href="/login" class="hover:text-white font-semibold text-emerald-400">Entrar</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT DO SIMULADOR DE CONVERSA EM TEMPO REAL -->
+  <script>
+    lucide.createIcons();
+
+    const EXPENSES_POOL = [
+      { desc: 'Almoço no shopping', cat: 'Alimentação', icon: '🍔', min: 35, max: 75, methods: ['Débito', 'PIX'] },
+      { desc: 'Gasolina posto Shell', cat: 'Transporte', icon: '⛽', min: 80, max: 180, methods: ['Crédito', 'Débito'] },
+      { desc: 'Supermercado semanal', cat: 'Mercado', icon: '🛒', min: 140, max: 380, methods: ['Crédito'] },
+      { desc: 'Farmácia remédios', cat: 'Saúde', icon: '💊', min: 45, max: 120, methods: ['PIX', 'Débito'] },
+      { desc: 'Uber para o centro', cat: 'Transporte', icon: '🚗', min: 18, max: 42, methods: ['Cartão de Crédito'] },
+      { desc: 'Padaria café da manhã', cat: 'Alimentação', icon: '☕', min: 16, max: 38, methods: ['PIX'] },
+      { desc: 'iFood jantar em casa', cat: 'Alimentação', icon: '🍕', min: 55, max: 110, methods: ['Crédito'] }
+    ];
+
+    const INCOMES_POOL = [
+      { desc: 'Freela de design', cat: 'Renda Extra', min: 400, max: 1200 },
+      { desc: 'Comissão de vendas', cat: 'Renda Extra', min: 300, max: 800 },
+      { desc: 'Consultoria prestada', cat: 'Renda Extra', min: 500, max: 1500 }
+    ];
+
+    let state = {
+      net: 3250,
+      totalExp: 1120,
+      budget: 3500,
+      joao: 560,
+      maria: 560
+    };
+
+    function randomRange(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function formatBRL(val) {
+      return 'R$ ' + val.toFixed(2).replace('.', ',');
+    }
+
+    const chatContainer = document.getElementById('liveChatBox');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const fakeInputText = document.getElementById('fakeInputText');
+
+    function appendMessageElement(isUser, sender, text, type = 'text', duration = '0:03') {
+      const wrap = document.createElement('div');
+      wrap.className = `flex ${isUser ? 'justify-end' : 'justify-start'} bubble-in`;
+
+      const bubble = document.createElement('div');
+      bubble.className = `${isUser ? 'bg-[#005c4b] text-white' : 'bg-[#1F2C3F] text-slate-200'} p-3 rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} max-w-[88%] shadow space-y-1.5`;
+
+      if (isUser) {
+        if (type === 'audio') {
+          bubble.innerHTML = `
+            <div class="flex items-center gap-1.5 text-[10px] text-emerald-200 font-bold mb-1">
+              <span>👤 ${sender}</span> • <span>Áudio (${duration})</span>
+            </div>
+            <div class="flex items-center gap-2 py-1">
+              <div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center shrink-0">
+                <i data-lucide="play" class="w-3.5 h-3.5 fill-white text-white"></i>
+              </div>
+              <div class="flex items-center gap-1 flex-1">
+                <div class="audio-bar" style="animation-delay: 0.1s"></div>
+                <div class="audio-bar" style="animation-delay: 0.3s"></div>
+                <div class="audio-bar" style="animation-delay: 0.5s"></div>
+                <div class="audio-bar" style="animation-delay: 0.2s"></div>
+                <div class="audio-bar" style="animation-delay: 0.4s"></div>
+              </div>
+              <span class="text-[10px] text-emerald-200">${duration}</span>
+            </div>
+            <p class="text-[11px] text-emerald-100 italic">"${text}"</p>
+          `;
+        } else {
+          bubble.innerHTML = `
+            <span class="text-[10px] text-emerald-200 font-bold block">👤 ${sender}</span>
+            <p class="text-xs">${text}</p>
+          `;
+        }
+      } else {
+        const formatted = text
+          .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
+          .replace(/\[Ver Dashboard\]/g, '<span class="text-emerald-400 font-bold underline">🔗 Ver Dashboard</span>');
+        
+        bubble.innerHTML = `
+          <span class="text-[10px] text-emerald-400 font-bold block">ZapContas AI</span>
+          <div class="whitespace-pre-line text-xs leading-relaxed">${formatted}</div>
+        `;
+      }
+
+      wrap.appendChild(bubble);
+      chatContainer.appendChild(wrap);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      lucide.createIcons();
+
+      if (chatContainer.children.length > 9) {
+        chatContainer.removeChild(chatContainer.children[0]);
+      }
+    }
+
+    function updateDashboard() {
+      document.getElementById('liveNetBalance').textContent = formatBRL(state.net);
+      document.getElementById('liveTotalExpense').textContent = formatBRL(state.totalExp);
+      
+      const pctBudget = Math.round((state.totalExp / state.budget) * 100);
+      document.getElementById('liveBudgetPct').textContent = `${pctBudget}% do teto atingido`;
+
+      const totCasal = state.joao + state.maria;
+      if (totCasal > 0) {
+        const pctJ = Math.round((state.joao / totCasal) * 100);
+        const pctM = 100 - pctJ;
+        document.getElementById('liveBarJoao').style.width = `${pctJ}%`;
+        document.getElementById('liveBarMaria').style.width = `${pctM}%`;
+        document.getElementById('liveValJoao').textContent = `${formatBRL(state.joao)} (${pctJ}%)`;
+        document.getElementById('liveValMaria').textContent = `${formatBRL(state.maria)} (${pctM}%)`;
+      }
+    }
+
+    async function playRandomTurn() {
+      const isJoao = Math.random() > 0.5;
+      const sender = isJoao ? 'João' : 'Maria';
+      const actionType = Math.random();
+
+      if (actionType < 0.65) {
+        const exp = EXPENSES_POOL[Math.floor(Math.random() * EXPENSES_POOL.length)];
+        const valor = randomRange(exp.min, exp.max);
+        const method = exp.methods[Math.floor(Math.random() * exp.methods.length)];
+        const isAudio = Math.random() > 0.55;
+
+        const userMsg = isAudio 
+          ? `${exp.desc} ${valor} reais no ${method.toLowerCase()}` 
+          : `${exp.desc} ${valor} no ${method.toLowerCase()}`;
+
+        fakeInputText.textContent = isAudio ? `${sender} gravando áudio...` : `${sender} digitando...`;
+        await new Promise(r => setTimeout(r, 1200));
+
+        appendMessageElement(true, sender, userMsg, isAudio ? 'audio' : 'text', `0:0${randomRange(2, 4)}`);
+        fakeInputText.textContent = 'Aguardando próxima mensagem...';
+
+        state.net -= valor;
+        state.totalExp += valor;
+        if (isJoao) state.joao += valor; else state.maria += valor;
+
+        typingIndicator.classList.remove('hidden');
+        await new Promise(r => setTimeout(r, 1100));
+        typingIndicator.classList.add('hidden');
+
+        const botReply = `✅ *Despesa registrada por ${sender}!*\n\n${exp.icon} *${exp.cat}:* R$ ${valor},00\n💳 *Forma:* ${method}\n💵 *Saldo livre:* ${formatBRL(state.net)}`;
+        appendMessageElement(false, 'ZapContas AI', botReply);
+
+        document.getElementById('liveEventNotice').textContent = `${exp.desc}: R$ ${valor},00 (${sender})`;
+        updateDashboard();
+
+      } else if (actionType < 0.85) {
+        const qMsg = isJoao ? 'Quem gastou mais esse mês?' : 'Como tá a divisão das contas?';
+        fakeInputText.textContent = `${sender} consultando divisão...`;
+        await new Promise(r => setTimeout(r, 1100));
+
+        appendMessageElement(true, sender, qMsg);
+        fakeInputText.textContent = 'Aguardando próxima mensagem...';
+
+        typingIndicator.classList.remove('hidden');
+        await new Promise(r => setTimeout(r, 1200));
+        typingIndicator.classList.add('hidden');
+
+        const tot = state.joao + state.maria;
+        const pJ = Math.round((state.joao / tot) * 100);
+        const pM = 100 - pJ;
+        const botReply = `👥 *Divisão do Casal Atual:*\n\n👤 *João:* ${formatBRL(state.joao)} (${pJ}%)\n👤 *Maria:* ${formatBRL(state.maria)} (${pM}%)\n\n💰 *Total gasto:* ${formatBRL(state.totalExp)}`;
+        appendMessageElement(false, 'ZapContas AI', botReply);
+
+        document.getElementById('liveEventNotice').textContent = `Divisão consultada: João ${pJ}% | Maria ${pM}%`;
+
+      } else {
+        const inc = INCOMES_POOL[Math.floor(Math.random() * INCOMES_POOL.length)];
+        const valor = randomRange(inc.min, inc.max);
+        const userMsg = `Recebi ${valor} reais ${inc.desc.toLowerCase()}`;
+
+        fakeInputText.textContent = `${sender} adicionando entrada...`;
+        await new Promise(r => setTimeout(r, 1100));
+
+        appendMessageElement(true, sender, userMsg);
+        fakeInputText.textContent = 'Aguardando próxima mensagem...';
+
+        state.net += valor;
+        typingIndicator.classList.remove('hidden');
+        await new Promise(r => setTimeout(r, 1100));
+        typingIndicator.classList.add('hidden');
+
+        const botReply = `🎉 *Entrada Registrada por ${sender}!*\n\n➕ *Valor:* +R$ ${valor},00\n💼 *Categoria:* ${inc.cat}\n💵 *Saldo disponível:* ${formatBRL(state.net)}`;
+        appendMessageElement(false, 'ZapContas AI', botReply);
+
+        document.getElementById('liveEventNotice').textContent = `Saldo adicionado: +R$ ${valor},00 por ${sender}`;
+        updateDashboard();
+      }
+
+      setTimeout(playRandomTurn, 3500);
+    }
+
+    setTimeout(playRandomTurn, 1000);
+
+    // Se o usuário já tiver logado anteriormente, direciona para sua dashboard
+    const savedToken = localStorage.getItem('zap_token');
+    if (savedToken && savedToken !== 'demo') {
+      const navBtn = document.getElementById('navDashboardLink');
+      const footerBtn = document.getElementById('footerDashboardLink');
+      if (navBtn) {
+        navBtn.href = `/dashboard?token=${savedToken}`;
+        navBtn.innerHTML = '<i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-emerald-400"></i> <span>Minha Dashboard</span>';
+      }
+      if (footerBtn) {
+        footerBtn.href = `/dashboard?token=${savedToken}`;
+        footerBtn.textContent = 'Minha Dashboard';
+      }
+    }
+  </script>
+</body>
+</html>

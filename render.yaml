@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: zapcontas
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SUPABASE_URL
+        value: https://qqypchmfmoejtumzemga.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_v_LQTvClsQU8AQddKuDjDw_t3s4oDga
