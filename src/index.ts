@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Servir arquivos estáticos (Dashboard e Simulador)
 const publicDir = path.join(__dirname, 'public');
-app.use(express.static(publicDir));
+app.use(express.static(publicDir, { index: false }));
 
 // Rotas da API e Webhook
 app.use(apiRouter);

@@ -36,21 +36,6 @@ export class BotEngine {
                 `🔗 *Assinar via PIX ou Cartão:*\n` +
                 `${this.baseUrl}/checkout?token=${account.token}&plan=individual_monthly`);
         }
-        // VERIFICAÇÃO DE TRIAL ANTI-FRAUDE:
-        const access = db.isAccessAllowed(phone);
-        if (!access.allowed && parsed.intent !== 'help') {
-            return (`━━━━━━━━━━━━━━━━━━━━━\n` +
-                `⏳ *TESTE GRÁTIS DE 7 DIAS ENCERRADO*\n` +
-                `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-                `Olá, *${senderName}*! O seu período de testes gratuitos de 7 dias chegou ao fim.\n\n` +
-                `Seu histórico e lançamentos continuam salvos com segurança. Para continuar registrando suas despesas pelo WhatsApp e liberando a Dashboard em tempo real, ative sua assinatura:\n\n` +
-                `👤 *1. Plano Individual:* R$ 14,90/mês\n` +
-                `👥 *2. Plano Casal & Sócios:* R$ 19,90/mês (2 telefones conectados)\n\n` +
-                `👉 *Ativar Assinatura Imediatamente (PIX ou Cartão):*\n` +
-                `${this.baseUrl}/checkout?token=${account.token}&reason=trial_expired\n\n` +
-                `━━━━━━━━━━━━━━━━━━━━━\n` +
-                `⚡ _A aprovação via PIX é instantânea e libera o bot na hora._`);
-        }
         // 1. Link para Dashboard Web
         if (parsed.intent === 'dashboard_link') {
             const link = `${this.baseUrl}/dashboard?token=${account.token}`;

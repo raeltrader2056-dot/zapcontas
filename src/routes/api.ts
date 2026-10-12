@@ -362,3 +362,141 @@ router.delete('/api/transaction/:id', (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message || 'Erro ao excluir' });
   }
 });
+
+// 8. Editar Transação Existente (para o cliente corrigir erros)
+router.put('/api/transaction/:id', (req: Request, res: Response) => {
+  try {
+    const { token, amount, description, category, paymentMethod, type } = req.body;
+    const txId = String(req.params.id);
+
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const numAmount = amount ? parseFloat(String(amount).replace(',', '.')) : undefined;
+
+    const updated = db.updateTransaction(account.id, txId, {
+      amount: numAmount,
+      description,
+      category,
+      paymentMethod,
+      type: type === 'income' ? 'income' : 'expense'
+    });
+
+    if (!updated) return res.status(404).json({ error: 'Lançamento não encontrado' });
+
+    const summary = db.getSummary(account.id);
+    const transactions = db.getTransactions(account.id);
+
+    return res.json({
+      success: true,
+      transaction: updated,
+      summary,
+      transactions
+    });
+  } catch (error: any) {
+    console.error('Erro ao editar transação:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao editar lançamento' });
+  }
+});
+
+// 9. Editar Meta Mensal (Orçamento)
+router.put('/api/account/budget', (req: Request, res: Response) => {
+  try {
+    const { token, budget } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const numBudget = parseFloat(String(budget).replace(',', '.'));
+    const safeBudget = isNaN(numBudget) || numBudget < 0 ? 0 : numBudget;
+
+    const updatedAccount = db.setMonthlyBudget(account.id, safeBudget);
+    const summary = db.getSummary(account.id);
+
+    return res.json({
+      success: true,
+      account: updatedAccount,
+      summary
+    });
+  } catch (error: any) {
+    console.error('Erro ao atualizar meta:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao atualizar meta' });
+  }
+});
+
+// 10. Ajustar/Editar Saldo Atual da Carteira
+router.post('/api/account/balance-set', (req: Request, res: Response) => {
+  try {
+    const { token, targetBalance } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const target = parseFloat(String(targetBalance).replace(',', '.'));
+    if (isNaN(target)) return res.status(400).json({ error: 'Valor de saldo inválido' });
+
+    const summaryBefore = db.getSummary(account.id);
+    const diff = target - summaryBefore.balance;
+
+    if (Math.abs(diff) > 0.01) {
+      const user = db.getUserByAccountId(account.id);
+      const now = new Date();
+      const monthKey = now.toISOString().substring(0, 7);
+
+      db.addTransaction({
+        accountId: account.id,
+        senderPhone: user ? user.phone : (account.members[0] || 'Web'),
+        senderName: user ? user.name : 'Painel Web',
+        amount: Math.abs(diff),
+        type: diff > 0 ? 'income' : 'expense',
+        category: 'Saldo Inicial / Ajuste',
+        paymentMethod: 'Ajuste de Saldo',
+        description: 'Ajuste Manual de Saldo',
+        rawMessage: `Saldo ajustado no Dashboard para R$ ${target}`,
+        date: now.toISOString(),
+        monthKey
+      });
+    }
+
+    const summary = db.getSummary(account.id);
+    const transactions = db.getTransactions(account.id);
+
+    return res.json({
+      success: true,
+      summary,
+      transactions
+    });
+  } catch (error: any) {
+    console.error('Erro ao ajustar saldo:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao ajustar saldo' });
+  }
+});
+
+// 11. Zerar Lançamentos do Mês
+router.post('/api/account/reset-month', (req: Request, res: Response) => {
+  try {
+    const { token } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const deletedCount = db.resetAccountMonth(account.id);
+    const summary = db.getSummary(account.id);
+    const transactions = db.getTransactions(account.id);
+
+    return res.json({
+      success: true,
+      deletedCount,
+      summary,
+      transactions
+    });
+  } catch (error: any) {
+    console.error('Erro ao zerar mês:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao zerar mês' });
+  }
+});

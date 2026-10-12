@@ -105,9 +105,9 @@
   <header class="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050811]/90 backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between relative z-10">
       
-      <!-- Logo e Identificação -->
+      <!-- Logo e Identificação (clicar recarrega o dashboard, NÃO vai para simulator) -->
       <div class="flex items-center gap-3.5">
-        <a href="/" class="flex items-center gap-2.5 group">
+        <a href="javascript:void(0)" onclick="window.location.reload()" class="flex items-center gap-2.5 group cursor-pointer" title="Recarregar Painel">
           <div class="w-10 h-10 flex items-center justify-center shrink-0 rounded-2xl bg-slate-900 border border-white/10 group-hover:border-emerald-500/40 transition shadow-lg shadow-black/40">
             <svg viewBox="0 0 40 40" class="w-6 h-6" fill="none">
               <rect width="40" height="40" rx="10" fill="#0E1726"/>
@@ -174,7 +174,7 @@
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </h1>
         <p class="text-sm text-slate-400 mt-1">
-          Acompanhe suas finanças em tempo real ou adicione novos lançamentos abaixo.
+          Acompanhe suas finanças em tempo real, defina metas ou lance novos valores.
         </p>
       </div>
 
@@ -214,27 +214,56 @@
             </span>
           </div>
           <p id="budgetDescription" class="text-xs sm:text-sm text-slate-400 mt-1">
-            Definido via WhatsApp. O bot avisa quando você se aproximar do limite.
+            Definido pelo painel ou WhatsApp. O bot avisa quando você se aproximar do limite.
           </p>
         </div>
       </div>
 
-      <!-- Barra de Progresso Visual -->
-      <div class="w-full md:w-72 space-y-2">
-        <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-white/10">
-          <div id="budgetProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+      <!-- Barra de Progresso Visual e Botão Editar -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+        <div class="w-full md:w-64 space-y-2">
+          <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-white/10">
+            <div id="budgetProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-400">
+            <span>0%</span>
+            <span id="budgetRemainingLabel" class="text-amber-400 font-bold">R$ 0,00 restantes</span>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-xs font-semibold text-slate-400">
-          <span>0%</span>
-          <span id="budgetRemainingLabel" class="text-amber-400 font-bold">R$ 0,00 restantes</span>
+        <button 
+          onclick="openBudgetModal()" 
+          class="text-xs font-bold text-amber-300 bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/30 px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+        >
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+          <span>Editar Meta</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- BANNER QUANDO NÃO TEM META DEFINIDA -->
+    <div id="noBudgetPrompt" class="card-premium p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-dashed border-white/15">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400">
+          <i data-lucide="target" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-white">Nenhum teto de gastos definido</h4>
+          <p class="text-xs text-slate-400">Defina uma meta para receber alertas automáticos no WhatsApp e acompanhar limites.</p>
         </div>
       </div>
+      <button 
+        onclick="openBudgetModal()" 
+        class="text-xs font-bold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/15 px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 self-start sm:self-auto shrink-0"
+      >
+        <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>Definir Meta Mensal</span>
+      </button>
     </div>
 
     <!-- 3 CARDS HEROICOS DE INDICADORES (INTERATIVOS & ESPAÇOSOS) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       
-      <!-- Card 1: Saldo Líquido -->
+      <!-- Card 1: Saldo Líquido (+ BOTÃO AJUSTAR SALDO) -->
       <div 
         id="cardNetBalance" 
         onclick="setFilter('all')" 
@@ -247,9 +276,14 @@
             </div>
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Saldo Livre</span>
           </div>
-          <span class="text-[11px] font-semibold text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-lg group-hover:border-white/20 transition">
-            Balanço
-          </span>
+          <button 
+            onclick="event.stopPropagation(); openBalanceModal()" 
+            class="text-[11px] font-bold text-sky-300 bg-sky-500/15 hover:bg-sky-500/30 border border-sky-500/30 px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
+            title="Ajustar ou sincronizar o saldo atual da carteira"
+          >
+            <i data-lucide="sliders" class="w-3 h-3"></i>
+            <span>Ajustar Saldo</span>
+          </button>
         </div>
         <div>
           <p id="netBalance" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">R$ 0,00</p>
@@ -375,21 +409,31 @@
             </div>
           </div>
 
-          <!-- Busca Rápida -->
-          <div class="relative w-full">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input 
-              id="searchTx" 
-              type="text" 
-              placeholder="Buscar por descrição, autor, categoria ou valor..." 
-              class="w-full bg-slate-950 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition"
+          <!-- Busca Rápida + Botão Zerar Mês -->
+          <div class="flex items-center gap-2 w-full">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input 
+                id="searchTx" 
+                type="text" 
+                placeholder="Buscar por descrição, autor, categoria ou valor..." 
+                class="w-full bg-slate-950 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition"
+              >
+            </div>
+            <button 
+              onclick="confirmResetMonth()" 
+              class="px-3.5 py-2.5 rounded-xl border border-white/10 bg-slate-950 hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs font-semibold"
+              title="Limpar todos os lançamentos deste mês"
             >
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Zerar Mês</span>
+            </button>
           </div>
         </div>
 
         <!-- LISTA AREJADA DE TRANSAÇÕES (Card Feed Moderno) -->
         <div id="transactionFeed" class="space-y-3">
-          <!-- Renderizado dinamicamente via renderTransactionsFeed -->
+          <!-- Renderizado dinamicamente via renderTransactions -->
         </div>
 
       </div>
@@ -437,7 +481,7 @@
 
   </main>
 
-  <!-- MODAL DE NOVO LANÇAMENTO (100% FUNCIONAL PARA ENTRADAS E GASTOS) -->
+  <!-- MODAL DE NOVO LANÇAMENTO & EDIÇÃO (100% FUNCIONAL) -->
   <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
     <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
       
@@ -448,8 +492,8 @@
 
       <!-- Alternador de Tipo: Gasto (-) vs Entrada (+) -->
       <div>
-        <h3 class="text-lg font-black text-white">Adicionar Lançamento</h3>
-        <p class="text-xs text-slate-400 mt-0.5">Registre despesas ou receitas diretamente no seu painel.</p>
+        <h3 id="modalTitle" class="text-lg font-black text-white">Adicionar Lançamento</h3>
+        <p id="modalSubtitle" class="text-xs text-slate-400 mt-0.5">Registre despesas ou receitas diretamente no seu painel.</p>
 
         <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-950 rounded-2xl border border-white/10 mt-4">
           <button 
@@ -534,6 +578,79 @@
         <span>Salvar no Extrato</span>
       </button>
 
+    </div>
+  </div>
+
+  <!-- MODAL DE EDITAR META MENSAL -->
+  <div id="budgetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
+      <button onclick="closeBudgetModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div>
+        <h3 class="text-lg font-black text-white">Editar Teto Mensal de Gastos</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Defina seu limite de gastos para o mês (digite 0 para desativar).</p>
+      </div>
+      <div class="space-y-2 text-center">
+        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Limite Mensal</label>
+        <div class="relative max-w-xs mx-auto">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-extrabold text-slate-400">R$</span>
+          <input 
+            id="budgetInput" 
+            type="number" 
+            step="10" 
+            min="0" 
+            placeholder="0,00" 
+            class="w-full bg-slate-950 border border-white/15 rounded-2xl py-3.5 pl-14 pr-4 text-2xl sm:text-3xl font-black text-white text-center focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+          >
+        </div>
+      </div>
+      <button 
+        id="btnSaveBudget" 
+        onclick="submitBudget()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm transition shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+        <span>Salvar Teto Mensal</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DE AJUSTAR SALDO DA CARTEIRA -->
+  <div id="balanceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
+      <button onclick="closeBalanceModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div>
+        <h3 class="text-lg font-black text-white">Ajustar Saldo Atual</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Sincronize o saldo do painel com o valor real da sua conta.</p>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-950 border border-white/10 flex items-center justify-between text-xs">
+        <span class="text-slate-400 font-semibold">Saldo Atual no Painel:</span>
+        <span id="currentBalanceDisplay" class="font-extrabold text-white text-sm">R$ 0,00</span>
+      </div>
+      <div class="space-y-2 text-center">
+        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Novo Saldo Desejado</label>
+        <div class="relative max-w-xs mx-auto">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-extrabold text-slate-400">R$</span>
+          <input 
+            id="targetBalanceInput" 
+            type="number" 
+            step="0.01" 
+            placeholder="0,00" 
+            class="w-full bg-slate-950 border border-white/15 rounded-2xl py-3.5 pl-14 pr-4 text-2xl sm:text-3xl font-black text-white text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
+          >
+        </div>
+      </div>
+      <button 
+        id="btnSaveBalance" 
+        onclick="submitBalanceAdjust()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-sm transition shadow-xl shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+        <span>Confirmar Ajuste de Saldo</span>
+      </button>
     </div>
   </div>
 
@@ -669,6 +786,7 @@
     let allTransactions = [];
     let currentFilter = 'all';
     let currentModalType = 'expense';
+    let editingTxId = null;
     let selectedCategory = '';
     let categoryChartInstance = null;
     let currentUser = null;
@@ -739,8 +857,12 @@
         // Meta / Orçamento
         const budget = currentAccount.budget || 0;
         const banner = document.getElementById('budgetBanner');
+        const noBudgetPrompt = document.getElementById('noBudgetPrompt');
+
         if (budget > 0) {
           banner.classList.remove('hidden');
+          noBudgetPrompt.classList.add('hidden');
+
           const pct = Math.min(100, Math.round((data.summary.totalExpense / budget) * 100));
           const remaining = Math.max(0, budget - data.summary.totalExpense);
 
@@ -755,6 +877,7 @@
           }
         } else {
           banner.classList.add('hidden');
+          noBudgetPrompt.classList.remove('hidden');
         }
 
         // Saldos Principais
@@ -778,10 +901,16 @@
       }
     }
 
-    // --- MODAL DE NOVO LANÇAMENTO (100% FUNCIONAL) ---
+    // --- MODAL DE NOVO LANÇAMENTO & EDIÇÃO ---
     function openTransactionModal(type = 'expense') {
+      editingTxId = null;
       currentModalType = type;
       switchModalType(type);
+
+      document.getElementById('modalTitle').textContent = 'Adicionar Lançamento';
+      document.getElementById('modalSubtitle').textContent = 'Registre despesas ou receitas diretamente no seu painel.';
+      document.getElementById('btnSaveTransaction').innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i><span>Salvar no Extrato</span>';
+      
       document.getElementById('txAmountInput').value = '';
       document.getElementById('txDescInput').value = '';
       document.getElementById('txModalAlert').className = 'hidden';
@@ -790,8 +919,41 @@
       lucide.createIcons();
     }
 
+    function openEditTransaction(txId) {
+      const tx = allTransactions.find(t => t.id === txId);
+      if (!tx) return;
+
+      editingTxId = tx.id;
+      currentModalType = tx.type;
+      switchModalType(tx.type);
+
+      document.getElementById('modalTitle').textContent = 'Editar Lançamento';
+      document.getElementById('modalSubtitle').textContent = 'Corrija valores, descrição ou categoria deste item.';
+      document.getElementById('btnSaveTransaction').innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i><span>Salvar Alterações</span>';
+
+      document.getElementById('txAmountInput').value = tx.amount;
+      document.getElementById('txDescInput').value = tx.description;
+      document.getElementById('txPaymentMethodSelect').value = tx.paymentMethod;
+
+      selectedCategory = tx.category;
+      const container = document.getElementById('txCategoryTags');
+      Array.from(container.children).forEach(c => {
+        if (c.textContent.includes(tx.category)) {
+          c.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer bg-white/20 text-white border border-white/30 font-bold shadow-xs';
+        } else {
+          c.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer bg-slate-900 text-slate-400 border border-white/10 hover:text-white';
+        }
+      });
+
+      document.getElementById('txModalAlert').className = 'hidden';
+      document.getElementById('transactionModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('txAmountInput').focus(), 100);
+      lucide.createIcons();
+    }
+
     function closeTransactionModal() {
       document.getElementById('transactionModal').classList.add('hidden');
+      editingTxId = null;
     }
 
     function switchModalType(type) {
@@ -813,12 +975,12 @@
     function renderCategoryTags(categories) {
       const container = document.getElementById('txCategoryTags');
       container.innerHTML = '';
-      selectedCategory = categories[0]?.name || 'Outros';
+      if (!selectedCategory) selectedCategory = categories[0]?.name || 'Outros';
 
-      categories.forEach((cat, idx) => {
+      categories.forEach((cat) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        const isSelected = idx === 0;
+        const isSelected = selectedCategory === cat.name;
         btn.className = `px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
           isSelected 
             ? 'bg-white/20 text-white border border-white/30 font-bold shadow-xs' 
@@ -856,8 +1018,11 @@
       btn.innerHTML = '<span>Salvando...</span>';
 
       try {
-        const res = await fetch('/api/transaction/create', {
-          method: 'POST',
+        const endpoint = editingTxId ? `/api/transaction/${editingTxId}` : '/api/transaction/create';
+        const method = editingTxId ? 'PUT' : 'POST';
+
+        const res = await fetch(endpoint, {
+          method,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             token,
@@ -872,7 +1037,7 @@
         const data = await res.json();
         if (res.ok && data.success) {
           closeTransactionModal();
-          showToast(`✓ ${currentModalType === 'income' ? 'Entrada' : 'Despesa'} de R$ ${amount.toFixed(2).replace('.', ',')} salva com sucesso!`);
+          showToast(editingTxId ? '✓ Lançamento corrigido com sucesso!' : `✓ ${currentModalType === 'income' ? 'Entrada' : 'Despesa'} de R$ ${amount.toFixed(2).replace('.', ',')} salva!`);
           loadData();
         } else {
           alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
@@ -911,7 +1076,106 @@
       }
     }
 
-    // --- RENDERIZAÇÃO DO EXTRATO MODERNO (FEED EM CARDS) ---
+    // --- MODAL DE META MENSAL (EDITAR META) ---
+    function openBudgetModal() {
+      const cur = currentAccount?.budget || 0;
+      document.getElementById('budgetInput').value = cur > 0 ? cur : '';
+      document.getElementById('budgetModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('budgetInput').focus(), 100);
+      lucide.createIcons();
+    }
+
+    function closeBudgetModal() {
+      document.getElementById('budgetModal').classList.add('hidden');
+    }
+
+    async function submitBudget() {
+      const budgetRaw = document.getElementById('budgetInput').value;
+      const budget = parseFloat(budgetRaw);
+      const safeBudget = isNaN(budget) || budget < 0 ? 0 : budget;
+
+      try {
+        const res = await fetch('/api/account/budget', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, budget: safeBudget })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          closeBudgetModal();
+          showToast(safeBudget > 0 ? `🎯 Meta mensal definida em R$ ${safeBudget.toFixed(2).replace('.', ',')}!` : '🎯 Teto de gastos desativado.');
+          loadData();
+        } else {
+          alert(data.error || 'Erro ao atualizar meta');
+        }
+      } catch (e) {
+        alert('Erro ao atualizar meta');
+      }
+    }
+
+    // --- MODAL DE AJUSTAR SALDO LIVRE ---
+    function openBalanceModal() {
+      document.getElementById('currentBalanceDisplay').textContent = document.getElementById('netBalance').textContent;
+      document.getElementById('targetBalanceInput').value = '';
+      document.getElementById('balanceModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('targetBalanceInput').focus(), 100);
+      lucide.createIcons();
+    }
+
+    function closeBalanceModal() {
+      document.getElementById('balanceModal').classList.add('hidden');
+    }
+
+    async function submitBalanceAdjust() {
+      const targetRaw = document.getElementById('targetBalanceInput').value;
+      const target = parseFloat(targetRaw);
+      if (isNaN(target)) {
+        alert('Informe um valor de saldo válido');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/account/balance-set', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, targetBalance: target })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          closeBalanceModal();
+          showToast(`💵 Saldo ajustado com sucesso para R$ ${target.toFixed(2).replace('.', ',')}!`);
+          loadData();
+        } else {
+          alert(data.error || 'Erro ao ajustar saldo');
+        }
+      } catch (e) {
+        alert('Erro ao ajustar saldo');
+      }
+    }
+
+    // --- ZERAR MÊS (LIMPAR EXTRATO) ---
+    async function confirmResetMonth() {
+      if (!confirm('⚠️ Tem certeza que deseja zerar e limpar TODOS os lançamentos deste mês? Essa ação não pode ser desfeita.')) return;
+
+      try {
+        const res = await fetch('/api/account/reset-month', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToast('🔄 Saldo e extrato do mês zerados com sucesso!');
+          loadData();
+        } else {
+          alert(data.error || 'Erro ao zerar mês');
+        }
+      } catch (e) {
+        alert('Erro ao zerar mês');
+      }
+    }
+
+    // --- RENDERIZAÇÃO DO EXTRATO MODERNO COM BOTÃO DE EDITAR ---
     function renderTransactions(list) {
       const feed = document.getElementById('transactionFeed');
       feed.innerHTML = '';
@@ -924,7 +1188,7 @@
               <i data-lucide="inbox" class="w-6 h-6"></i>
             </div>
             <p class="text-sm font-bold text-white">Nenhum lançamento encontrado</p>
-            <p class="text-xs text-slate-400 max-w-xs mx-auto">Mande uma mensagem no WhatsApp ou clique nos botões acima para adicionar o primeiro gasto ou entrada.</p>
+            <p class="text-xs text-slate-400 max-w-xs mx-auto">Mande uma mensagem no WhatsApp ou clique nos botões acima para adicionar ou registrar um gasto.</p>
           </div>
         `;
         lucide.createIcons();
@@ -963,14 +1227,21 @@
             </div>
           </div>
 
-          <!-- Valor e Ação de Excluir -->
-          <div class="flex items-center gap-3 shrink-0">
+          <!-- Valor e Ações: Editar e Excluir -->
+          <div class="flex items-center gap-2 sm:gap-3 shrink-0">
             <span class="font-black text-sm sm:text-base ${isInc ? 'text-emerald-400' : 'text-rose-400'} tracking-tight">
               ${isInc ? '+' : '-'} R$ ${tx.amount.toFixed(2).replace('.', ',')}
             </span>
             <button 
+              onclick="openEditTransaction('${tx.id}')" 
+              class="opacity-60 group-hover:opacity-100 hover:text-sky-400 p-2 rounded-xl hover:bg-sky-500/10 transition cursor-pointer text-slate-400"
+              title="Editar / Corrigir este lançamento"
+            >
+              <i data-lucide="edit-2" class="w-4 h-4"></i>
+            </button>
+            <button 
               onclick="deleteTransaction('${tx.id}')" 
-              class="opacity-50 group-hover:opacity-100 hover:text-rose-400 p-2 rounded-xl hover:bg-rose-500/10 transition cursor-pointer text-slate-400"
+              class="opacity-60 group-hover:opacity-100 hover:text-rose-400 p-2 rounded-xl hover:bg-rose-500/10 transition cursor-pointer text-slate-400"
               title="Excluir este lançamento"
             >
               <i data-lucide="trash-2" class="w-4 h-4"></i>

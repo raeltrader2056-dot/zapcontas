@@ -305,6 +305,31 @@ export class Database {
     return true;
   }
 
+  // Atualiza uma transação existente (para o cliente corrigir erros)
+  public updateTransaction(
+    accountId: string,
+    transactionId: string,
+    updates: {
+      amount?: number;
+      description?: string;
+      category?: string;
+      paymentMethod?: string;
+      type?: 'income' | 'expense';
+    }
+  ): Transaction | null {
+    const tx = this.data.transactions.find(t => t.accountId === accountId && t.id === transactionId);
+    if (!tx) return null;
+
+    if (updates.amount !== undefined && updates.amount > 0) tx.amount = updates.amount;
+    if (updates.description !== undefined && updates.description.trim()) tx.description = updates.description.trim();
+    if (updates.category !== undefined && updates.category.trim()) tx.category = updates.category.trim();
+    if (updates.paymentMethod !== undefined) tx.paymentMethod = updates.paymentMethod;
+    if (updates.type !== undefined) tx.type = updates.type;
+
+    this.save();
+    return tx;
+  }
+
   // Zera todos os lançamentos do mês ou adiciona um ajuste compensatório
   public resetAccountMonth(accountId: string, monthKey?: string): number {
     const currentMonthKey = monthKey || new Date().toISOString().substring(0, 7);
