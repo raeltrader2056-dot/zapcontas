@@ -296,6 +296,15 @@ export class Database {
     return removed;
   }
 
+  // Apaga uma transação específica pelo ID
+  public deleteTransaction(accountId: string, transactionId: string): boolean {
+    const idx = this.data.transactions.findIndex(t => t.accountId === accountId && t.id === transactionId);
+    if (idx === -1) return false;
+    this.data.transactions.splice(idx, 1);
+    this.save();
+    return true;
+  }
+
   // Zera todos os lançamentos do mês ou adiciona um ajuste compensatório
   public resetAccountMonth(accountId: string, monthKey?: string): number {
     const currentMonthKey = monthKey || new Date().toISOString().substring(0, 7);

@@ -283,3 +283,82 @@ router.post('/api/webhook/payment', (req: Request, res: Response) => {
 
   return res.json({ success: true, account: updated });
 });
+
+// 6. Criar Transação Manual pelo Dashboard (Entrada ou Gasto)
+router.post('/api/transaction/create', (req: Request, res: Response) => {
+  try {
+    const { token, type, amount, description, category, paymentMethod } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const numAmount = parseFloat(String(amount).replace(',', '.'));
+    if (isNaN(numAmount) || numAmount <= 0) {
+      return res.status(400).json({ error: 'Valor deve ser um número positivo maior que zero' });
+    }
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const user = db.getUserByAccountId(account.id);
+    const senderPhone = user ? user.phone : (account.members[0] || 'Web');
+    const senderName = user ? user.name : 'Painel Web';
+
+    const now = new Date();
+    const monthKey = now.toISOString().substring(0, 7);
+
+    const isIncome = type === 'income';
+    const tx = db.addTransaction({
+      accountId: account.id,
+      senderPhone,
+      senderName,
+      amount: numAmount,
+      type: isIncome ? 'income' : 'expense',
+      category: category || (isIncome ? 'Renda & Entradas' : 'Outros'),
+      paymentMethod: paymentMethod || 'PIX',
+      description: (description && description.trim()) || (isIncome ? 'Entrada manual' : 'Despesa manual'),
+      rawMessage: `Lançado no Dashboard: ${description || 'Manual'} (R$ ${numAmount})`,
+      date: now.toISOString(),
+      monthKey
+    });
+
+    const summary = db.getSummary(account.id);
+    const transactions = db.getTransactions(account.id);
+
+    return res.json({
+      success: true,
+      transaction: tx,
+      summary,
+      transactions
+    });
+  } catch (error: any) {
+    console.error('Erro ao criar transação via dashboard:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao criar lançamento' });
+  }
+});
+
+// 7. Excluir Transação pelo Dashboard
+router.delete('/api/transaction/:id', (req: Request, res: Response) => {
+  try {
+    const token = String(req.query.token || req.body?.token || '');
+    const txId = String(req.params.id);
+
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const deleted = db.deleteTransaction(account.id, txId);
+    if (!deleted) return res.status(404).json({ error: 'Lançamento não encontrado' });
+
+    const summary = db.getSummary(account.id);
+    const transactions = db.getTransactions(account.id);
+
+    return res.json({
+      success: true,
+      summary,
+      transactions
+    });
+  } catch (error: any) {
+    console.error('Erro ao excluir transação via dashboard:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao excluir' });
+  }
+});

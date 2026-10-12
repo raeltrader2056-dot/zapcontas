@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ZapContas • Gestão Financeira Inteligente</title>
   <link rel="icon" type="image/svg+xml" href="/logo.svg">
 
@@ -20,111 +20,143 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-      background-color: #060A14;
+      background-color: #050811;
       color: #F8FAFC;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
     .dot-pattern {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-      background-size: 26px 26px;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
 
-    .glass-card {
-      background: rgba(14, 22, 42, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1.25rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 9999px;
+      filter: blur(140px);
+      pointer-events: none;
+      opacity: 0.15;
     }
 
-    .glass-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
+    .card-premium {
+      background: rgba(13, 20, 38, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 1.5rem;
+      box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .header-dark {
-      background: rgba(6, 10, 20, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    .card-premium:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .card-interactive {
+      cursor: pointer;
+    }
+    .card-interactive:active {
+      transform: scale(0.985);
+    }
+
+    .card-active-emerald {
+      border-color: rgba(16, 185, 129, 0.5) !important;
+      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25), inset 0 0 15px rgba(16, 185, 129, 0.05) !important;
+    }
+
+    .card-active-rose {
+      border-color: rgba(244, 63, 94, 0.5) !important;
+      box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.25), inset 0 0 15px rgba(244, 63, 94, 0.05) !important;
+    }
+
+    .card-active-all {
+      border-color: rgba(56, 189, 248, 0.5) !important;
+      box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(56, 189, 248, 0.05) !important;
     }
 
     /* Scrollbar estilizada */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #060A14; }
+    ::-webkit-scrollbar-track { background: #050811; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+
+    /* Animação suave de entrada */
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-feed-in {
+      animation: fadeInSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
   </style>
 </head>
 <body class="min-h-screen relative flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
 
-  <!-- Fundo com Dot Pattern -->
+  <!-- Fundo com Dot Matrix e Luzes Ambiente -->
   <div class="fixed inset-0 dot-pattern pointer-events-none z-0"></div>
+  <div class="ambient-glow bg-emerald-500 -top-40 left-1/2 -translate-x-1/2"></div>
+  <div class="ambient-glow bg-blue-600 top-[600px] -left-40"></div>
 
-  <!-- Header Superior -->
-  <header class="header-dark sticky top-0 z-40 relative z-10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between py-3 sm:py-0">
+  <!-- Header Superior Fixo e Espaçoso -->
+  <header class="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050811]/90 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between relative z-10">
       
-      <!-- Marca & Identidade -->
+      <!-- Logo e Identificação -->
       <div class="flex items-center gap-3.5">
-        <a href="/lp" class="flex items-center gap-2.5 group">
-          <div class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
-            <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
-              <rect width="40" height="40" rx="10" fill="#0E1726" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 flex items-center justify-center shrink-0 rounded-2xl bg-slate-900 border border-white/10 group-hover:border-emerald-500/40 transition shadow-lg shadow-black/40">
+            <svg viewBox="0 0 40 40" class="w-6 h-6" fill="none">
+              <rect width="40" height="40" rx="10" fill="#0E1726"/>
               <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
-                    stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
-                    fill="#10B981" fill-opacity="0.9" stroke="#047857" stroke-width="0.5"/>
+                    fill="#10B981" fill-opacity="0.95"/>
             </svg>
           </div>
-          <span class="font-extrabold text-lg text-white tracking-tight">ZapContas</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-base text-white tracking-tight">ZapContas</span>
+              <span id="accountTypePill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">Individual</span>
+            </div>
+            <p id="accountName" class="text-xs text-slate-400 font-medium truncate max-w-[150px] sm:max-w-xs">Carregando carteira...</p>
+          </div>
         </a>
-
-        <div class="h-4 w-px bg-white/10 hidden sm:block"></div>
-
-        <!-- Tag da Carteira Ativa -->
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-          <span id="accountName" class="text-xs font-semibold text-slate-300">Carregando carteira...</span>
-          <span id="accountTypePill" class="text-[10px] font-bold tracking-wider bg-white/[0.06] text-slate-400 px-2 py-0.5 rounded-md border border-white/10">
-            Individual
-          </span>
-        </div>
       </div>
 
-      <!-- Ações no Topo -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Ações do Topo -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
         <!-- Exportar CSV -->
-        <button onclick="exportCSV()" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 text-slate-300 transition cursor-pointer">
+        <button onclick="exportCSV()" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 text-slate-300 transition cursor-pointer">
           <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
-          <span>CSV</span>
+          <span>Exportar CSV</span>
         </button>
 
-        <!-- Botão de Perfil do Cliente -->
-        <button id="btnUserProfile" onclick="openProfileModal()" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 hover:border-white/20 transition group cursor-pointer text-left">
+        <!-- Botão de Perfil -->
+        <button id="btnUserProfile" onclick="openProfileModal()" class="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-slate-800 hover:border-white/20 transition group cursor-pointer">
           <div class="relative shrink-0">
             <img id="headerUserAvatar" src="" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-emerald-500/40 hidden">
             <div id="headerUserAvatarFallback" class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-slate-950 font-black text-xs flex items-center justify-center border border-white/20 shadow-xs">
               U
             </div>
-            <span id="headerPlanDot" class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#060A14]" title="Status"></span>
+            <span id="headerPlanDot" class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#050811]"></span>
           </div>
           <div class="hidden sm:block text-left">
             <div class="flex items-center gap-1.5">
               <span id="headerUserName" class="text-xs font-bold text-white group-hover:text-emerald-400 transition max-w-[120px] truncate">Meu Perfil</span>
               <span id="headerUserPlanBadge" class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">PRO</span>
             </div>
-            <span class="text-[10px] text-slate-400">Configurar perfil</span>
+            <span class="text-[10px] text-slate-400">Configurações</span>
           </div>
         </button>
 
         <!-- Botão Sair -->
-        <button onclick="logoutUser()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-300 hover:text-rose-400 transition cursor-pointer" title="Sair da Conta">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Sair</span>
+        <button onclick="logoutUser()" class="inline-flex items-center justify-center p-2.5 sm:px-3 sm:py-2 rounded-xl border border-white/10 bg-slate-900/80 hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 transition cursor-pointer" title="Sair da Conta">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span class="hidden sm:inline text-xs font-semibold ml-1.5">Sair</span>
         </button>
       </div>
 
@@ -132,393 +164,498 @@
   </header>
 
   <!-- Container Principal -->
-  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-7 w-full space-y-6 relative z-10">
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full space-y-8 relative z-10">
 
-    <!-- Barra de Contexto & Filtros Rápidos -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <!-- BARRA HEROICA DE AÇÃO & TÍTULO -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
       <div>
-        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-          <span>Resumo & Extrato Mensal</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
+          <span>Visão Financeira</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </h1>
-        <p class="text-xs text-slate-400 mt-0.5">
-          Tudo que você envia pelo WhatsApp é organizado e recalculado automaticamente em tempo real.
+        <p class="text-sm text-slate-400 mt-1">
+          Acompanhe suas finanças em tempo real ou adicione novos lançamentos abaixo.
         </p>
       </div>
 
-      <!-- Filtro Rápido de Período -->
-      <div class="flex items-center gap-1 self-start sm:self-auto bg-slate-900/90 p-1 rounded-xl text-xs font-semibold text-slate-400 border border-white/10 shadow-inner">
-        <button id="filterAll" class="period-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-bold shadow-xs">Tudo</button>
-        <button id="filterExpenses" class="period-btn px-3 py-1.5 rounded-lg hover:text-white transition">Apenas Gastos</button>
-        <button id="filterIncomes" class="period-btn px-3 py-1.5 rounded-lg hover:text-white transition">Apenas Entradas</button>
+      <!-- BOTÕES DE AÇÃO RÁPIDA (100% FUNCIONAIS) -->
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <!-- Botão: + Nova Entrada -->
+        <button 
+          onclick="openTransactionModal('income')" 
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all cursor-pointer transform active:scale-95"
+        >
+          <i data-lucide="plus-circle" class="w-4 h-4 text-slate-950 stroke-[2.5]"></i>
+          <span>Nova Entrada</span>
+        </button>
+
+        <!-- Botão: - Novo Gasto -->
+        <button 
+          onclick="openTransactionModal('expense')" 
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm shadow-xl shadow-rose-500/20 hover:shadow-rose-500/30 transition-all cursor-pointer transform active:scale-95"
+        >
+          <i data-lucide="minus-circle" class="w-4 h-4 text-white stroke-[2.5]"></i>
+          <span>Novo Gasto</span>
+        </button>
       </div>
     </div>
 
-    <!-- Barra de Meta de Gastos / Orçamento (Quando Ativa) -->
-    <div id="budgetBanner" class="glass-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hidden border-l-4 border-l-amber-500">
-      <div class="flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
-          <i data-lucide="target" class="w-5 h-5"></i>
+    <!-- META DE GASTOS / ORÇAMENTO (QUANDO DEFINIDO) -->
+    <div id="budgetBanner" class="card-premium p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 hidden border-l-4 border-l-amber-500">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
+          <i data-lucide="target" class="w-6 h-6"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h4 class="text-xs sm:text-sm font-bold text-white">Teto de Gastos Mensal</h4>
-            <span id="budgetPercentLabel" class="text-[11px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30">
+          <div class="flex items-center gap-2.5">
+            <h4 class="text-sm font-bold text-white">Teto Mensal de Gastos</h4>
+            <span id="budgetPercentLabel" class="text-xs font-bold text-amber-300 bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/30">
               0% do teto
             </span>
           </div>
-          <p id="budgetDescription" class="text-xs text-slate-400 mt-0.5">
+          <p id="budgetDescription" class="text-xs sm:text-sm text-slate-400 mt-1">
             Definido via WhatsApp. O bot avisa quando você se aproximar do limite.
           </p>
         </div>
       </div>
 
       <!-- Barra de Progresso Visual -->
-      <div class="w-full sm:w-64 space-y-1.5">
-        <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/10">
+      <div class="w-full md:w-72 space-y-2">
+        <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-white/10">
           <div id="budgetProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
-        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-400">
           <span>0%</span>
           <span id="budgetRemainingLabel" class="text-amber-400 font-bold">R$ 0,00 restantes</span>
         </div>
       </div>
     </div>
 
-    <!-- 3 Cards Principais de Indicadores Financeiros -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <!-- 3 CARDS HEROICOS DE INDICADORES (INTERATIVOS & ESPAÇOSOS) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       
-      <!-- Saldo Líquido -->
-      <div class="glass-card p-5 space-y-2">
+      <!-- Card 1: Saldo Líquido -->
+      <div 
+        id="cardNetBalance" 
+        onclick="setFilter('all')" 
+        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden"
+      >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Saldo Líquido</span>
-          <div class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
-            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 group-hover:text-white transition">
+              <i data-lucide="wallet" class="w-4 h-4"></i>
+            </div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Saldo Livre</span>
           </div>
+          <span class="text-[11px] font-semibold text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-lg group-hover:border-white/20 transition">
+            Balanço
+          </span>
         </div>
-        <p id="netBalance" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 0,00</p>
-        <p class="text-[11px] text-slate-400">Diferença de receitas e despesas</p>
+        <div>
+          <p id="netBalance" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">R$ 0,00</p>
+          <p class="text-xs text-slate-400 mt-1">Diferença entre entradas e saídas</p>
+        </div>
+        <div class="pt-1 flex items-center gap-1.5 text-xs text-sky-400 font-semibold group-hover:translate-x-1 transition-transform">
+          <span>Ver todas as transações</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </div>
       </div>
 
-      <!-- Total de Entradas -->
-      <div class="glass-card p-5 space-y-2">
+      <!-- Card 2: Entradas no Mês (+ AÇÃO) -->
+      <div 
+        id="cardTotalIncome" 
+        onclick="setFilter('income')" 
+        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden border-emerald-500/20"
+      >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entradas no Mês</span>
-          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
+              <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+            </div>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Entradas no Mês</span>
           </div>
+          <button 
+            onclick="event.stopPropagation(); openTransactionModal('income')" 
+            class="text-[11px] font-bold text-emerald-300 bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/30 px-2.5 py-1 rounded-lg transition"
+            title="Adicionar entrada agora"
+          >
+            + Adicionar
+          </button>
         </div>
-        <p id="totalIncome" class="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight">+ R$ 0,00</p>
-        <p class="text-[11px] text-slate-400">Salários, comissões e rendas</p>
+        <div>
+          <p id="totalIncome" class="text-3xl sm:text-4xl font-extrabold text-emerald-400 tracking-tight">+ R$ 0,00</p>
+          <p class="text-xs text-slate-400 mt-1">Salários, freelas e receitas recebidas</p>
+        </div>
+        <div class="pt-1 flex items-center gap-1.5 text-xs text-emerald-400 font-semibold group-hover:translate-x-1 transition-transform">
+          <span>Filtrar apenas entradas</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </div>
       </div>
 
-      <!-- Total de Despesas -->
-      <div class="glass-card p-5 space-y-2">
+      <!-- Card 3: Gastos no Mês (+ AÇÃO) -->
+      <div 
+        id="cardTotalExpense" 
+        onclick="setFilter('expense')" 
+        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden border-rose-500/20"
+      >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gastos no Mês</span>
-          <div class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
-            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </div>
+            <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Gastos no Mês</span>
           </div>
+          <button 
+            onclick="event.stopPropagation(); openTransactionModal('expense')" 
+            class="text-[11px] font-bold text-rose-300 bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/30 px-2.5 py-1 rounded-lg transition"
+            title="Registrar gasto agora"
+          >
+            + Lançar
+          </button>
         </div>
-        <p id="totalExpense" class="text-2xl sm:text-3xl font-black text-rose-400 tracking-tight">- R$ 0,00</p>
-        <p class="text-[11px] text-slate-400">Total acumulado da carteira</p>
+        <div>
+          <p id="totalExpense" class="text-3xl sm:text-4xl font-extrabold text-rose-400 tracking-tight">- R$ 0,00</p>
+          <p class="text-xs text-slate-400 mt-1">Total de despesas acumuladas</p>
+        </div>
+        <div class="pt-1 flex items-center gap-1.5 text-xs text-rose-400 font-semibold group-hover:translate-x-1 transition-transform">
+          <span>Filtrar apenas despesas</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </div>
       </div>
 
     </div>
 
-    <!-- Divisão de Gastos (Modo Casal / Múltiplos Usuários) -->
-    <div class="glass-card p-5 sm:p-6 space-y-4">
-      <div class="flex items-center justify-between">
+    <!-- DIVISÃO DE GASTOS (MODO CASAL / MÚLTIPLOS USUÁRIOS) -->
+    <div id="coupleSection" class="card-premium p-6 sm:p-7 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
             <span>Divisão de Gastos por Pessoa</span>
           </h3>
-          <p class="text-xs text-slate-400 mt-0.5">Veja quanto cada pessoa lançou pelo WhatsApp neste mês.</p>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Veja quanto cada um contribuiu para as despesas da casa este mês.</p>
         </div>
-        <span class="text-[10px] font-bold bg-white/5 border border-white/10 text-slate-300 px-2 py-1 rounded-md">
+        <span class="text-xs font-bold bg-white/5 border border-white/10 text-slate-300 px-3 py-1 rounded-full self-start sm:self-auto">
           Modo Casal & Sócios
         </span>
       </div>
 
-      <div id="personList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+      <div id="personList" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
         <!-- Renderizado dinamicamente -->
       </div>
     </div>
 
-    <!-- Grid: Transações Recentes + Gráfico por Categorias -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- SEÇÃO DUPLA: EXTRATO COMPLETO + GRÁFICO DE CATEGORIAS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      <!-- Tabela de Lançamentos (8 Colunas) -->
-      <div class="lg:col-span-8 glass-card p-5 sm:p-6 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 class="text-sm font-bold text-white">Extrato de Lançamentos</h3>
-            <p id="txCountLabel" class="text-xs text-slate-400 mt-0.5">0 lançamentos listados</p>
+      <!-- Coluna Principal: Extrato Financeiro Moderno (7 Colunas) -->
+      <div class="lg:col-span-7 space-y-5">
+        
+        <!-- Cabeçalho do Extrato com Filtros e Busca -->
+        <div class="card-premium p-5 sm:p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span>Extrato de Lançamentos</span>
+              </h3>
+              <p id="txCountLabel" class="text-xs text-slate-400 mt-0.5">Carregando...</p>
+            </div>
+
+            <!-- Abas de Filtro Segmentadas (Estilo iOS / Modern Fintech) -->
+            <div class="flex items-center gap-1 bg-slate-950 p-1.5 rounded-2xl border border-white/10 self-start sm:self-auto">
+              <button id="filterBtnAll" onclick="setFilter('all')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/15 text-white shadow-xs">
+                Tudo
+              </button>
+              <button id="filterBtnExpense" onclick="setFilter('expense')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">
+                Gastos
+              </button>
+              <button id="filterBtnIncome" onclick="setFilter('income')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">
+                Entradas
+              </button>
+            </div>
           </div>
 
           <!-- Busca Rápida -->
-          <div class="relative w-full sm:w-60">
-            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <div class="relative w-full">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input 
               id="searchTx" 
               type="text" 
-              placeholder="Buscar gasto, autor..." 
-              class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+              placeholder="Buscar por descrição, autor, categoria ou valor..." 
+              class="w-full bg-slate-950 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition"
             >
           </div>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-white/10 text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
-                <th class="pb-2.5">Autor</th>
-                <th class="pb-2.5">Descrição</th>
-                <th class="pb-2.5">Categoria</th>
-                <th class="pb-2.5">Forma</th>
-                <th class="pb-2.5 text-right">Valor</th>
-              </tr>
-            </thead>
-            <tbody id="transactionTable" class="divide-y divide-white/[0.04]">
-              <!-- Inserido dinamicamente -->
-            </tbody>
-          </table>
+        <!-- LISTA AREJADA DE TRANSAÇÕES (Card Feed Moderno) -->
+        <div id="transactionFeed" class="space-y-3">
+          <!-- Renderizado dinamicamente via renderTransactionsFeed -->
         </div>
+
       </div>
 
-      <!-- Gráfico de Categorias (4 Colunas) -->
-      <div class="lg:col-span-4 glass-card p-5 sm:p-6 space-y-5">
-        <div>
-          <h3 class="text-sm font-bold text-white">Distribuição por Categoria</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Para onde está indo o dinheiro este mês.</p>
+      <!-- Coluna Lateral: Gráfico por Categorias (5 Colunas) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="card-premium p-6 sm:p-7 space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-bold text-white">Gastos por Categoria</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Distribuição percentual deste mês</p>
+            </div>
+            <i data-lucide="pie-chart" class="w-5 h-5 text-slate-400"></i>
+          </div>
+
+          <!-- Gráfico Donut com Altura Generosa -->
+          <div class="h-60 relative flex items-center justify-center">
+            <canvas id="categoryChart"></canvas>
+          </div>
+
+          <!-- Barras de Progresso por Categoria -->
+          <div id="categoryProgressList" class="space-y-3.5 pt-2 border-t border-white/10">
+            <!-- Renderizado dinamicamente -->
+          </div>
         </div>
 
-        <div class="h-48 relative flex items-center justify-center">
-          <canvas id="categoryChart"></canvas>
+        <!-- Dica de Produtividade WhatsApp -->
+        <div class="card-premium p-5 sm:p-6 border-emerald-500/20 bg-emerald-500/5 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <i data-lucide="message-square" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white">Lançamentos via WhatsApp</h4>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Você pode registrar qualquer gasto apenas mandando uma mensagem de texto ou áudio no WhatsApp:  
+              <code class="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[11px] font-mono">"Almoço 35"</code> ou <code class="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[11px] font-mono">"Saldo"</code>.
+            </p>
+          </div>
         </div>
 
-        <div id="categoryProgressList" class="space-y-3 pt-2 text-xs">
-          <!-- Inserido dinamicamente -->
-        </div>
       </div>
 
     </div>
 
   </main>
 
-  <!-- Rodapé -->
-  <footer class="border-t border-white/[0.08] bg-[#060A14] py-8 relative z-10 text-xs text-slate-500 mt-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-      <div class="flex items-center gap-3">
-        <div class="w-6 h-6 shrink-0">
-          <svg viewBox="0 0 40 40" class="w-full h-full" fill="none">
-            <rect width="40" height="40" rx="10" fill="#0E1726"/>
-            <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
-                  stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
-                  fill="#10B981" fill-opacity="0.9"/>
-          </svg>
-        </div>
-        <span class="font-bold text-white">ZapContas</span>
-        <span class="text-slate-600 hidden sm:inline">•</span>
-        <span class="text-[11px] sm:text-xs">Seu controle financeiro descomplicado pelo WhatsApp</span>
-      </div>
-
-      <div class="flex items-center gap-4 text-slate-400 text-[11px] sm:text-xs">
-        <button onclick="exportCSV()" class="hover:text-white font-semibold cursor-pointer">Exportar CSV</button>
-        <span>•</span>
-        <a href="/lp" class="hover:text-white font-semibold">Página Principal</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Modal de Perfil do Cliente -->
-  <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-all duration-200">
-    <div class="glass-card w-full max-w-lg bg-[#0E1528] border border-white/10 rounded-2xl p-5 sm:p-7 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
+  <!-- MODAL DE NOVO LANÇAMENTO (100% FUNCIONAL PARA ENTRADAS E GASTOS) -->
+  <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
       
-      <!-- Cabeçalho do Modal -->
-      <div class="flex items-center justify-between pb-3.5 border-b border-white/10">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <i data-lucide="user" class="w-5 h-5"></i>
+      <!-- Botão Fechar -->
+      <button onclick="closeTransactionModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Alternador de Tipo: Gasto (-) vs Entrada (+) -->
+      <div>
+        <h3 class="text-lg font-black text-white">Adicionar Lançamento</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Registre despesas ou receitas diretamente no seu painel.</p>
+
+        <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-950 rounded-2xl border border-white/10 mt-4">
+          <button 
+            id="modalTabExpense" 
+            onclick="switchModalType('expense')" 
+            class="py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-rose-500/20 border border-rose-500/40 text-rose-300 shadow-md"
+          >
+            <i data-lucide="arrow-up-right" class="w-4 h-4 text-rose-400"></i>
+            <span>Despesa (-)</span>
+          </button>
+          <button 
+            id="modalTabIncome" 
+            onclick="switchModalType('income')" 
+            class="py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white"
+          >
+            <i data-lucide="arrow-down-left" class="w-4 h-4 text-emerald-400"></i>
+            <span>Receita / Entrada (+)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Campo de Valor Centralizado Gigante -->
+      <div class="space-y-2 text-center">
+        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Valor do Lançamento</label>
+        <div class="relative max-w-xs mx-auto">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-extrabold text-slate-400">R$</span>
+          <input 
+            id="txAmountInput" 
+            type="number" 
+            step="0.01" 
+            min="0.01" 
+            placeholder="0,00" 
+            class="w-full bg-slate-950 border border-white/15 rounded-2xl py-3.5 pl-14 pr-4 text-2xl sm:text-3xl font-black text-white text-center focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+          >
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-300">Descrição do Item</label>
+        <input 
+          id="txDescInput" 
+          type="text" 
+          placeholder="Ex: Almoço no shopping, Salário, Uber..." 
+          class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+        >
+      </div>
+
+      <!-- Categoria (Tags Clicáveis Rápidas) -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-slate-300">Categoria</label>
+        <div id="txCategoryTags" class="flex flex-wrap gap-2">
+          <!-- Renderizado dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Forma de Pagamento -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-300">Forma de Pagamento</label>
+        <select 
+          id="txPaymentMethodSelect" 
+          class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500 transition"
+        >
+          <option value="PIX">PIX</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+          <option value="Cartão de Débito">Cartão de Débito</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Boleto">Boleto</option>
+        </select>
+      </div>
+
+      <!-- Alerta do Modal -->
+      <div id="txModalAlert" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+      <!-- Botão Salvar -->
+      <button 
+        id="btnSaveTransaction" 
+        onclick="submitManualTransaction()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm transition shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i>
+        <span>Salvar no Extrato</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE PERFIL DO CLIENTE -->
+  <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
+      
+      <!-- Botão Fechar -->
+      <button onclick="closeProfileModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div>
+        <h3 class="text-lg font-black text-white">Meu Perfil de Cliente</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Gerencie seus dados e informações de conta.</p>
+      </div>
+
+      <!-- Card do Plano Atual -->
+      <div id="modalPlanBox" class="p-4 rounded-2xl border border-white/10 bg-slate-950 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="modalPlanIconBox" class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="award" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base font-bold text-white tracking-tight">Perfil do Cliente</h3>
-            <p class="text-xs text-slate-400">Personalize sua foto, nome e telefone</p>
+            <h4 id="modalPlanTitle" class="text-xs font-bold text-white">Plano PRO Ativo</h4>
+            <p id="modalPlanSubtitle" class="text-[11px] text-slate-400">Todos os recursos liberados</p>
           </div>
         </div>
-        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <span id="modalPlanExpires" class="text-[10px] font-bold text-slate-400 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
+          Ativo
+        </span>
       </div>
 
-      <!-- Seção da Foto de Perfil -->
-      <div class="space-y-3">
-        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">Foto do Perfil</label>
-        <div class="flex items-center gap-4">
-          <!-- Preview da Imagem -->
-          <div class="relative shrink-0">
-            <img id="modalAvatarPreview" src="" alt="Avatar Preview" class="w-20 h-20 rounded-full object-cover border-2 border-emerald-500/50 shadow-md hidden">
-            <div id="modalAvatarFallback" class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-slate-950 font-black text-2xl flex items-center justify-center border-2 border-emerald-500/30 shadow-md">
-              U
-            </div>
-            <button onclick="document.getElementById('avatarFileInput').click()" class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-slate-900 border border-white/20 text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center shadow transition cursor-pointer" title="Enviar Foto">
-              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-            </button>
+      <!-- Avatar Preview -->
+      <div class="flex items-center gap-4">
+        <div class="relative shrink-0">
+          <img id="modalAvatarPreview" src="" alt="Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500/40 hidden">
+          <div id="modalAvatarFallback" class="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-slate-950 font-black text-xl flex items-center justify-center border-2 border-white/20">
+            U
           </div>
-
-          <!-- Ações de Foto -->
-          <div class="flex-1 space-y-2">
-            <div class="flex flex-wrap gap-2">
-              <input type="file" id="avatarFileInput" accept="image/*" class="hidden" onchange="handleAvatarFileUpload(event)">
-              <button type="button" onclick="document.getElementById('avatarFileInput').click()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/15 text-white border border-white/10 transition inline-flex items-center gap-1.5 cursor-pointer">
-                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                <span>Enviar Foto</span>
-              </button>
-              <button type="button" onclick="removeAvatarPhoto()" class="px-2.5 py-1.5 text-xs font-medium rounded-lg text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 transition cursor-pointer">
-                Remover
-              </button>
-            </div>
-            
-            <!-- Avatares Rápidos Prontos -->
-            <div>
-              <p class="text-[11px] text-slate-400 mb-1">Ou selecione um avatar rápido:</p>
-              <div class="flex items-center gap-2">
-                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Feminino 1">
-                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Masculino 1">
-                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Feminino 2">
-                <img onclick="selectPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover cursor-pointer ring-1 ring-white/10 hover:ring-2 hover:ring-emerald-400 transition" alt="Avatar Masculino 2">
-              </div>
-            </div>
+        </div>
+        <div class="space-y-1.5">
+          <p class="text-xs font-bold text-white">Foto de Perfil</p>
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer text-xs font-bold px-3 py-1.5 rounded-xl border border-white/10 bg-slate-900 hover:bg-slate-800 text-slate-200 transition">
+              <span>Escolher Foto</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleAvatarFileUpload(event)">
+            </label>
+            <button onclick="removeAvatarPhoto()" class="text-xs text-rose-400 hover:underline">Remover</button>
           </div>
         </div>
       </div>
 
-      <!-- Formulário de Informações -->
-      <div class="space-y-4 pt-2">
-        <!-- Nome -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nome Completo</label>
-          <input type="text" id="profileNameInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="Seu nome">
+      <!-- Formulário de Perfil -->
+      <div class="space-y-4 text-xs">
+        <div class="space-y-1.5">
+          <label class="font-bold text-slate-300">Seu Nome</label>
+          <input id="profileNameInput" type="text" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
         </div>
 
-        <!-- E-mail -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">E-mail para Notificações</label>
-          <input type="email" id="profileEmailInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="seuemail@exemplo.com">
+        <div class="space-y-1.5">
+          <label class="font-bold text-slate-300">Seu E-mail (Opcional)</label>
+          <input id="profileEmailInput" type="email" placeholder="seu@email.com" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
         </div>
 
-        <!-- WhatsApp com Restrição Estrita PRO -->
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="text-xs font-semibold text-slate-300">Número do WhatsApp</label>
-            <span id="phoneProBadge" class="text-[10px] font-bold px-2 py-0.5 rounded border"></span>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-300">Telefone do WhatsApp</label>
+            <span id="phoneProBadge" class="text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+              Liberado PRO
+            </span>
           </div>
-
-          <input type="text" id="profilePhoneInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-950/70" placeholder="(11) 99999-9999">
-
-          <!-- Aviso para Free / Trial -->
-          <div id="phoneLockNotice" class="mt-2.5 p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl space-y-2 hidden">
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="lock" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
-              <div class="text-[11px] text-slate-300 leading-relaxed">
-                A alteração do número de WhatsApp conectado é <strong>exclusiva para clientes do Plano PRO</strong>. Faça o upgrade agora para alterar seu número.
-              </div>
-            </div>
-            <div class="pt-1 flex justify-end">
-              <a href="/checkout" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition shadow-sm">
-                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-                <span>Fazer Upgrade para PRO</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card de Status do Plano -->
-        <div id="modalPlanStatusCard" class="p-3.5 rounded-xl border border-white/10 bg-slate-900/50 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div id="modalPlanIconBox" class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-              <i data-lucide="shield-check" class="w-4 h-4"></i>
-            </div>
-            <div>
-              <p id="modalPlanTitle" class="text-xs font-bold text-white">Carregando plano...</p>
-              <p id="modalPlanSubtitle" class="text-[11px] text-slate-400">Status da sua conta</p>
-            </div>
-          </div>
-          <span id="modalPlanExpires" class="text-[11px] font-semibold text-slate-300"></span>
+          <input id="profilePhoneInput" type="tel" class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
+          <p id="phoneLockNotice" class="text-[11px] text-amber-400/90 hidden">
+            🔒 A troca de número é exclusiva para assinantes PRO.
+          </p>
         </div>
       </div>
 
-      <!-- Feedback de Salvamento -->
-      <div id="profileSaveAlert" class="hidden p-3 rounded-xl text-xs font-semibold flex items-center gap-2"></div>
+      <!-- Alerta de Sucesso / Erro -->
+      <div id="profileSaveAlert" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
 
-      <!-- Botões de Ação do Rodapé -->
-      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
-        <button type="button" onclick="closeProfileModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition cursor-pointer">
-          Cancelar
-        </button>
-        <button type="button" id="btnSaveProfile" onclick="saveUserProfile()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 transition shadow-lg shadow-emerald-500/20 flex items-center gap-2 cursor-pointer">
-          <i data-lucide="check" class="w-3.5 h-3.5"></i>
-          <span>Salvar Alterações</span>
-        </button>
-      </div>
+      <!-- Botão Salvar -->
+      <button id="btnSaveProfile" onclick="saveUserProfile()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+        Salvar Alterações
+      </button>
 
     </div>
   </div>
 
-  <!-- Modal Bloqueador de Paywall (Exibido quando os 7 dias de teste encerram) -->
-  <div id="paywallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl hidden">
-    <div class="glass-card w-full max-w-md bg-[#0E1528] border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 text-center">
-      
-      <!-- Ícone de Alerta / Cadeado -->
-      <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/10">
+  <!-- PAYWALL MODAL (7 DIAS EXPIRADOS) -->
+  <div id="paywallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl hidden">
+    <div class="bg-[#0B1222] border border-amber-500/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 text-center shadow-2xl animate-feed-in">
+      <div class="w-16 h-16 rounded-3xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center mx-auto">
         <i data-lucide="lock" class="w-8 h-8"></i>
       </div>
-
-      <!-- Títulos -->
-      <div class="space-y-2">
-        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
-          Período de Teste Concluído
-        </span>
-        <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">Seus 7 Dias Grátis Encerraram</h3>
-        <p class="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
-          Seu histórico de lançamentos e divisões continuam 100% salvos e protegidos com a gente. Para continuar registrando despesas pelo WhatsApp e desbloquear o acesso total aos seus relatórios, ative sua assinatura:
+      <div>
+        <h3 class="text-xl font-black text-white">Teste Gratuito de 7 Dias Concluído</h3>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
+          Seus dados continuam 100% salvos. Para continuar registrando gastos pelo WhatsApp e liberando seu painel, ative seu plano:
         </p>
       </div>
-
-      <!-- Recursos Inclusos -->
-      <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-left space-y-2 text-xs text-slate-300">
-        <div class="flex items-center gap-2">
-          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-          <span>Lançamentos ilimitados via áudio e texto</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-          <span>Bot do WhatsApp disponível 24h</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-          <span>Exportação de relatórios para o Excel</span>
-        </div>
-      </div>
-
-      <!-- Botão de Ação -->
-      <div class="space-y-3 pt-2">
-        <a id="btnPaywallCheckout" href="/checkout" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition shadow-xl shadow-emerald-500/25">
-          <i data-lucide="zap" class="w-4 h-4 fill-slate-950"></i>
-          <span>Desbloquear Acesso (R$ 14,90/mês)</span>
-        </a>
-        <p class="text-[11px] text-slate-400">Ativação instantânea via PIX ou Cartão • Sem fidelidade</p>
-      </div>
-
+      <a id="btnPaywallCheckout" href="/checkout" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25">
+        <i data-lucide="zap" class="w-4 h-4 fill-slate-950"></i>
+        <span>Ativar Assinatura (R$ 14,90/mês)</span>
+      </a>
     </div>
   </div>
 
+  <!-- TOAST FLUTUANTE DE FEEDBACK -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toastContent" class="px-5 py-3.5 rounded-2xl bg-slate-900 border border-white/20 text-white font-bold text-xs shadow-2xl flex items-center gap-2.5">
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toastText">Operação realizada com sucesso!</span>
+    </div>
+  </div>
+
+  <!-- SCRIPT COMPLETO E ROBUSTO -->
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     let token = urlParams.get('token') || localStorage.getItem('zap_token');
 
-    // Validação estrita de acesso
     if (!token || token === 'demo') {
       localStorage.removeItem('zap_token');
       window.location.replace('/login');
@@ -531,10 +668,32 @@
 
     let allTransactions = [];
     let currentFilter = 'all';
+    let currentModalType = 'expense';
+    let selectedCategory = '';
     let categoryChartInstance = null;
     let currentUser = null;
     let currentAccount = null;
     let selectedAvatarDataUrl = '';
+
+    const EXPENSE_CATEGORIES = [
+      { name: 'Alimentação', icon: '🍔' },
+      { name: 'Transporte', icon: '🚗' },
+      { name: 'Moradia / Contas', icon: '🏠' },
+      { name: 'Lazer & Entretenimento', icon: '🍿' },
+      { name: 'Saúde & Farmácia', icon: '💊' },
+      { name: 'Compras Pessoais', icon: '🛍️' },
+      { name: 'Educação', icon: '📚' },
+      { name: 'Outros', icon: '📁' }
+    ];
+
+    const INCOME_CATEGORIES = [
+      { name: 'Salário & Fixos', icon: '💼' },
+      { name: 'Renda Extra / Freela', icon: '⚡' },
+      { name: 'Vendas & Comissões', icon: '📈' },
+      { name: 'PIX Recebido', icon: '💸' },
+      { name: 'Rendimentos', icon: '📊' },
+      { name: 'Outros', icon: '💰' }
+    ];
 
     const COLORS = [
       '#10B981', '#3B82F6', '#F59E0B', '#EF4444', 
@@ -565,18 +724,15 @@
         document.getElementById('accountName').textContent = currentAccount.name || 'Minha Carteira';
         document.getElementById('accountTypePill').textContent = currentAccount.type === 'shared' ? 'Casal / Sócios' : 'Individual';
 
-        // Atualiza perfil no Header
         updateHeaderProfileUI();
 
-        // Se o período de teste de 7 dias estiver encerrado, ativa o Paywall Modal
+        // Paywall
         if (data.expired) {
           const paywallModal = document.getElementById('paywallModal');
           if (paywallModal) {
             paywallModal.classList.remove('hidden');
             const btnPaywall = document.getElementById('btnPaywallCheckout');
-            if (btnPaywall) {
-              btnPaywall.href = data.checkoutUrl || `/checkout?token=${token}&reason=trial_expired`;
-            }
+            if (btnPaywall) btnPaywall.href = data.checkoutUrl || `/checkout?token=${token}&reason=trial_expired`;
           }
         }
 
@@ -595,7 +751,7 @@
           
           if (pct >= 85) {
             document.getElementById('budgetProgressBar').className = 'h-full bg-rose-500 rounded-full transition-all duration-500';
-            document.getElementById('budgetPercentLabel').className = 'text-[11px] font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-500/30';
+            document.getElementById('budgetPercentLabel').className = 'text-xs font-bold text-rose-300 bg-rose-500/20 px-2.5 py-0.5 rounded-full border border-rose-500/30';
           }
         } else {
           banner.classList.add('hidden');
@@ -609,7 +765,7 @@
         // Divisão por Pessoa
         renderPersons(data.summary.byPerson, data.summary.totalExpense);
 
-        // Transações
+        // Extrato
         applyFilters();
 
         // Categorias
@@ -622,6 +778,383 @@
       }
     }
 
+    // --- MODAL DE NOVO LANÇAMENTO (100% FUNCIONAL) ---
+    function openTransactionModal(type = 'expense') {
+      currentModalType = type;
+      switchModalType(type);
+      document.getElementById('txAmountInput').value = '';
+      document.getElementById('txDescInput').value = '';
+      document.getElementById('txModalAlert').className = 'hidden';
+      document.getElementById('transactionModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('txAmountInput').focus(), 100);
+      lucide.createIcons();
+    }
+
+    function closeTransactionModal() {
+      document.getElementById('transactionModal').classList.add('hidden');
+    }
+
+    function switchModalType(type) {
+      currentModalType = type;
+      const tabExp = document.getElementById('modalTabExpense');
+      const tabInc = document.getElementById('modalTabIncome');
+
+      if (type === 'expense') {
+        tabExp.className = 'py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-rose-500/20 border border-rose-500/40 text-rose-300 shadow-md';
+        tabInc.className = 'py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white';
+        renderCategoryTags(EXPENSE_CATEGORIES);
+      } else {
+        tabInc.className = 'py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md';
+        tabExp.className = 'py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white';
+        renderCategoryTags(INCOME_CATEGORIES);
+      }
+    }
+
+    function renderCategoryTags(categories) {
+      const container = document.getElementById('txCategoryTags');
+      container.innerHTML = '';
+      selectedCategory = categories[0]?.name || 'Outros';
+
+      categories.forEach((cat, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isSelected = idx === 0;
+        btn.className = `px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+          isSelected 
+            ? 'bg-white/20 text-white border border-white/30 font-bold shadow-xs' 
+            : 'bg-slate-900 text-slate-400 border border-white/10 hover:text-white'
+        }`;
+        btn.innerHTML = `<span>${cat.icon}</span><span>${cat.name}</span>`;
+        btn.onclick = () => {
+          selectedCategory = cat.name;
+          Array.from(container.children).forEach(c => {
+            c.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer bg-slate-900 text-slate-400 border border-white/10 hover:text-white';
+          });
+          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer bg-white/20 text-white border border-white/30 font-bold shadow-xs';
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    async function submitManualTransaction() {
+      const amountRaw = document.getElementById('txAmountInput').value;
+      const description = document.getElementById('txDescInput').value.trim();
+      const paymentMethod = document.getElementById('txPaymentMethodSelect').value;
+      const alertBox = document.getElementById('txModalAlert');
+      const btn = document.getElementById('btnSaveTransaction');
+
+      const amount = parseFloat(amountRaw);
+      if (isNaN(amount) || amount <= 0) {
+        alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+        alertBox.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>Informe um valor numérico válido maior que zero.</span>';
+        alertBox.classList.remove('hidden');
+        lucide.createIcons();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Salvando...</span>';
+
+      try {
+        const res = await fetch('/api/transaction/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token,
+            type: currentModalType,
+            amount,
+            description: description || (currentModalType === 'income' ? 'Entrada manual' : 'Despesa manual'),
+            category: selectedCategory,
+            paymentMethod
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          closeTransactionModal();
+          showToast(`✓ ${currentModalType === 'income' ? 'Entrada' : 'Despesa'} de R$ ${amount.toFixed(2).replace('.', ',')} salva com sucesso!`);
+          loadData();
+        } else {
+          alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+          alertBox.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>${data.error || 'Erro ao registrar'}</span>`;
+          alertBox.classList.remove('hidden');
+          lucide.createIcons();
+        }
+      } catch (err) {
+        alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
+        alertBox.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>Falha na comunicação com o servidor.</span>';
+        alertBox.classList.remove('hidden');
+        lucide.createIcons();
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i><span>Salvar no Extrato</span>';
+        lucide.createIcons();
+      }
+    }
+
+    async function deleteTransaction(txId) {
+      if (!confirm('Deseja realmente excluir este lançamento do extrato?')) return;
+
+      try {
+        const res = await fetch(`/api/transaction/${txId}?token=${token}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToast('🗑️ Lançamento removido com sucesso!');
+          loadData();
+        } else {
+          alert(data.error || 'Erro ao excluir');
+        }
+      } catch (e) {
+        alert('Erro ao excluir lançamento');
+      }
+    }
+
+    // --- RENDERIZAÇÃO DO EXTRATO MODERNO (FEED EM CARDS) ---
+    function renderTransactions(list) {
+      const feed = document.getElementById('transactionFeed');
+      feed.innerHTML = '';
+      document.getElementById('txCountLabel').textContent = `${list.length} lançamento${list.length === 1 ? '' : 's'} encontrado${list.length === 1 ? '' : 's'}`;
+
+      if (list.length === 0) {
+        feed.innerHTML = `
+          <div class="card-premium p-10 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400">
+              <i data-lucide="inbox" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm font-bold text-white">Nenhum lançamento encontrado</p>
+            <p class="text-xs text-slate-400 max-w-xs mx-auto">Mande uma mensagem no WhatsApp ou clique nos botões acima para adicionar o primeiro gasto ou entrada.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.forEach(tx => {
+        const isInc = tx.type === 'income';
+        const card = document.createElement('div');
+        card.className = 'card-premium p-4 sm:p-5 flex items-center justify-between gap-4 animate-feed-in group hover:border-white/20 transition';
+
+        const dateStr = new Date(tx.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3.5 min-w-0">
+            <!-- Ícone da Categoria -->
+            <div class="w-11 h-11 rounded-2xl ${isInc ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'} flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="${isInc ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5 stroke-[2.5]"></i>
+            </div>
+
+            <!-- Informações -->
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h4 class="font-bold text-sm text-white truncate max-w-[180px] sm:max-w-md">${tx.description}</h4>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/10 shrink-0">
+                  ${tx.category}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                <span>${dateStr}</span>
+                <span>•</span>
+                <span>${tx.paymentMethod}</span>
+                <span>•</span>
+                <span class="text-slate-300 font-medium">Por ${tx.senderName}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Valor e Ação de Excluir -->
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="font-black text-sm sm:text-base ${isInc ? 'text-emerald-400' : 'text-rose-400'} tracking-tight">
+              ${isInc ? '+' : '-'} R$ ${tx.amount.toFixed(2).replace('.', ',')}
+            </span>
+            <button 
+              onclick="deleteTransaction('${tx.id}')" 
+              class="opacity-50 group-hover:opacity-100 hover:text-rose-400 p-2 rounded-xl hover:bg-rose-500/10 transition cursor-pointer text-slate-400"
+              title="Excluir este lançamento"
+            >
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+
+        feed.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    // --- FILTROS & BUSCA ---
+    function applyFilters() {
+      const query = document.getElementById('searchTx').value.toLowerCase().trim();
+      let list = allTransactions;
+
+      if (currentFilter === 'expense') {
+        list = list.filter(t => t.type === 'expense');
+      } else if (currentFilter === 'income') {
+        list = list.filter(t => t.type === 'income');
+      }
+
+      if (query) {
+        list = list.filter(t => 
+          t.description.toLowerCase().includes(query) ||
+          t.senderName.toLowerCase().includes(query) ||
+          t.category.toLowerCase().includes(query) ||
+          t.amount.toString().includes(query)
+        );
+      }
+
+      renderTransactions(list);
+    }
+
+    document.getElementById('searchTx').addEventListener('input', applyFilters);
+
+    function setFilter(type) {
+      currentFilter = type;
+      
+      const bAll = document.getElementById('filterBtnAll');
+      const bExp = document.getElementById('filterBtnExpense');
+      const bInc = document.getElementById('filterBtnIncome');
+
+      const cardBal = document.getElementById('cardNetBalance');
+      const cardInc = document.getElementById('cardTotalIncome');
+      const cardExp = document.getElementById('cardTotalExpense');
+
+      [bAll, bExp, bInc].forEach(b => {
+        b.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white';
+      });
+
+      [cardBal, cardInc, cardExp].forEach(c => {
+        c.classList.remove('card-active-all', 'card-active-emerald', 'card-active-rose');
+      });
+
+      if (type === 'all') {
+        bAll.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/15 text-white shadow-xs';
+        cardBal.classList.add('card-active-all');
+      } else if (type === 'expense') {
+        bExp.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-xs';
+        cardExp.classList.add('card-active-rose');
+      } else if (type === 'income') {
+        bInc.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs';
+        cardInc.classList.add('card-active-emerald');
+      }
+
+      applyFilters();
+    }
+
+    // --- GRÁFICOS & CATEGORIAS ---
+    function renderCategories(byCategory = {}, totalExpense = 0) {
+      const labels = Object.keys(byCategory);
+      const values = Object.values(byCategory);
+
+      const listContainer = document.getElementById('categoryProgressList');
+      listContainer.innerHTML = '';
+
+      if (labels.length === 0) {
+        listContainer.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">Nenhum gasto categorizado ainda.</p>';
+      }
+
+      labels.forEach((cat, idx) => {
+        const val = values[idx];
+        const pct = totalExpense > 0 ? Math.round((val / totalExpense) * 100) : 0;
+        const color = COLORS[idx % COLORS.length];
+
+        const row = document.createElement('div');
+        row.className = 'space-y-1.5';
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-semibold text-slate-300 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full shadow-xs" style="background-color: ${color}"></span>
+              ${cat}
+            </span>
+            <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')} (${pct}%)</span>
+          </div>
+          <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/10">
+            <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${color}"></div>
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+
+      if (categoryChartInstance) categoryChartInstance.destroy();
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+
+      if (labels.length === 0) return;
+
+      categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: COLORS.slice(0, labels.length),
+            borderWidth: 3,
+            borderColor: '#0B1222'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '74%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0B1222',
+              titleColor: '#F8FAFC',
+              bodyColor: '#94A3B8',
+              borderColor: 'rgba(255,255,255,0.15)',
+              borderWidth: 1,
+              padding: 12,
+              callbacks: {
+                label: (ctx) => ` R$ ${ctx.parsed.toFixed(2).replace('.', ',')}`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // --- DIVISÃO POR PESSOA (MODO CASAL) ---
+    function renderPersons(byPerson = {}, totalExpense = 0) {
+      const container = document.getElementById('personList');
+      container.innerHTML = '';
+      const section = document.getElementById('coupleSection');
+
+      const entries = Object.entries(byPerson);
+      if (entries.length <= 1) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+
+      entries.forEach(([name, stats]) => {
+        const pct = totalExpense > 0 ? Math.round((stats.total / totalExpense) * 100) : 0;
+        const card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl border border-white/10 bg-slate-950/70 hover:bg-slate-950 transition flex items-center justify-between';
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 border border-white/10 text-slate-950 font-black text-sm flex items-center justify-center shadow-md">
+              ${name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p class="font-extrabold text-sm text-white">${name}</p>
+              <p class="text-xs text-slate-400 mt-0.5">${stats.count} lançamentos realizados</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-black text-sm sm:text-base text-rose-400">R$ ${stats.total.toFixed(2).replace('.', ',')}</p>
+            <span class="text-xs font-bold text-slate-300 bg-white/10 border border-white/10 px-2 py-0.5 rounded-md shadow-xs">
+              ${pct}% dos gastos
+            </span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // --- PERFIL DO CLIENTE ---
     function updateHeaderProfileUI() {
       if (!currentUser) return;
       const isPro = currentUser.plan === 'pro' || (currentAccount && currentAccount.subscriptionStatus === 'active');
@@ -633,11 +1166,11 @@
       if (isPro) {
         badge.textContent = 'PRO';
         badge.className = 'text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
-        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#060A14]';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#050811]';
       } else {
         badge.textContent = 'TESTE';
         badge.className = 'text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30';
-        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-[#060A14]';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-[#050811]';
       }
 
       const img = document.getElementById('headerUserAvatar');
@@ -695,17 +1228,15 @@
         modalPlanTitle.textContent = 'Plano PRO Ativo';
         modalPlanSubtitle.textContent = 'Alteração de número e limites ilimitados';
         modalPlanExpires.textContent = currentAccount.expiresAt ? `Até ${new Date(currentAccount.expiresAt).toLocaleDateString('pt-BR')}` : 'Ativo';
-        modalPlanIconBox.className = 'w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center';
+        modalPlanIconBox.className = 'w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center';
       } else {
         modalPlanTitle.textContent = 'Período de Teste Gratuito';
         modalPlanSubtitle.textContent = 'Troca de número exclusiva para assinantes PRO';
         modalPlanExpires.textContent = currentUser.trialEndsAt ? `Teste até ${new Date(currentUser.trialEndsAt).toLocaleDateString('pt-BR')}` : '7 dias de teste';
-        modalPlanIconBox.className = 'w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center';
+        modalPlanIconBox.className = 'w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center';
       }
 
-      const alertBox = document.getElementById('profileSaveAlert');
-      alertBox.className = 'hidden';
-
+      document.getElementById('profileSaveAlert').className = 'hidden';
       document.getElementById('profileModal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -731,23 +1262,16 @@
     function handleAvatarFileUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       if (file.size > 2 * 1024 * 1024) {
         alert('A foto deve ter no máximo 2MB.');
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (e) => {
         selectedAvatarDataUrl = e.target.result;
         updateModalAvatarPreview(selectedAvatarDataUrl);
       };
       reader.readAsDataURL(file);
-    }
-
-    function selectPresetAvatar(url) {
-      selectedAvatarDataUrl = url;
-      updateModalAvatarPreview(url);
     }
 
     function removeAvatarPhoto() {
@@ -776,16 +1300,8 @@
       btn.innerHTML = '<span>Salvando...</span>';
 
       try {
-        const payload = {
-          token,
-          name,
-          email,
-          avatarUrl: selectedAvatarDataUrl
-        };
-
-        if (isPro && phoneRaw) {
-          payload.phone = phoneRaw;
-        }
+        const payload = { token, name, email, avatarUrl: selectedAvatarDataUrl };
+        if (isPro && phoneRaw) payload.phone = phoneRaw;
 
         const res = await fetch('/api/user/profile', {
           method: 'PUT',
@@ -794,11 +1310,9 @@
         });
 
         const data = await res.json();
-
         if (res.ok && data.success) {
           currentUser = data.user;
           currentAccount = data.account;
-
           document.getElementById('accountName').textContent = data.account.name;
           updateHeaderProfileUI();
 
@@ -807,9 +1321,8 @@
           alertBox.classList.remove('hidden');
           lucide.createIcons();
 
-          setTimeout(() => {
-            closeProfileModal();
-          }, 1000);
+          setTimeout(() => closeProfileModal(), 900);
+          showToast('✓ Perfil atualizado com sucesso!');
         } else {
           alertBox.className = 'p-3 rounded-xl text-xs font-semibold flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400';
           alertBox.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><span>${data.error || 'Erro ao atualizar dados'}</span>`;
@@ -823,7 +1336,7 @@
         lucide.createIcons();
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Salvar Alterações</span>';
+        btn.innerHTML = 'Salvar Alterações';
         lucide.createIcons();
       }
     }
@@ -834,187 +1347,6 @@
         window.location.replace('/login');
       }
     }
-
-    function renderPersons(byPerson = {}, totalExpense = 0) {
-      const container = document.getElementById('personList');
-      container.innerHTML = '';
-
-      const entries = Object.entries(byPerson);
-      if (entries.length === 0) {
-        container.innerHTML = `<p class="col-span-full text-slate-400 text-xs py-2">Nenhuma despesa lançada ainda para dividir.</p>`;
-        return;
-      }
-
-      entries.forEach(([name, stats]) => {
-        const pct = totalExpense > 0 ? Math.round((stats.total / totalExpense) * 100) : 0;
-        const card = document.createElement('div');
-        card.className = 'p-4 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-900 transition flex items-center justify-between';
-        
-        card.innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-slate-800 border border-white/10 text-white font-black text-xs flex items-center justify-center shadow-xs">
-              ${name.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p class="font-bold text-xs text-white">${name}</p>
-              <p class="text-[11px] text-slate-400">${stats.count} gastos registrados</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-bold text-xs text-rose-400">R$ ${stats.total.toFixed(2).replace('.', ',')}</p>
-            <span class="text-[10px] font-bold text-slate-300 bg-white/10 border border-white/10 px-1.5 py-0.5 rounded shadow-xs">
-              ${pct}%
-            </span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function renderTransactions(list) {
-      const tbody = document.getElementById('transactionTable');
-      tbody.innerHTML = '';
-      document.getElementById('txCountLabel').textContent = `${list.length} lançamentos listados`;
-
-      if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">Nenhum lançamento encontrado para os filtros atuais.</td></tr>`;
-        return;
-      }
-
-      list.forEach(tx => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-white/[0.02] transition-colors';
-        const isInc = tx.type === 'income';
-
-        tr.innerHTML = `
-          <td class="py-3 font-semibold text-white">
-            <span class="inline-flex items-center gap-1.5">
-              <span class="w-5 h-5 rounded-full bg-white/10 text-slate-200 font-bold text-[10px] flex items-center justify-center border border-white/10">
-                ${tx.senderName.charAt(0)}
-              </span>
-              ${tx.senderName}
-            </span>
-          </td>
-          <td class="py-3 text-slate-300 font-medium">${tx.description}</td>
-          <td class="py-3">
-            <span class="px-2 py-0.5 rounded text-[11px] bg-white/[0.05] text-slate-300 font-medium border border-white/10">
-              ${tx.category}
-            </span>
-          </td>
-          <td class="py-3 text-slate-400 text-[11px]">${tx.paymentMethod}</td>
-          <td class="py-3 text-right font-bold ${isInc ? 'text-emerald-400' : 'text-rose-400'}">
-            ${isInc ? '+' : '-'} R$ ${tx.amount.toFixed(2).replace('.', ',')}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderCategories(byCategory = {}, totalExpense = 0) {
-      const labels = Object.keys(byCategory);
-      const values = Object.values(byCategory);
-
-      const listContainer = document.getElementById('categoryProgressList');
-      listContainer.innerHTML = '';
-
-      labels.forEach((cat, idx) => {
-        const val = values[idx];
-        const pct = totalExpense > 0 ? Math.round((val / totalExpense) * 100) : 0;
-        const color = COLORS[idx % COLORS.length];
-
-        const row = document.createElement('div');
-        row.className = 'space-y-1.5';
-        row.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-medium text-slate-300 flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full shadow-xs" style="background-color: ${color}"></span>
-              ${cat}
-            </span>
-            <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')} (${pct}%)</span>
-          </div>
-          <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/10">
-            <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${color}"></div>
-          </div>
-        `;
-        listContainer.appendChild(row);
-      });
-
-      if (categoryChartInstance) categoryChartInstance.destroy();
-      const ctx = document.getElementById('categoryChart').getContext('2d');
-
-      if (labels.length === 0) return;
-
-      categoryChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: COLORS.slice(0, labels.length),
-            borderWidth: 2,
-            borderColor: '#0E1528'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '72%',
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#0E1528',
-              titleColor: '#F8FAFC',
-              bodyColor: '#94A3B8',
-              borderColor: 'rgba(255,255,255,0.1)',
-              borderWidth: 1,
-              callbacks: {
-                label: (ctx) => ` R$ ${ctx.parsed.toFixed(2).replace('.', ',')}`
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function applyFilters() {
-      const query = document.getElementById('searchTx').value.toLowerCase().trim();
-      let list = allTransactions;
-
-      if (currentFilter === 'expense') {
-        list = list.filter(t => t.type === 'expense');
-      } else if (currentFilter === 'income') {
-        list = list.filter(t => t.type === 'income');
-      }
-
-      if (query) {
-        list = list.filter(t => 
-          t.description.toLowerCase().includes(query) ||
-          t.senderName.toLowerCase().includes(query) ||
-          t.category.toLowerCase().includes(query)
-        );
-      }
-
-      renderTransactions(list);
-    }
-
-    document.getElementById('searchTx').addEventListener('input', applyFilters);
-
-    const filterAll = document.getElementById('filterAll');
-    const filterExpenses = document.getElementById('filterExpenses');
-    const filterIncomes = document.getElementById('filterIncomes');
-
-    function setFilter(type, activeBtn) {
-      currentFilter = type;
-      [filterAll, filterExpenses, filterIncomes].forEach(btn => {
-        btn.className = 'period-btn px-3 py-1.5 rounded-lg hover:text-white transition';
-      });
-      activeBtn.className = 'period-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-bold shadow-xs';
-      applyFilters();
-    }
-
-    filterAll.addEventListener('click', () => setFilter('all', filterAll));
-    filterExpenses.addEventListener('click', () => setFilter('expense', filterExpenses));
-    filterIncomes.addEventListener('click', () => setFilter('income', filterIncomes));
 
     function exportCSV() {
       if (allTransactions.length === 0) {
@@ -1031,6 +1363,18 @@
       a.href = url;
       a.download = `ZapContas_Extrato_${new Date().toISOString().substring(0, 10)}.csv`;
       a.click();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastText');
+      text.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
     }
   </script>
 </body>
