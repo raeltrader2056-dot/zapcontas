@@ -165,6 +165,8 @@ export class BotEngine {
             const txData = parsed.transaction;
             const now = new Date();
             const monthKey = now.toISOString().substring(0, 7);
+            const brazilTime = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' });
+            const brazilDate = now.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit' });
             const saved = db.addTransaction({
                 accountId: account.id,
                 senderPhone: phone,
@@ -186,7 +188,8 @@ export class BotEngine {
             response += `🏷️ *Item:* ${saved.description}\n`;
             response += `📁 *Categoria:* ${saved.category}\n`;
             response += `💵 *Valor:* ${txData.type === 'income' ? '+' : '-'}R$ ${formattedValue}\n`;
-            response += `💳 *Forma:* ${saved.paymentMethod}\n\n`;
+            response += `💳 *Forma:* ${saved.paymentMethod}\n`;
+            response += `⏰ *Data:* ${brazilDate} às ${brazilTime}\n\n`;
             response += `📊 *Saldo do mês:* R$ ${formattedBalance}\n`;
             response += `🔗 [Ver Dashboard](${this.baseUrl}/dashboard?token=${account.token})`;
             return response;

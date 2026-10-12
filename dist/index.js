@@ -1,3 +1,5 @@
+// Configuração obrigatória do Fuso Horário Oficial do Brasil (Brasília / UTC-3)
+process.env.TZ = 'America/Sao_Paulo';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';

@@ -33,16 +33,21 @@ export async function registerZapiWebhook(webhookUrl: string): Promise<boolean> 
  * Inicia túnel público HTTPS e sincroniza automaticamente com a Z-API
  */
 export async function startPublicTunnel(port: number = 3000): Promise<void> {
-  // Se houver uma URL pública fixa configurada no .env (ex: ngrok ou domínio de produção), usa ela diretamente
-  if (process.env.PUBLIC_URL && !process.env.PUBLIC_URL.includes('localhost')) {
-    console.log(`🌐 [URL Pública Fixa Detectada]: ${process.env.PUBLIC_URL}`);
-    botEngine.setBaseUrl(process.env.PUBLIC_URL);
-    await registerZapiWebhook(`${process.env.PUBLIC_URL}/webhook/whatsapp`);
+  const isRender = Boolean(process.env.RENDER || process.env.RENDER_EXTERNAL_URL);
+  const isProduction = process.env.NODE_ENV === 'production' || isRender;
+
+  // URL pública oficial do ZapContas em produção
+  const targetBaseUrl = process.env.PUBLIC_URL || process.env.RENDER_EXTERNAL_URL || (isProduction ? 'https://zapcontas.onrender.com' : 'https://zapcontas.onrender.com');
+
+  if (targetBaseUrl && !targetBaseUrl.includes('localhost') && !process.env.FORCE_LOCALTUNNEL) {
+    console.log(`🌐 [Ambiente Oficial ZapContas]: ${targetBaseUrl}`);
+    botEngine.setBaseUrl(targetBaseUrl);
+    await registerZapiWebhook(`${targetBaseUrl}/webhook/whatsapp`);
     return;
   }
 
   try {
-    console.log('🚀 Criando túnel HTTPS seguro para a Z-API...');
+    console.log('🚀 Criando túnel HTTPS para testes locais...');
     const tunnel = await localtunnel({ port });
     console.log(`\n======================================================`);
     console.log(`🌐 TÚNEL HTTPS ATIVO: ${tunnel.url}`);
@@ -63,7 +68,8 @@ export async function startPublicTunnel(port: number = 3000): Promise<void> {
       console.error('❌ [Túnel HTTPS Erro]:', err);
     });
   } catch (err) {
-    console.error('❌ Erro ao inicializar túnel público:', err);
-    setTimeout(() => startPublicTunnel(port), 6000);
+    console.error('❌ Erro ao inicializar túnel público local:', err);
+    // Em caso de falha no localtunnel, assegura que a URL do Render continue salva no Z-API
+    await registerZapiWebhook('https://zapcontas.onrender.com/webhook/whatsapp');
   }
 }

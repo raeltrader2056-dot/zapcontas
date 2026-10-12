@@ -32,11 +32,10 @@ router.post('/webhook/whatsapp', async (req: Request, res: Response) => {
       return res.json({ ignored: true, reason: 'isGroup' });
     }
 
-    // 3. Extração resiliente do telefone
+    // 3. Extração resiliente do telefone (ignora status e broadcasts)
     const rawPhone = req.body.phone || req.body.senderPhone || req.body.sender?.phone || req.body.from;
-    if (!rawPhone) {
-      console.warn('⚠️ Webhook ignorado: telefone não fornecido no payload:', req.body);
-      return res.status(200).json({ ignored: true, reason: 'no_phone' });
+    if (!rawPhone || String(rawPhone).includes('broadcast') || String(rawPhone).includes('status')) {
+      return res.status(200).json({ ignored: true, reason: 'broadcast_or_no_phone' });
     }
 
     const cleanPhone = String(rawPhone).replace(/\D/g, '');
@@ -198,8 +197,8 @@ router.post('/api/auth/send-whatsapp-otp', async (req: Request, res: Response) =
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutos
     });
 
-    // Mensagem enviada pelo bot no WhatsApp (Sofisticação & Alta Segurança)
-    const formattedTime = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    // Mensagem enviada pelo bot no WhatsApp (Sofisticação & Alta Segurança no Horário de Brasília)
+    const formattedTime = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' });
     const message = `━━━━━━━━━━━━━━━━━━━━━\n` +
       `🛡️ *ZAPCONTAS* | *Autenticação Segura*\n` +
       `━━━━━━━━━━━━━━━━━━━━━\n\n` +
