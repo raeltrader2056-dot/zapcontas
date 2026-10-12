@@ -143,7 +143,8 @@ router.get('/api/dashboard/:token', (req: Request, res: Response) => {
     expired: !access.allowed,
     checkoutUrl: `/checkout?token=${account.token}&reason=trial_expired`,
     summary,
-    transactions
+    transactions,
+    vaults: db.getVaults(account.id)
   });
 });
 
@@ -497,5 +498,126 @@ router.post('/api/account/reset-month', (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Erro ao zerar mês:', error);
     return res.status(500).json({ error: error.message || 'Erro ao zerar mês' });
+  }
+});
+
+// 12. Criar Nova Caixinha / Meta de Investimento
+router.post('/api/vault/create', (req: Request, res: Response) => {
+  try {
+    const { token, name, targetAmount, icon } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const numTarget = targetAmount ? parseFloat(String(targetAmount).replace(',', '.')) : 0;
+    const vault = db.createVault(account.id, name, isNaN(numTarget) ? 0 : numTarget, icon);
+
+    return res.json({
+      success: true,
+      vault,
+      vaults: db.getVaults(account.id),
+      summary: db.getSummary(account.id)
+    });
+  } catch (error: any) {
+    console.error('Erro ao criar caixinha:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao criar caixinha' });
+  }
+});
+
+// 13. Guardar Dinheiro na Caixinha
+router.post('/api/vault/deposit', (req: Request, res: Response) => {
+  try {
+    const { token, vaultId, amount } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const numAmount = parseFloat(String(amount).replace(',', '.'));
+    if (isNaN(numAmount) || numAmount <= 0) {
+      return res.status(400).json({ error: 'Valor deve ser maior que zero' });
+    }
+
+    const user = db.getUserByAccountId(account.id);
+    const senderPhone = user ? user.phone : (account.members[0] || 'Web');
+    const senderName = user ? user.name : 'Painel Web';
+
+    const result = db.depositToVault(account.id, vaultId, numAmount, senderPhone, senderName);
+    if (!result) {
+      return res.status(400).json({ error: 'Não foi possível guardar esse valor na caixinha' });
+    }
+
+    return res.json({
+      success: true,
+      vault: result.vault,
+      vaults: db.getVaults(account.id),
+      summary: db.getSummary(account.id),
+      transactions: db.getTransactions(account.id)
+    });
+  } catch (error: any) {
+    console.error('Erro ao depositar na caixinha:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao guardar dinheiro' });
+  }
+});
+
+// 14. Resgatar Dinheiro da Caixinha (Volta para o Saldo Livre)
+router.post('/api/vault/withdraw', (req: Request, res: Response) => {
+  try {
+    const { token, vaultId, amount } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const numAmount = parseFloat(String(amount).replace(',', '.'));
+    if (isNaN(numAmount) || numAmount <= 0) {
+      return res.status(400).json({ error: 'Valor deve ser maior que zero' });
+    }
+
+    const user = db.getUserByAccountId(account.id);
+    const senderPhone = user ? user.phone : (account.members[0] || 'Web');
+    const senderName = user ? user.name : 'Painel Web';
+
+    const result = db.withdrawFromVault(account.id, vaultId, numAmount, senderPhone, senderName);
+    if (!result) {
+      return res.status(400).json({ error: 'Saldo insuficiente na caixinha para resgate' });
+    }
+
+    return res.json({
+      success: true,
+      vault: result.vault,
+      vaults: db.getVaults(account.id),
+      summary: db.getSummary(account.id),
+      transactions: db.getTransactions(account.id)
+    });
+  } catch (error: any) {
+    console.error('Erro ao resgatar da caixinha:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao resgatar dinheiro' });
+  }
+});
+
+// 15. Excluir Caixinha
+router.delete('/api/vault/:id', (req: Request, res: Response) => {
+  try {
+    const token = String(req.query.token || req.body?.token || '');
+    const vaultId = String(req.params.id);
+
+    if (!token) return res.status(400).json({ error: 'Token é obrigatório' });
+
+    const account = db.getAccountByToken(token);
+    if (!account) return res.status(404).json({ error: 'Conta não encontrada' });
+
+    const deleted = db.deleteVault(account.id, vaultId);
+    if (!deleted) return res.status(404).json({ error: 'Caixinha não encontrada' });
+
+    return res.json({
+      success: true,
+      vaults: db.getVaults(account.id),
+      summary: db.getSummary(account.id)
+    });
+  } catch (error: any) {
+    console.error('Erro ao excluir caixinha:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao excluir caixinha' });
   }
 });

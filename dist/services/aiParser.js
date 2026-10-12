@@ -104,14 +104,100 @@ export class MessageAIParser {
                 };
             }
         }
-        // 6. Consultas de Relatório / Divisão de quem gastou
+        // 6. Caixinhas e Investimentos: Guardar Dinheiro
+        if (clean.includes('guardei') ||
+            clean.includes('guardar') ||
+            clean.includes('investi') ||
+            clean.includes('investir') ||
+            clean.includes('juntei') ||
+            clean.includes('na caixinha') ||
+            clean.includes('no cofrinho')) {
+            const val = this.extractAmount(clean);
+            if (val) {
+                let vaultName = 'Reserva de Emergência';
+                if (clean.includes('viagem'))
+                    vaultName = 'Viagem dos Sonhos';
+                else if (clean.includes('carro'))
+                    vaultName = 'Carro Novo';
+                else if (clean.includes('casa'))
+                    vaultName = 'Casa Própria';
+                else if (clean.includes('invest') || clean.includes('ação') || clean.includes('acoes') || clean.includes('cdb'))
+                    vaultName = 'Investimentos';
+                else if (clean.includes('reserva'))
+                    vaultName = 'Reserva de Emergência';
+                return {
+                    intent: 'vault_deposit',
+                    targetAmount: val,
+                    vaultName
+                };
+            }
+        }
+        // 7. Caixinhas e Investimentos: Resgatar Dinheiro
+        if (clean.includes('resgatei') ||
+            clean.includes('resgatar') ||
+            clean.includes('tirei da caixinha') ||
+            clean.includes('tirar da caixinha') ||
+            clean.includes('tirei da reserva') ||
+            clean.includes('tirei do cofrinho')) {
+            const val = this.extractAmount(clean);
+            if (val) {
+                let vaultName = 'Reserva de Emergência';
+                if (clean.includes('viagem'))
+                    vaultName = 'Viagem dos Sonhos';
+                else if (clean.includes('carro'))
+                    vaultName = 'Carro Novo';
+                else if (clean.includes('invest'))
+                    vaultName = 'Investimentos';
+                return {
+                    intent: 'vault_withdraw',
+                    targetAmount: val,
+                    vaultName
+                };
+            }
+        }
+        // 8. Consultar Caixinhas / Total Guardado
+        if (clean === 'caixinhas' ||
+            clean === 'caixinha' ||
+            clean === 'cofrinho' ||
+            clean === 'investimentos' ||
+            clean === 'investimento' ||
+            clean.includes('minhas caixinhas') ||
+            clean.includes('quanto guardei') ||
+            clean.includes('quanto tenho guardado') ||
+            clean.includes('meus investimentos')) {
+            return {
+                intent: 'vault_query'
+            };
+        }
+        // 9. Adicionar Dinheiro / Entrada Direta ("adicionar 500", "depositei 1000")
+        if ((clean.startsWith('adicionar') || clean.startsWith('depositei') || clean.startsWith('deposito') || clean.startsWith('depósito')) &&
+            !clean.includes('saldo inicial')) {
+            const val = this.extractAmount(clean);
+            if (val) {
+                return {
+                    intent: 'add_money',
+                    targetAmount: val
+                };
+            }
+        }
+        // 10. Tirar / Retirar Dinheiro ("retirar 200", "saque 150", "tirei 100")
+        if (clean.startsWith('retirar') || clean.startsWith('retirei') || clean.startsWith('saque') || clean.startsWith('saquei')) {
+            const val = this.extractAmount(clean);
+            if (val) {
+                return {
+                    intent: 'remove_money',
+                    targetAmount: val
+                };
+            }
+        }
+        // 11. Consultas de Relatório / Divisão de quem gastou
         if (clean.includes('quem gastou') || clean.includes('divisao') || clean.includes('divisão') || clean.includes('por pessoa')) {
             return {
                 intent: 'report_query',
                 queryPeriod: 'by_person'
             };
         }
-        // 7. Consultas de Saldo / Extrato
+        // 12. Consultas de Saldo / Extrato
         if (clean.startsWith('saldo') ||
             clean.includes('quanto gastei') ||
             clean.includes('quanto gastamos') ||
@@ -129,7 +215,7 @@ export class MessageAIParser {
                 queryPeriod: period
             };
         }
-        // 4. Comandos de Ajuda
+        // 13. Comandos de Ajuda
         if (clean === 'ajuda' || clean === 'help' || clean === 'como funciona' || clean === 'menu') {
             return {
                 intent: 'help'

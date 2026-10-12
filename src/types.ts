@@ -42,6 +42,16 @@ export interface Transaction {
   monthKey: string; // YYYY-MM para agrupamentos rápidos
 }
 
+export interface Vault {
+  id: string;
+  accountId: string;
+  name: string; // Ex: "Reserva de Emergência", "Viagem", "Investimentos"
+  targetAmount: number; // Meta financeira (ex: 5000)
+  currentAmount: number; // Saldo guardado atualmente
+  icon: string; // Ícone visual (ex: 🛡️, ✈️, 📈, 🏠, 🚗, 💰)
+  createdAt: string;
+}
+
 export interface ParsedMessage {
   intent: 
     | 'transaction' 
@@ -52,6 +62,11 @@ export interface ParsedMessage {
     | 'set_initial_balance'
     | 'set_budget'
     | 'delete_last'
+    | 'vault_deposit'
+    | 'vault_withdraw'
+    | 'vault_query'
+    | 'add_money'
+    | 'remove_money'
     | 'subscribe'
     | 'help' 
     | 'unknown';
@@ -64,5 +79,6 @@ export interface ParsedMessage {
   };
   queryPeriod?: 'today' | 'week' | 'month' | 'by_person';
   targetAmount?: number;
+  vaultName?: string;
   explanation?: string;
 }

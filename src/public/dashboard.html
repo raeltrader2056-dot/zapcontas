@@ -179,23 +179,32 @@
       </div>
 
       <!-- BOTÕES DE AÇÃO RÁPIDA (100% FUNCIONAIS) -->
-      <div class="flex items-center gap-3 w-full sm:w-auto">
+      <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
         <!-- Botão: + Nova Entrada -->
         <button 
           onclick="openTransactionModal('income')" 
-          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all cursor-pointer transform active:scale-95"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-emerald-500/20 transition-all cursor-pointer transform active:scale-95"
         >
           <i data-lucide="plus-circle" class="w-4 h-4 text-slate-950 stroke-[2.5]"></i>
-          <span>Nova Entrada</span>
+          <span>+ Adicionar Entrada</span>
         </button>
 
         <!-- Botão: - Novo Gasto -->
         <button 
           onclick="openTransactionModal('expense')" 
-          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm shadow-xl shadow-rose-500/20 hover:shadow-rose-500/30 transition-all cursor-pointer transform active:scale-95"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm shadow-lg shadow-rose-500/20 transition-all cursor-pointer transform active:scale-95"
         >
           <i data-lucide="minus-circle" class="w-4 h-4 text-white stroke-[2.5]"></i>
-          <span>Novo Gasto</span>
+          <span>- Novo Gasto</span>
+        </button>
+
+        <!-- Botão: 🏦 Guardar na Caixinha -->
+        <button 
+          onclick="openNewVaultModal()" 
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-sky-400 border border-sky-500/30 font-black text-xs sm:text-sm shadow-md transition-all cursor-pointer transform active:scale-95"
+        >
+          <i data-lucide="piggy-bank" class="w-4 h-4 text-sky-400 stroke-[2.5]"></i>
+          <span>🏦 Guardar Dinheiro</span>
         </button>
       </div>
     </div>
@@ -260,14 +269,14 @@
       </button>
     </div>
 
-    <!-- 3 CARDS HEROICOS DE INDICADORES (INTERATIVOS & ESPAÇOSOS) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <!-- 4 CARDS HEROICOS DE INDICADORES (SALDO LIVRE, CAIXINHAS, PATRIMÔNIO, GASTOS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
       
-      <!-- Card 1: Saldo Líquido (+ BOTÃO AJUSTAR SALDO) -->
+      <!-- Card 1: Saldo Livre -->
       <div 
         id="cardNetBalance" 
         onclick="setFilter('all')" 
-        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden"
+        class="card-premium card-interactive p-5 sm:p-6 space-y-3 group relative overflow-hidden"
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -278,59 +287,71 @@
           </div>
           <button 
             onclick="event.stopPropagation(); openBalanceModal()" 
-            class="text-[11px] font-bold text-sky-300 bg-sky-500/15 hover:bg-sky-500/30 border border-sky-500/30 px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
+            class="text-[10px] font-bold text-sky-300 bg-sky-500/15 hover:bg-sky-500/30 border border-sky-500/30 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
             title="Ajustar ou sincronizar o saldo atual da carteira"
           >
             <i data-lucide="sliders" class="w-3 h-3"></i>
-            <span>Ajustar Saldo</span>
+            <span>Ajustar</span>
           </button>
         </div>
         <div>
-          <p id="netBalance" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">R$ 0,00</p>
-          <p class="text-xs text-slate-400 mt-1">Diferença entre entradas e saídas</p>
-        </div>
-        <div class="pt-1 flex items-center gap-1.5 text-xs text-sky-400 font-semibold group-hover:translate-x-1 transition-transform">
-          <span>Ver todas as transações</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          <p id="netBalance" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">R$ 0,00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Disponível para o dia a dia</p>
         </div>
       </div>
 
-      <!-- Card 2: Entradas no Mês (+ AÇÃO) -->
+      <!-- Card 2: Guardado em Caixinhas & Investimentos -->
       <div 
-        id="cardTotalIncome" 
-        onclick="setFilter('income')" 
-        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden border-emerald-500/20"
+        id="cardVaults" 
+        onclick="scrollToVaults()" 
+        class="card-premium card-interactive p-5 sm:p-6 space-y-3 group relative overflow-hidden border-sky-500/25 bg-sky-500/[0.04]"
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
-              <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+            <div class="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+              <i data-lucide="piggy-bank" class="w-4 h-4"></i>
             </div>
-            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Entradas no Mês</span>
+            <span class="text-xs font-bold text-sky-300 uppercase tracking-wider">Guardado / Caixas</span>
           </div>
           <button 
-            onclick="event.stopPropagation(); openTransactionModal('income')" 
-            class="text-[11px] font-bold text-emerald-300 bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/30 px-2.5 py-1 rounded-lg transition"
-            title="Adicionar entrada agora"
+            onclick="event.stopPropagation(); openNewVaultModal()" 
+            class="text-[10px] font-bold text-sky-300 bg-sky-500/15 hover:bg-sky-500/30 border border-sky-500/30 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
           >
-            + Adicionar
+            <i data-lucide="plus" class="w-3 h-3"></i>
+            <span>Nova</span>
           </button>
         </div>
         <div>
-          <p id="totalIncome" class="text-3xl sm:text-4xl font-extrabold text-emerald-400 tracking-tight">+ R$ 0,00</p>
-          <p class="text-xs text-slate-400 mt-1">Salários, freelas e receitas recebidas</p>
-        </div>
-        <div class="pt-1 flex items-center gap-1.5 text-xs text-emerald-400 font-semibold group-hover:translate-x-1 transition-transform">
-          <span>Filtrar apenas entradas</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          <p id="vaultsTotal" class="text-2xl sm:text-3xl font-extrabold text-sky-300 tracking-tight">R$ 0,00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Total reservado em caixinhas</p>
         </div>
       </div>
 
-      <!-- Card 3: Gastos no Mês (+ AÇÃO) -->
+      <!-- Card 3: Patrimônio Total Acumulado -->
+      <div 
+        id="cardNetWorth" 
+        class="card-premium p-5 sm:p-6 space-y-3 relative overflow-hidden border-teal-500/20 bg-teal-500/[0.03]"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400">
+              <i data-lucide="gem" class="w-4 h-4"></i>
+            </div>
+            <span class="text-xs font-bold text-teal-300 uppercase tracking-wider">Patrimônio Total</span>
+          </div>
+          <span class="text-[10px] font-semibold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">Livre + Caixas</span>
+        </div>
+        <div>
+          <p id="netWorth" class="text-2xl sm:text-3xl font-extrabold text-teal-300 tracking-tight">R$ 0,00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Capital total acumulado</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Gastos no Mês -->
       <div 
         id="cardTotalExpense" 
         onclick="setFilter('expense')" 
-        class="card-premium card-interactive p-6 sm:p-7 space-y-4 group relative overflow-hidden border-rose-500/20"
+        class="card-premium card-interactive p-5 sm:p-6 space-y-3 group relative overflow-hidden border-rose-500/20"
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -341,22 +362,48 @@
           </div>
           <button 
             onclick="event.stopPropagation(); openTransactionModal('expense')" 
-            class="text-[11px] font-bold text-rose-300 bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/30 px-2.5 py-1 rounded-lg transition"
-            title="Registrar gasto agora"
+            class="text-[10px] font-bold text-rose-300 bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/30 px-2 py-0.5 rounded-lg transition"
           >
             + Lançar
           </button>
         </div>
         <div>
-          <p id="totalExpense" class="text-3xl sm:text-4xl font-extrabold text-rose-400 tracking-tight">- R$ 0,00</p>
-          <p class="text-xs text-slate-400 mt-1">Total de despesas acumuladas</p>
-        </div>
-        <div class="pt-1 flex items-center gap-1.5 text-xs text-rose-400 font-semibold group-hover:translate-x-1 transition-transform">
-          <span>Filtrar apenas despesas</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          <p id="totalExpense" class="text-2xl sm:text-3xl font-extrabold text-rose-400 tracking-tight">- R$ 0,00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Total de despesas acumuladas</p>
         </div>
       </div>
 
+    </div>
+
+    <!-- SEÇÃO DE CAIXINHAS & METAS DE POUPANÇA (100% FUNCIONAL) -->
+    <div id="vaultsSection" class="card-premium p-6 sm:p-7 space-y-6 border-sky-500/20 bg-sky-500/[0.03]">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
+            <i data-lucide="piggy-bank" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h3 class="text-base sm:text-lg font-black text-white">Minhas Caixinhas & Metas</h3>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">Poupança & Investimentos</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Guarde dinheiro para objetivos específicos pelo WhatsApp ou pelo painel.</p>
+          </div>
+        </div>
+
+        <button 
+          onclick="openNewVaultModal()" 
+          class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-sky-500/20 cursor-pointer self-start sm:self-auto"
+        >
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Nova Caixinha</span>
+        </button>
+      </div>
+
+      <!-- Grid com os Cards das Caixinhas -->
+      <div id="vaultsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
     </div>
 
     <!-- DIVISÃO DE GASTOS (MODO CASAL / MÚLTIPLOS USUÁRIOS) -->
@@ -718,6 +765,116 @@
     </div>
   </div>
 
+  <!-- MODAL: CRIAR NOVA CAIXINHA / META -->
+  <div id="newVaultModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
+      <button onclick="closeNewVaultModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div>
+        <h3 class="text-lg font-black text-white flex items-center gap-2">
+          <span>Criar Nova Caixinha</span>
+          <span class="text-xl">🏦</span>
+        </h3>
+        <p class="text-xs text-slate-400 mt-0.5">Defina o nome da sua meta e o valor que deseja alcançar.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Nome da Caixinha -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Objetivo / Nome da Caixinha</label>
+          <input 
+            id="newVaultNameInput" 
+            type="text" 
+            placeholder="Ex: Viagem dos Sonhos, Reserva de Emergência, Carro Novo" 
+            class="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
+          >
+        </div>
+
+        <!-- Meta Financeira -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Meta Financeira (R$)</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">R$</span>
+            <input 
+              id="newVaultTargetInput" 
+              type="number" 
+              step="0.01" 
+              placeholder="Ex: 5000,00" 
+              class="w-full bg-slate-950 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm font-bold text-white focus:outline-none focus:border-sky-500 transition"
+            >
+          </div>
+        </div>
+
+        <!-- Seletor de Ícone Visual -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Ícone da Caixinha</label>
+          <div id="vaultIconPicker" class="grid grid-cols-6 gap-2">
+            <button type="button" onclick="selectVaultIcon('🛡️')" class="p-2.5 rounded-xl bg-slate-950 border border-sky-500 text-xl hover:scale-105 transition">🛡️</button>
+            <button type="button" onclick="selectVaultIcon('✈️')" class="p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition">✈️</button>
+            <button type="button" onclick="selectVaultIcon('📈')" class="p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition">📈</button>
+            <button type="button" onclick="selectVaultIcon('🚗')" class="p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition">🚗</button>
+            <button type="button" onclick="selectVaultIcon('🏠')" class="p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition">🏠</button>
+            <button type="button" onclick="selectVaultIcon('💰')" class="p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition">💰</button>
+          </div>
+          <input type="hidden" id="selectedVaultIcon" value="🛡️">
+        </div>
+      </div>
+
+      <button 
+        id="btnCreateVaultSubmit" 
+        onclick="submitCreateVault()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-black text-sm transition shadow-xl shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+        <span>Criar Caixinha</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: GUARDAR OU RESGATAR DINHEIRO DE CAIXINHA -->
+  <div id="vaultActionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
+      <button onclick="closeVaultActionModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div>
+        <h3 id="vaultActionTitle" class="text-lg font-black text-white flex items-center gap-2">
+          <span>Guardar Dinheiro</span>
+          <span id="vaultActionIcon">💰</span>
+        </h3>
+        <p id="vaultActionSubtitle" class="text-xs text-slate-400 mt-0.5">Caixinha: Reserva de Emergência</p>
+      </div>
+
+      <div class="space-y-2 text-center">
+        <label id="vaultActionValueLabel" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Valor a Guardar</label>
+        <div class="relative max-w-xs mx-auto">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-extrabold text-slate-400">R$</span>
+          <input 
+            id="vaultActionAmountInput" 
+            type="number" 
+            step="0.01" 
+            min="0.01" 
+            placeholder="0,00" 
+            class="w-full bg-slate-950 border border-white/15 rounded-2xl py-3.5 pl-14 pr-4 text-2xl sm:text-3xl font-black text-white text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
+          >
+        </div>
+        <p id="vaultActionHelperText" class="text-[11px] text-slate-400 mt-1">Este valor será transferido do seu saldo livre para esta caixinha.</p>
+      </div>
+
+      <button 
+        id="btnVaultActionSubmit" 
+        onclick="submitVaultAction()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-black text-sm transition shadow-xl shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+        <span id="vaultActionBtnText">Confirmar e Guardar</span>
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL DE PERFIL DO CLIENTE -->
   <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
     <div class="bg-[#0B1222] border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-feed-in">
@@ -848,6 +1005,7 @@
     }
 
     let allTransactions = [];
+    let allVaults = [];
     let currentFilter = 'all';
     let currentModalType = 'expense';
     let editingTxId = null;
@@ -856,6 +1014,7 @@
     let currentUser = null;
     let currentAccount = null;
     let selectedAvatarDataUrl = '';
+    let currentVaultAction = { id: '', type: 'deposit' };
 
     const EXPENSE_CATEGORIES = [
       { name: 'Alimentação', icon: '🍔' },
@@ -893,6 +1052,7 @@
 
         const data = await res.json();
         allTransactions = data.transactions || [];
+        allVaults = data.vaults || [];
         currentUser = data.user;
         currentAccount = data.account;
 
@@ -946,8 +1106,12 @@
 
         // Saldos Principais
         document.getElementById('netBalance').textContent = `R$ ${data.summary.balance.toFixed(2).replace('.', ',')}`;
-        document.getElementById('totalIncome').textContent = `+ R$ ${data.summary.totalIncome.toFixed(2).replace('.', ',')}`;
+        document.getElementById('vaultsTotal').textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
+        document.getElementById('netWorth').textContent = `R$ ${(data.summary.netWorth || (data.summary.balance + (data.summary.totalVaults || 0))).toFixed(2).replace('.', ',')}`;
         document.getElementById('totalExpense').textContent = `- R$ ${data.summary.totalExpense.toFixed(2).replace('.', ',')}`;
+
+        // Renderiza Caixinhas
+        renderVaults(allVaults);
 
         // Divisão por Pessoa
         renderPersons(data.summary.byPerson, data.summary.totalExpense);
@@ -962,6 +1126,266 @@
 
       } catch (err) {
         console.error('Erro ao buscar dados:', err);
+      }
+    }
+
+    // --- GESTÃO DE CAIXINHAS & POUPANÇA ---
+    function scrollToVaults() {
+      const el = document.getElementById('vaultsSection');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderVaults(vaults) {
+      const container = document.getElementById('vaultsContainer');
+      if (!container) return;
+
+      if (!vaults || vaults.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 rounded-2xl border border-dashed border-white/10 bg-slate-950/40 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mx-auto text-2xl">
+              🏦
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white">Você ainda não tem caixinhas ativas</h4>
+              <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                Crie sua primeira caixinha para separar dinheiro da Reserva de Emergência, Viagens ou Investimentos.
+              </p>
+            </div>
+            <button 
+              onclick="openNewVaultModal()" 
+              class="px-4 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 font-bold text-xs inline-flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Criar Primeira Caixinha</span>
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = '';
+      vaults.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl bg-slate-900/80 border border-white/10 hover:border-sky-500/40 transition space-y-4 relative group';
+
+        const hasTarget = v.targetAmount > 0;
+        const pct = hasTarget ? Math.min(100, Math.round((v.currentAmount / v.targetAmount) * 100)) : 0;
+        const remaining = hasTarget ? Math.max(0, v.targetAmount - v.currentAmount) : 0;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${v.icon || '💰'}</span>
+              <div>
+                <h4 class="font-bold text-sm text-white">${v.name}</h4>
+                <p class="text-[11px] text-slate-400">${hasTarget ? `Meta: R$ ${v.targetAmount.toFixed(2).replace('.', ',')}` : 'Sem meta estipulada'}</p>
+              </div>
+            </div>
+            <button 
+              onclick="deleteVault('${v.id}')" 
+              class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg hover:bg-white/5 transition opacity-0 group-hover:opacity-100 cursor-pointer"
+              title="Excluir caixinha"
+            >
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div>
+            <div class="text-xs text-slate-400 font-semibold">Saldo Guardado</div>
+            <div class="text-2xl font-black text-sky-300">R$ ${v.currentAmount.toFixed(2).replace('.', ',')}</div>
+          </div>
+
+          ${hasTarget ? `
+            <div class="space-y-1.5 pt-1">
+              <div class="flex justify-between text-[11px] font-bold text-slate-400">
+                <span>${pct}% concluído</span>
+                <span class="text-sky-400">R$ ${remaining.toFixed(2).replace('.', ',')} restantes</span>
+              </div>
+              <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                <div class="h-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
+            <button 
+              onclick="openVaultActionModal('${v.id}', 'deposit')" 
+              class="py-2 px-3 rounded-xl bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+            >
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              <span>+ Guardar</span>
+            </button>
+            <button 
+              onclick="openVaultActionModal('${v.id}', 'withdraw')" 
+              class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+            >
+              <i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Resgatar</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function openNewVaultModal() {
+      document.getElementById('newVaultNameInput').value = '';
+      document.getElementById('newVaultTargetInput').value = '';
+      selectVaultIcon('🛡️');
+      document.getElementById('newVaultModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeNewVaultModal() {
+      document.getElementById('newVaultModal').classList.add('hidden');
+    }
+
+    function selectVaultIcon(icon) {
+      document.getElementById('selectedVaultIcon').value = icon;
+      const buttons = document.querySelectorAll('#vaultIconPicker button');
+      buttons.forEach(btn => {
+        if (btn.textContent.trim() === icon) {
+          btn.className = 'p-2.5 rounded-xl bg-slate-950 border border-sky-500 text-xl hover:scale-105 transition';
+        } else {
+          btn.className = 'p-2.5 rounded-xl bg-slate-950 border border-white/10 text-xl hover:scale-105 transition';
+        }
+      });
+    }
+
+    async function submitCreateVault() {
+      const name = document.getElementById('newVaultNameInput').value.trim();
+      const targetAmount = document.getElementById('newVaultTargetInput').value;
+      const icon = document.getElementById('selectedVaultIcon').value || '💰';
+
+      if (!name) {
+        alert('Por favor, informe o nome ou objetivo da caixinha.');
+        return;
+      }
+
+      const btn = document.getElementById('btnCreateVaultSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Criando...</span>';
+
+      try {
+        const res = await fetch('/api/vault/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, name, targetAmount, icon })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          allVaults = data.vaults;
+          renderVaults(allVaults);
+          document.getElementById('vaultsTotal').textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
+          document.getElementById('netWorth').textContent = `R$ ${(data.summary.netWorth || 0).toFixed(2).replace('.', ',')}`;
+          closeNewVaultModal();
+          showToast(`✓ Caixinha "${name}" criada com sucesso!`);
+        } else {
+          alert(data.error || 'Erro ao criar caixinha');
+        }
+      } catch (e) {
+        alert('Erro ao conectar ao servidor.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i><span>Criar Caixinha</span>';
+        lucide.createIcons();
+      }
+    }
+
+    function openVaultActionModal(vaultId, type = 'deposit') {
+      const vault = allVaults.find(v => v.id === vaultId);
+      if (!vault) return;
+
+      currentVaultAction = { id: vaultId, type };
+      document.getElementById('vaultActionAmountInput').value = '';
+      document.getElementById('vaultActionIcon').textContent = vault.icon || '💰';
+      document.getElementById('vaultActionSubtitle').textContent = `Caixinha: ${vault.name} (Saldo atual: R$ ${vault.currentAmount.toFixed(2).replace('.', ',')})`;
+
+      if (type === 'deposit') {
+        document.getElementById('vaultActionTitle').innerHTML = '<span>Guardar Dinheiro</span>';
+        document.getElementById('vaultActionValueLabel').textContent = 'Valor a Guardar na Caixinha';
+        document.getElementById('vaultActionHelperText').textContent = 'O valor será transferido do seu saldo livre para esta meta.';
+        document.getElementById('vaultActionBtnText').textContent = 'Confirmar e Guardar';
+      } else {
+        document.getElementById('vaultActionTitle').innerHTML = '<span>Resgatar Dinheiro</span>';
+        document.getElementById('vaultActionValueLabel').textContent = 'Valor a Resgatar para Saldo Livre';
+        document.getElementById('vaultActionHelperText').textContent = 'O valor sairá da caixinha e retornará para seu saldo livre disponível.';
+        document.getElementById('vaultActionBtnText').textContent = 'Confirmar Resgate';
+      }
+
+      document.getElementById('vaultActionModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeVaultActionModal() {
+      document.getElementById('vaultActionModal').classList.add('hidden');
+    }
+
+    async function submitVaultAction() {
+      const amount = document.getElementById('vaultActionAmountInput').value;
+      if (!amount || parseFloat(amount) <= 0) {
+        alert('Por favor, informe um valor maior que zero.');
+        return;
+      }
+
+      const endpoint = currentVaultAction.type === 'deposit' ? '/api/vault/deposit' : '/api/vault/withdraw';
+      const btn = document.getElementById('btnVaultActionSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Processando...</span>';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, vaultId: currentVaultAction.id, amount })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          allVaults = data.vaults;
+          allTransactions = data.transactions;
+          renderVaults(allVaults);
+          applyFilters();
+
+          document.getElementById('netBalance').textContent = `R$ ${data.summary.balance.toFixed(2).replace('.', ',')}`;
+          document.getElementById('vaultsTotal').textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
+          document.getElementById('netWorth').textContent = `R$ ${(data.summary.netWorth || 0).toFixed(2).replace('.', ',')}`;
+
+          closeVaultActionModal();
+          showToast(currentVaultAction.type === 'deposit' ? '✓ Valor guardado com sucesso!' : '✓ Resgate concluído com sucesso!');
+        } else {
+          alert(data.error || 'Erro ao processar movimentação.');
+        }
+      } catch (e) {
+        alert('Erro ao conectar ao servidor.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i><span id="vaultActionBtnText">Confirmar</span>';
+        lucide.createIcons();
+      }
+    }
+
+    async function deleteVault(vaultId) {
+      if (!confirm('Tem certeza que deseja excluir esta caixinha?')) return;
+
+      try {
+        const res = await fetch(`/api/vault/${vaultId}?token=${token}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          allVaults = data.vaults;
+          renderVaults(allVaults);
+          document.getElementById('vaultsTotal').textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
+          document.getElementById('netWorth').textContent = `R$ ${(data.summary.netWorth || 0).toFixed(2).replace('.', ',')}`;
+          showToast('✓ Caixinha removida com sucesso!');
+        } else {
+          alert(data.error || 'Erro ao excluir caixinha');
+        }
+      } catch (e) {
+        alert('Erro ao excluir caixinha.');
       }
     }
 

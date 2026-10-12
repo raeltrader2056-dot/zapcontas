@@ -15,7 +15,10 @@ export class Database {
         if (fs.existsSync(this.dbPath)) {
             try {
                 const raw = fs.readFileSync(this.dbPath, 'utf-8');
-                return JSON.parse(raw);
+                const parsed = JSON.parse(raw);
+                if (!parsed.vaults)
+                    parsed.vaults = [];
+                return parsed;
             }
             catch (e) {
                 console.error('Erro ao ler banco de dados, inicializando vazio:', e);
@@ -24,12 +27,15 @@ export class Database {
         const initial = {
             users: [],
             accounts: [],
-            transactions: []
+            transactions: [],
+            vaults: []
         };
         this.save(initial);
         return initial;
     }
     save(dataToSave = this.data) {
+        if (!dataToSave.vaults)
+            dataToSave.vaults = [];
         fs.writeFileSync(this.dbPath, JSON.stringify(dataToSave, null, 2), 'utf-8');
     }
     // --- Usuários e Contas com Proteção Anti-Fraude de Trial ---
@@ -282,6 +288,118 @@ export class Database {
         this.save();
         return account;
     }
+    // --- Gestão de Caixinhas & Investimentos ---
+    getVaults(accountId) {
+        if (!this.data.vaults)
+            this.data.vaults = [];
+        return this.data.vaults.filter(v => v.accountId === accountId);
+    }
+    getVault(accountId, vaultIdOrName) {
+        if (!this.data.vaults)
+            this.data.vaults = [];
+        const lower = vaultIdOrName.toLowerCase().trim();
+        return this.data.vaults.find(v => v.accountId === accountId && (v.id === vaultIdOrName || v.name.toLowerCase().includes(lower)));
+    }
+    createVault(accountId, name, targetAmount = 0, icon = '💰') {
+        if (!this.data.vaults)
+            this.data.vaults = [];
+        const newVault = {
+            id: 'vlt_' + Math.random().toString(36).substring(2, 9),
+            accountId,
+            name: name.trim() || 'Reserva de Emergência',
+            targetAmount: Math.max(0, targetAmount),
+            currentAmount: 0,
+            icon: icon || '💰',
+            createdAt: new Date().toISOString()
+        };
+        this.data.vaults.push(newVault);
+        this.save();
+        return newVault;
+    }
+    depositToVault(accountId, vaultNameOrId, amount, senderPhone, senderName) {
+        if (amount <= 0)
+            return null;
+        if (!this.data.vaults)
+            this.data.vaults = [];
+        let vault = this.getVault(accountId, vaultNameOrId);
+        if (!vault) {
+            // Cria a caixinha automaticamente com ícone temático
+            const lower = vaultNameOrId.toLowerCase();
+            const defaultIcon = lower.includes('viagem') ? '✈️'
+                : lower.includes('reserva') ? '🛡️'
+                    : lower.includes('invest') ? '📈'
+                        : lower.includes('carro') ? '🚗'
+                            : lower.includes('casa') ? '🏠' : '💰';
+            vault = this.createVault(accountId, vaultNameOrId || 'Reserva', 5000, defaultIcon);
+        }
+        vault.currentAmount += amount;
+        // Registra como saída do saldo livre para a caixinha
+        const now = new Date();
+        const monthKey = now.toISOString().substring(0, 7);
+        const tx = this.addTransaction({
+            accountId,
+            senderPhone,
+            senderName,
+            amount,
+            type: 'expense',
+            category: 'Caixinha / Investimento',
+            paymentMethod: 'Transferência para Caixinha',
+            description: `Guardado em ${vault.name}`,
+            rawMessage: `Guardado R$ ${amount} na caixinha ${vault.name}`,
+            date: now.toISOString(),
+            monthKey
+        });
+        this.save();
+        return { vault, tx };
+    }
+    withdrawFromVault(accountId, vaultNameOrId, amount, senderPhone, senderName) {
+        if (amount <= 0)
+            return null;
+        let vault = this.getVault(accountId, vaultNameOrId);
+        if (!vault) {
+            const all = this.getVaults(accountId);
+            if (all.length > 0)
+                vault = all[0];
+            else
+                return null;
+        }
+        const withdrawAmount = Math.min(amount, vault.currentAmount);
+        if (withdrawAmount <= 0)
+            return null;
+        vault.currentAmount -= withdrawAmount;
+        // Retorna para o saldo livre como entrada
+        const now = new Date();
+        const monthKey = now.toISOString().substring(0, 7);
+        const tx = this.addTransaction({
+            accountId,
+            senderPhone,
+            senderName,
+            amount: withdrawAmount,
+            type: 'income',
+            category: 'Resgate de Caixinha',
+            paymentMethod: 'Resgate de Caixinha',
+            description: `Resgate de ${vault.name}`,
+            rawMessage: `Resgate de R$ ${withdrawAmount} da caixinha ${vault.name}`,
+            date: now.toISOString(),
+            monthKey
+        });
+        this.save();
+        return { vault, tx };
+    }
+    deleteVault(accountId, vaultId) {
+        if (!this.data.vaults)
+            return false;
+        const idx = this.data.vaults.findIndex(v => v.accountId === accountId && v.id === vaultId);
+        if (idx === -1)
+            return false;
+        this.data.vaults.splice(idx, 1);
+        this.save();
+        return true;
+    }
+    getTotalVaults(accountId) {
+        const vaults = this.getVaults(accountId);
+        return vaults.reduce((acc, v) => acc + (v.currentAmount || 0), 0);
+    }
     getSummary(accountId, monthKey) {
         const currentMonthKey = monthKey || new Date().toISOString().substring(0, 7);
         const list = this.getTransactions(accountId, currentMonthKey);
@@ -303,11 +421,15 @@ export class Database {
                 byPerson[item.senderName].count += 1;
             }
         }
+        const freeBalance = totalIncome - totalExpense;
+        const totalVaults = this.getTotalVaults(accountId);
         return {
             monthKey: currentMonthKey,
             totalIncome,
             totalExpense,
-            balance: totalIncome - totalExpense,
+            balance: freeBalance,
+            totalVaults,
+            netWorth: freeBalance + totalVaults,
             byCategory,
             byPerson,
             transactionCount: list.length
