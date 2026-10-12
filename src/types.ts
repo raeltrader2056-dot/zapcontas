@@ -68,6 +68,7 @@ export interface ParsedMessage {
     | 'add_money'
     | 'remove_money'
     | 'subscribe'
+    | 'greeting'
     | 'help' 
     | 'unknown';
   transaction?: {
@@ -81,4 +82,9 @@ export interface ParsedMessage {
   targetAmount?: number;
   vaultName?: string;
   explanation?: string;
+}
+
+export interface BotReply {
+  text: string;
+  buttons?: Array<{ id: string; label: string }>;
 }

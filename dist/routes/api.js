@@ -35,9 +35,12 @@ router.post('/webhook/whatsapp', async (req, res) => {
         const fullPhone = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
         // 4. Extração do nome de quem enviou
         const senderName = req.body.senderName || req.body.chatName || req.body.pushName || req.body.notifyName || 'Cliente';
-        // 5. Extração do conteúdo da mensagem (Z-API envia em req.body.text.message ou req.body.message)
+        // 5. Extração do conteúdo da mensagem (Z-API envia em buttonResponse, text.message ou message)
         let messageText = '';
-        if (typeof req.body.text === 'string') {
+        if (req.body.buttonResponse) {
+            messageText = req.body.buttonResponse.referenceId || req.body.buttonResponse.label || '';
+        }
+        else if (typeof req.body.text === 'string') {
             messageText = req.body.text;
         }
         else if (req.body.text && typeof req.body.text.message === 'string') {
@@ -60,19 +63,26 @@ router.post('/webhook/whatsapp', async (req, res) => {
         }
         console.log(`💬 [WHATSAPP RECEBIDO] ${senderName} (${fullPhone}): "${messageText}"`);
         // 6. Processa através da Inteligência Financeira do BotEngine
-        let reply = '';
-        if (messageText === 'audio_message') {
-            reply = `🎙️ *Áudio recebido!*\n\n` +
-                `Para garantir precisão no registro imediato, digite o gasto (ex: *Almoço 35* ou *Uber 22 no débito*).\n\n` +
-                `💡 _Dica: Digite *Saldo* para ver seu resumo ou *Ajuda* para comandos._`;
-        }
-        else {
-            reply = botEngine.handleIncomingMessage(fullPhone, senderName, messageText);
-        }
+        const reply = messageText === 'audio_message'
+            ? {
+                text: `🎙️ *Áudio recebido!*\n\n` +
+                    `Para garantir precisão no registro imediato, envie o gasto por texto (ex: *Almoço 35* ou *Uber 22 no débito*).\n\n` +
+                    `💡 _Ou toque nas ações rápidas abaixo:_`,
+                buttons: [
+                    { id: 'btn_summary', label: '📊 Ver Resumo' },
+                    { id: 'btn_dashboard', label: '🌐 Abrir Painel' }
+                ]
+            }
+            : botEngine.handleIncomingMessage(fullPhone, senderName, messageText);
         // 7. Dispara resposta real no WhatsApp do cliente via Z-API
-        if (reply) {
+        if (reply && reply.text) {
             console.log(`🚀 [WHATSAPP ENVIANDO RESPOSTA] Para ${fullPhone}...`);
-            await whatsappClient.sendMessage(fullPhone, reply);
+            if (reply.buttons && reply.buttons.length > 0) {
+                await whatsappClient.sendButtonList(fullPhone, reply.text, reply.buttons);
+            }
+            else {
+                await whatsappClient.sendMessage(fullPhone, reply.text);
+            }
         }
         return res.json({
             success: true,

@@ -40,7 +40,25 @@ export class MessageAIParser {
     parse(text) {
         const raw = text.trim();
         const clean = raw.toLowerCase();
-        // 1. Comandos de Dashboard / Link
+        // 0. Respostas de Botões Interativos (Quick Reply Buttons)
+        if (clean === 'btn_dashboard')
+            return { intent: 'dashboard_link' };
+        if (clean === 'btn_summary')
+            return { intent: 'balance_query', queryPeriod: 'month' };
+        if (clean === 'btn_vaults')
+            return { intent: 'vault_query' };
+        if (clean === 'btn_help')
+            return { intent: 'help' };
+        if (clean === 'btn_reset')
+            return { intent: 'reset_balance' };
+        // 1. Saudações e Início de Conversa
+        const greetings = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'e ai', 'e aí', 'opa', 'salve', 'iniciar', 'começar'];
+        if (greetings.includes(clean)) {
+            return {
+                intent: 'greeting'
+            };
+        }
+        // 2. Comandos de Dashboard / Link
         if (clean.includes('dashboard') || clean.includes('painel') || clean.includes('link') || clean.includes('grafico') || clean.includes('gráfico')) {
             return {
                 intent: 'dashboard_link'
