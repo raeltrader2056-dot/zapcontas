@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { supabaseService } from '../services/supabase.js';
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 export class Database {
     dbPath;
@@ -37,6 +38,162 @@ export class Database {
         if (!dataToSave.vaults)
             dataToSave.vaults = [];
         fs.writeFileSync(this.dbPath, JSON.stringify(dataToSave, null, 2), 'utf-8');
+    }
+    // --- Sincronização em Nuvem Supabase (Zero Perda de Dados) ---
+    async initSupabaseSync() {
+        if (!supabaseService.client)
+            return;
+        try {
+            // 1. Carrega contas salvas no Supabase
+            const { data: dbAccounts, error: accErr } = await supabaseService.client.from('accounts').select('*');
+            if (!accErr && dbAccounts && dbAccounts.length > 0) {
+                for (const a of dbAccounts) {
+                    const idx = this.data.accounts.findIndex(acc => acc.id === a.id);
+                    const mapped = {
+                        id: a.id,
+                        name: a.name,
+                        type: a.type,
+                        token: a.token,
+                        members: a.members || [],
+                        monthlyBudget: Number(a.monthly_budget) || 2500,
+                        subscriptionStatus: a.subscription_status || 'trialing',
+                        planType: a.plan_type || 'free',
+                        expiresAt: a.expires_at,
+                        createdAt: a.created_at
+                    };
+                    if (idx !== -1)
+                        this.data.accounts[idx] = mapped;
+                    else
+                        this.data.accounts.push(mapped);
+                }
+            }
+            // 2. Carrega usuários salvos no Supabase
+            const { data: dbUsers, error: usrErr } = await supabaseService.client.from('users').select('*');
+            if (!usrErr && dbUsers && dbUsers.length > 0) {
+                for (const u of dbUsers) {
+                    const idx = this.data.users.findIndex(usr => usr.id === u.id);
+                    const mapped = {
+                        id: u.id,
+                        phone: u.phone,
+                        name: u.name,
+                        accountId: u.account_id,
+                        plan: u.plan || 'free',
+                        trialUsed: Boolean(u.trial_used),
+                        trialEndsAt: u.trial_ends_at,
+                        deviceFingerprint: u.device_fingerprint,
+                        createdAt: u.created_at
+                    };
+                    if (idx !== -1)
+                        this.data.users[idx] = mapped;
+                    else
+                        this.data.users.push(mapped);
+                }
+            }
+            // 3. Carrega transações salvas no Supabase
+            const { data: dbTxs, error: txErr } = await supabaseService.client.from('transactions').select('*');
+            if (!txErr && dbTxs && dbTxs.length > 0) {
+                for (const t of dbTxs) {
+                    const idx = this.data.transactions.findIndex(tx => tx.id === t.id);
+                    const mapped = {
+                        id: t.id,
+                        accountId: t.account_id,
+                        senderPhone: t.sender_phone,
+                        senderName: t.sender_name,
+                        amount: Number(t.amount),
+                        type: t.type,
+                        category: t.category,
+                        paymentMethod: t.payment_method,
+                        description: t.description,
+                        rawMessage: t.raw_message,
+                        date: t.date,
+                        monthKey: t.month_key
+                    };
+                    if (idx !== -1)
+                        this.data.transactions[idx] = mapped;
+                    else
+                        this.data.transactions.push(mapped);
+                }
+            }
+            this.save();
+            console.log('⚡ [Supabase] Sincronização inicial concluída com sucesso!');
+        }
+        catch (err) {
+            console.warn('⚠️ [Supabase] Falha ao sincronizar dados na inicialização:', err);
+        }
+    }
+    async persistAccountToSupabase(account) {
+        if (!supabaseService.client)
+            return;
+        try {
+            await supabaseService.client.from('accounts').upsert({
+                id: account.id,
+                name: account.name,
+                type: account.type,
+                token: account.token,
+                members: account.members,
+                monthly_budget: account.monthlyBudget,
+                subscription_status: account.subscriptionStatus,
+                plan_type: account.planType,
+                expires_at: account.expiresAt,
+                created_at: account.createdAt
+            });
+        }
+        catch (e) {
+            // Ignora silenciosamente para não travar a resposta imediata do WhatsApp
+        }
+    }
+    async persistUserToSupabase(user) {
+        if (!supabaseService.client)
+            return;
+        try {
+            await supabaseService.client.from('users').upsert({
+                id: user.id,
+                phone: user.phone,
+                name: user.name,
+                account_id: user.accountId,
+                plan: user.plan,
+                trial_used: user.trialUsed,
+                trial_ends_at: user.trialEndsAt,
+                device_fingerprint: user.deviceFingerprint,
+                created_at: user.createdAt
+            });
+        }
+        catch (e) {
+            // Ignora silenciosamente
+        }
+    }
+    async persistTransactionToSupabase(tx) {
+        if (!supabaseService.client)
+            return;
+        try {
+            await supabaseService.client.from('transactions').upsert({
+                id: tx.id,
+                account_id: tx.accountId,
+                sender_phone: tx.senderPhone,
+                sender_name: tx.senderName,
+                amount: tx.amount,
+                type: tx.type,
+                category: tx.category,
+                payment_method: tx.paymentMethod,
+                description: tx.description,
+                raw_message: tx.rawMessage,
+                date: tx.date,
+                month_key: tx.monthKey
+            });
+        }
+        catch (e) {
+            // Ignora silenciosamente
+        }
+    }
+    async deleteTransactionFromSupabase(txId) {
+        if (!supabaseService.client)
+            return;
+        try {
+            await supabaseService.client.from('transactions').delete().eq('id', txId);
+        }
+        catch (e) {
+            // Ignora silenciosamente
+        }
     }
     // --- Usuários e Contas com Proteção Anti-Fraude de Trial ---
     getOrCreateUser(phone, name, fingerprint) {
@@ -84,6 +241,8 @@ export class Database {
         this.data.accounts.push(newAccount);
         this.data.users.push(user);
         this.save();
+        this.persistAccountToSupabase(newAccount);
+        this.persistUserToSupabase(user);
         return { user, account: newAccount, isNewTrial: isEligibleForTrial };
     }
     // Verifica se o usuário tem acesso ativo (trial válido ou plano pro pago)
@@ -205,6 +364,7 @@ export class Database {
         };
         this.data.transactions.push(fullTx);
         this.save();
+        this.persistTransactionToSupabase(fullTx);
         return fullTx;
     }
     // Ativa assinatura Pro quando o pagamento for aprovado
@@ -221,9 +381,11 @@ export class Database {
         this.data.users.forEach(u => {
             if (account.members.includes(u.phone) || u.accountId === account.id) {
                 u.plan = 'pro';
+                this.persistUserToSupabase(u);
             }
         });
         this.save();
+        this.persistAccountToSupabase(account);
         return account;
     }
     getTransactions(accountId, monthKey) {
@@ -241,6 +403,7 @@ export class Database {
         const realIdx = this.data.transactions.length - 1 - idx;
         const removed = this.data.transactions.splice(realIdx, 1)[0];
         this.save();
+        this.deleteTransactionFromSupabase(removed.id);
         return removed;
     }
     // Apaga uma transação específica pelo ID
@@ -250,6 +413,7 @@ export class Database {
             return false;
         this.data.transactions.splice(idx, 1);
         this.save();
+        this.deleteTransactionFromSupabase(transactionId);
         return true;
     }
     // Atualiza uma transação existente (para o cliente corrigir erros)
@@ -268,6 +432,7 @@ export class Database {
         if (updates.type !== undefined)
             tx.type = updates.type;
         this.save();
+        this.persistTransactionToSupabase(tx);
         return tx;
     }
     // Zera todos os lançamentos do mês ou adiciona um ajuste compensatório

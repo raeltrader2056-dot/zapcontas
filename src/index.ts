@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import { router as apiRouter } from './routes/api.js';
 import { botEngine } from './services/botEngine.js';
 import { startPublicTunnel } from './services/tunnel.js';
+import { db } from './database/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +63,9 @@ app.listen(PORT, async () => {
   console.log(`📱 Simulador WhatsApp:  http://localhost:${PORT}`);
   console.log(`📊 Dashboard Financeiro: http://localhost:${PORT}/dashboard?token=demo`);
   console.log(`======================================================\n`);
+
+  // Sincroniza dados com o Supabase Cloud
+  await db.initSupabaseSync();
 
   // Inicializa túnel público HTTPS e sincroniza webhook com Z-API
   await startPublicTunnel(Number(PORT));

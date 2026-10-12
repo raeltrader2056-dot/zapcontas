@@ -190,9 +190,7 @@ router.post('/api/auth/send-whatsapp-otp', async (req, res) => {
             `⚡ *ZapContas* • _Gestão Financeira Inteligente via WhatsApp_`;
         // Dispara a mensagem REAL via Z-API no celular do usuário
         await whatsappClient.sendMessage(fullPhone, message);
-        // Registra no motor de atendimento do bot
-        botEngine.handleIncomingMessage(fullPhone, name || 'Usuário', `Código de verificação gerado: ${code}`);
-        console.log(`⚡ [WHATSAPP REAL ENVIADO] Para ${fullPhone}: Código ${code}`);
+        console.log(`⚡ [WHATSAPP REAL ENVIADO] Para ${fullPhone}: Código de verificação emitido com sucesso.`);
         return res.json({ success: true, code, phone: fullPhone });
     }
     catch (e) {
