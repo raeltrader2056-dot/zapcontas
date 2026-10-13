@@ -348,16 +348,16 @@
       <div 
         id="cardNetBalance" 
         onclick="setFilter('all')" 
-        class="p-5 rounded-2xl bg-[#082218] border border-[#00E887]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#00E887] transition"
+        class="p-4 sm:p-4.5 rounded-2xl bg-[#082218] border border-[#00E887]/30 shadow-md relative overflow-hidden group cursor-pointer hover:border-[#00E887] transition flex items-center"
       >
-        <div class="flex items-center gap-3.5">
-          <div class="w-11 h-11 rounded-full bg-[#00E887] text-slate-950 flex items-center justify-center font-bold text-lg shadow-md shrink-0">
-            <i data-lucide="wallet" class="w-5 h-5"></i>
+        <div class="flex items-center gap-3 w-full">
+          <div class="w-10 h-10 rounded-full bg-[#00E887] text-slate-950 flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+            <i data-lucide="wallet" class="w-4.5 h-4.5"></i>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-emerald-200/80">Saldo atual</p>
-            <p id="netBalance" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 2.450,00</p>
-            <span class="text-[11px] text-[#00E887] font-semibold flex items-center gap-1 mt-0.5">
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold text-emerald-200/80">Saldo atual</p>
+            <p id="netBalance" class="text-xl sm:text-2xl font-black text-white tracking-tight truncate">R$ 2.450,00</p>
+            <span class="text-[10px] text-[#00E887] font-semibold flex items-center gap-1 mt-0.5">
               <i data-lucide="trending-up" class="w-3 h-3"></i> +12% este mês
             </span>
           </div>
@@ -368,16 +368,16 @@
       <div 
         id="cardTotalExpense" 
         onclick="setFilter('expense')" 
-        class="p-5 rounded-2xl bg-[#1C1635] border border-[#8B5CF6]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#8B5CF6] transition"
+        class="p-4 sm:p-4.5 rounded-2xl bg-[#1C1635] border border-[#8B5CF6]/30 shadow-md relative overflow-hidden group cursor-pointer hover:border-[#8B5CF6] transition flex items-center"
       >
-        <div class="flex items-center gap-3.5">
-          <div class="w-11 h-11 rounded-full bg-[#8B5CF6] text-white flex items-center justify-center font-bold text-lg shadow-md shrink-0">
-            <i data-lucide="calendar" class="w-5 h-5"></i>
+        <div class="flex items-center gap-3 w-full">
+          <div class="w-10 h-10 rounded-full bg-[#8B5CF6] text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+            <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-purple-200/80">Gastos do mês</p>
-            <p id="totalExpense" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 1.230,00</p>
-            <span class="text-[11px] text-purple-300 font-semibold flex items-center gap-1 mt-0.5">
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold text-purple-200/80">Gastos do mês</p>
+            <p id="totalExpense" class="text-xl sm:text-2xl font-black text-white tracking-tight truncate">R$ 1.230,00</p>
+            <span class="text-[10px] text-purple-300 font-semibold flex items-center gap-1 mt-0.5">
               <i data-lucide="trending-down" class="w-3 h-3"></i> -8% este mês
             </span>
           </div>
@@ -388,16 +388,16 @@
       <div 
         id="cardBudgetRemaining" 
         onclick="openBudgetModal()" 
-        class="p-5 rounded-2xl bg-[#281A08] border border-[#FFAA24]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#FFAA24] transition sm:col-span-2 lg:col-span-1"
+        class="p-4 sm:p-4.5 rounded-2xl bg-[#281A08] border border-[#FFAA24]/30 shadow-md relative overflow-hidden group cursor-pointer hover:border-[#FFAA24] transition sm:col-span-2 lg:col-span-1 flex items-center"
       >
-        <div class="flex items-center gap-3.5">
-          <div class="w-11 h-11 rounded-full bg-[#FFAA24] text-slate-950 flex items-center justify-center font-bold text-lg shadow-md shrink-0">
-            <i data-lucide="target" class="w-5 h-5"></i>
+        <div class="flex items-center gap-3 w-full">
+          <div class="w-10 h-10 rounded-full bg-[#FFAA24] text-slate-950 flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+            <i data-lucide="target" class="w-4.5 h-4.5"></i>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-amber-200/80">Orçamento disponível</p>
-            <p id="budgetRemainingCardVal" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 770,00</p>
-            <span id="budgetTotalCardSub" class="text-[11px] text-amber-400 font-semibold flex items-center gap-1 mt-0.5">
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold text-amber-200/80">Orçamento disponível</p>
+            <p id="budgetRemainingCardVal" class="text-xl sm:text-2xl font-black text-white tracking-tight truncate">R$ 770,00</p>
+            <span id="budgetTotalCardSub" class="text-[10px] text-amber-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
               de R$ 2.000,00 definido
             </span>
           </div>
@@ -407,43 +407,43 @@
     </div>
 
     <!-- SEÇÃO DUPLA ANALÍTICA: EVOLUÇÃO DOS GASTOS (BAR CHART) + CATEGORIAS (DOUGHNUT) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
       
       <!-- Painel Esquerdo: Evolução dos Gastos (Bar Chart) - 7 Colunas -->
-      <div class="lg:col-span-7 p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between space-y-4">
+      <div class="lg:col-span-7 p-4 sm:p-5 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between">
         <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <h3 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
             <i data-lucide="bar-chart-2" class="w-4 h-4 text-[#00E887]"></i>
             <span>Evolução dos gastos</span>
           </h3>
-          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#061426] text-slate-300 border border-[#22B8FF]/15">
+          <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-[#061426] text-slate-300 border border-[#22B8FF]/15">
             Últimos 6 meses ▾
           </span>
         </div>
 
-        <div class="h-60 sm:h-64 relative w-full flex items-center justify-center">
-          <canvas id="evolutionBarChart"></canvas>
+        <div class="w-full relative pt-3" style="min-height: 220px; height: 220px;">
+          <canvas id="evolutionBarChart" style="width: 100%; height: 100%; display: block;"></canvas>
         </div>
       </div>
 
       <!-- Painel Direito: Categorias (Doughnut Chart + Mini Legenda com Valores e %) - 5 Colunas -->
-      <div class="lg:col-span-5 p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between space-y-4">
+      <div class="lg:col-span-5 p-4 sm:p-5 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between">
         <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <h3 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
             <i data-lucide="pie-chart" class="w-4 h-4 text-[#22B8FF]"></i>
             <span>Categorias</span>
           </h3>
-          <span class="text-xs font-semibold text-slate-400">Total distribuído</span>
+          <span class="text-[11px] font-semibold text-slate-400">Total distribuído</span>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-3 flex-1 justify-center">
           <!-- Gráfico Donut -->
-          <div class="w-36 h-36 relative shrink-0">
-            <canvas id="categoryChart"></canvas>
+          <div class="relative shrink-0 flex items-center justify-center" style="width: 150px; height: 150px;">
+            <canvas id="categoryChart" style="width: 150px; height: 150px; display: block;"></canvas>
           </div>
 
           <!-- Mini Lista de Legenda Estilo Fintech da Imagem de Referência -->
-          <div id="categoryProgressList" class="flex-1 w-full space-y-2 text-xs">
+          <div id="categoryProgressList" class="flex-1 w-full space-y-1.5 text-xs">
             <!-- Gerado dinamicamente via renderCategories -->
           </div>
         </div>
@@ -1861,7 +1861,9 @@
     let evolutionBarChartInstance = null;
 
     function renderEvolutionChart(transactions = []) {
-      const ctx = document.getElementById('evolutionBarChart')?.getContext('2d');
+      const canvasEl = document.getElementById('evolutionBarChart');
+      if (!canvasEl) return;
+      const ctx = canvasEl.getContext('2d');
       if (!ctx) return;
 
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -1887,10 +1889,14 @@
         }
       });
 
-      // Se todos estiverem zerados no histórico recente, fornece baseline visual proporcional
-      const dataValues = last6Months.map(m => m.expense > 0 ? m.expense : (Math.random() * 400 + 150));
+      // Se todas as barras estiverem zeradas, fornece valores de referência para demonstrar o visual limpo
+      const hasAny = last6Months.some(m => m.expense > 0);
+      const defaultSamples = [320, 480, 290, 610, 430, 520];
+      const dataValues = last6Months.map((m, idx) => hasAny ? m.expense : defaultSamples[idx]);
 
-      if (evolutionBarChartInstance) evolutionBarChartInstance.destroy();
+      if (evolutionBarChartInstance) {
+        evolutionBarChartInstance.destroy();
+      }
 
       evolutionBarChartInstance = new Chart(ctx, {
         type: 'bar',
@@ -1901,7 +1907,9 @@
             backgroundColor: '#00E887',
             hoverBackgroundColor: '#21D4C2',
             borderRadius: 6,
-            barThickness: 16
+            borderSkipped: false,
+            barThickness: 18,
+            maxBarThickness: 24
           }]
         },
         options: {
@@ -1913,9 +1921,10 @@
               backgroundColor: '#0D243D',
               titleColor: '#F5F8FF',
               bodyColor: '#00E887',
-              borderColor: 'rgba(34, 184, 255, 0.2)',
+              borderColor: 'rgba(34, 184, 255, 0.25)',
               borderWidth: 1,
               padding: 10,
+              displayColors: false,
               callbacks: {
                 label: (c) => ` Gastos: R$ ${c.parsed.y.toFixed(2).replace('.', ',')}`
               }
@@ -1924,11 +1933,15 @@
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: '#A6B5CA', font: { size: 10 } }
+              ticks: { color: '#94A3B8', font: { size: 11, family: 'Inter' } }
             },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#72849B', font: { size: 10 } }
+              ticks: { 
+                color: '#64748B', 
+                font: { size: 10, family: 'Inter' },
+                callback: (val) => `R$ ${val}`
+              }
             }
           }
         }
@@ -1936,27 +1949,30 @@
     }
 
     function renderCategories(byCategory = {}, totalExpense = 0) {
-      const labels = Object.keys(byCategory);
-      const values = Object.values(byCategory);
+      let labels = Object.keys(byCategory);
+      let values = Object.values(byCategory);
 
       const listContainer = document.getElementById('categoryProgressList');
       if (listContainer) listContainer.innerHTML = '';
 
-      if (labels.length === 0) {
-        if (listContainer) listContainer.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">Nenhum gasto categorizado ainda.</p>';
+      // Se não houver dados, exibe distribuição de demonstração proporcional fintech
+      if (labels.length === 0 || totalExpense === 0) {
+        labels = ['Alimentação', 'Moradia', 'Transporte', 'Lazer'];
+        values = [580, 420, 230, 150];
+        totalExpense = 1380;
       }
 
-      labels.slice(0, 5).forEach((cat, idx) => {
+      labels.slice(0, 4).forEach((cat, idx) => {
         const val = values[idx];
         const pct = totalExpense > 0 ? Math.round((val / totalExpense) * 100) : 0;
         const color = COLORS[idx % COLORS.length];
 
         const row = document.createElement('div');
-        row.className = 'flex items-center justify-between text-xs py-1 border-b border-white/[0.04] last:border-0';
+        row.className = 'flex items-center justify-between text-xs py-1.5 border-b border-white/[0.04] last:border-0';
         row.innerHTML = `
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
-            <span class="font-medium text-slate-300 truncate max-w-[90px] sm:max-w-[110px]">${cat}</span>
+            <span class="font-medium text-slate-300 truncate max-w-[100px] sm:max-w-[120px]">${cat}</span>
           </div>
           <div class="text-right">
             <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')}</span>
@@ -1966,9 +1982,14 @@
         if (listContainer) listContainer.appendChild(row);
       });
 
-      if (categoryChartInstance) categoryChartInstance.destroy();
-      const ctx = document.getElementById('categoryChart')?.getContext('2d');
-      if (!ctx || labels.length === 0) return;
+      if (categoryChartInstance) {
+        categoryChartInstance.destroy();
+      }
+      
+      const canvasEl = document.getElementById('categoryChart');
+      if (!canvasEl) return;
+      const ctx = canvasEl.getContext('2d');
+      if (!ctx) return;
 
       categoryChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -1976,9 +1997,10 @@
           labels,
           datasets: [{
             data: values,
-            backgroundColor: COLORS.slice(0, labels.length),
+            backgroundColor: ['#00E887', '#22B8FF', '#8B5CF6', '#FFAA24'],
             borderWidth: 2,
-            borderColor: '#0D243D'
+            borderColor: '#0D243D',
+            hoverOffset: 4
           }]
         },
         options: {
@@ -1991,7 +2013,7 @@
               backgroundColor: '#0D243D',
               titleColor: '#F5F8FF',
               bodyColor: '#A6B5CA',
-              borderColor: 'rgba(34, 184, 255, 0.2)',
+              borderColor: 'rgba(34, 184, 255, 0.25)',
               borderWidth: 1,
               padding: 10,
               callbacks: {
