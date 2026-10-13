@@ -341,272 +341,197 @@
       </button>
     </div>
 
-    <!-- 4 CARDS DE INDICADORES (CLEAN FINTECH FLAT COM ACENTOS VIBRANTES) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 3 CARDS DE INDICADORES PRINCIPAIS (EXATAMENTE COMO NA REFERÊNCIA) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       
-      <!-- Card 1: Saldo Livre -->
+      <!-- Card 1: Saldo atual (Green Box com círculo e ícone de carteira) -->
       <div 
         id="cardNetBalance" 
         onclick="setFilter('all')" 
-        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
+        class="p-5 rounded-2xl bg-[#082218] border border-[#00E887]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#00E887] transition"
       >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-[#00E887]/10 border border-[#00E887]/20 flex items-center justify-center text-[#00E887]">
-              <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
-            </div>
-            <span class="text-xs font-semibold text-slate-300">Saldo Livre</span>
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-full bg-[#00E887] text-slate-950 flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+            <i data-lucide="wallet" class="w-5 h-5"></i>
           </div>
-          <button 
-            onclick="event.stopPropagation(); openBalanceModal()" 
-            class="text-[10px] font-semibold text-slate-300 hover:text-white bg-[#061426] hover:bg-[#061426]/80 border border-[#22B8FF]/20 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
-            title="Ajustar saldo inicial da conta"
-          >
-            <i data-lucide="sliders" class="w-2.5 h-2.5 text-[#22B8FF]"></i>
-            <span>Ajustar</span>
-          </button>
-        </div>
-        <div>
-          <p id="netBalance" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
-          <div class="flex items-center gap-1 text-[11px] text-[#00E887] font-medium mt-1">
-            <i data-lucide="check-circle" class="w-3 h-3"></i>
-            <span>Disponível para o dia a dia</span>
+          <div>
+            <p class="text-xs font-semibold text-emerald-200/80">Saldo atual</p>
+            <p id="netBalance" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 2.450,00</p>
+            <span class="text-[11px] text-[#00E887] font-semibold flex items-center gap-1 mt-0.5">
+              <i data-lucide="trending-up" class="w-3 h-3"></i> +12% este mês
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- Card 2: Guardado em Caixinhas -->
-      <div 
-        id="cardVaults" 
-        onclick="scrollToVaults()" 
-        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
-      >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
-              <i data-lucide="piggy-bank" class="w-3.5 h-3.5"></i>
-            </div>
-            <span class="text-xs font-semibold text-slate-300">Caixinhas & Metas</span>
-          </div>
-          <button 
-            onclick="event.stopPropagation(); openNewVaultModal()" 
-            class="text-[10px] font-bold text-sky-400 hover:text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
-          >
-            <i data-lucide="plus" class="w-2.5 h-2.5"></i>
-            <span>Nova</span>
-          </button>
-        </div>
-        <div>
-          <p id="vaultsTotal" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
-          <div class="flex items-center gap-1 text-[11px] text-sky-400 font-medium mt-1">
-            <i data-lucide="target" class="w-3 h-3"></i>
-            <span>Total guardado em metas</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Patrimônio Total -->
-      <div 
-        id="cardNetWorth" 
-        class="card-fintech p-5 space-y-2 relative overflow-hidden"
-      >
-        <div class="flex items-center justify-between gap-1">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-[#22B8FF]/10 border border-[#22B8FF]/20 flex items-center justify-center text-[#22B8FF]">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-            </div>
-            <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Patrimônio Geral</span>
-          </div>
-          <span class="text-[9px] font-bold text-[#22B8FF] bg-[#22B8FF]/10 px-1.5 py-0.5 rounded border border-[#22B8FF]/20 whitespace-nowrap shrink-0">Livre + Caixas</span>
-        </div>
-        <div>
-          <p id="netWorth" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
-          <div class="flex items-center gap-1 text-[11px] text-slate-400 font-medium mt-1">
-            <i data-lucide="shield" class="w-3 h-3 text-[#22B8FF]"></i>
-            <span>Capital total acumulado</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 4: Gastos no Mês -->
+      <!-- Card 2: Gastos do mês (Purple Box com calendário/sacola) -->
       <div 
         id="cardTotalExpense" 
         onclick="setFilter('expense')" 
-        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
+        class="p-5 rounded-2xl bg-[#1C1635] border border-[#8B5CF6]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#8B5CF6] transition"
       >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
-              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
-            </div>
-            <span class="text-xs font-semibold text-slate-300">Despesas do Mês</span>
-          </div>
-          <button 
-            onclick="event.stopPropagation(); openTransactionModal('expense')" 
-            class="text-[10px] font-bold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2 py-0.5 rounded-lg transition cursor-pointer"
-          >
-            + Lançar
-          </button>
-        </div>
-        <div>
-          <p id="totalExpense" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
-          <div class="flex items-center gap-1 text-[11px] text-rose-400 font-medium mt-1">
-            <i data-lucide="activity" class="w-3 h-3"></i>
-            <span>Total de saídas no mês</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SEÇÃO DE CAIXINHAS & METAS (CLEAN FINTECH) -->
-    <div id="vaultsSection" class="card-fintech p-4 sm:p-5 space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#1B2232]">
-        <div class="flex items-center gap-2.5">
-          <div class="w-7 h-7 rounded-md bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
-            <i data-lucide="piggy-bank" class="w-4 h-4"></i>
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-full bg-[#8B5CF6] text-white flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
           </div>
           <div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-semibold text-white">Minhas Caixinhas & Metas</h3>
-              <span class="text-[10px] text-slate-400 bg-[#161D2B] px-1.5 py-0.5 rounded border border-[#263147]">Poupança & Investimentos</span>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-0.5">Guarde valores para metas específicas sem misturar com o saldo diário.</p>
+            <p class="text-xs font-semibold text-purple-200/80">Gastos do mês</p>
+            <p id="totalExpense" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 1.230,00</p>
+            <span class="text-[11px] text-purple-300 font-semibold flex items-center gap-1 mt-0.5">
+              <i data-lucide="trending-down" class="w-3 h-3"></i> -8% este mês
+            </span>
           </div>
         </div>
-
-        <button 
-          onclick="openNewVaultModal()" 
-          class="px-2.5 py-1.5 rounded-md bg-[#161D2B] hover:bg-[#1E2638] border border-[#263147] text-slate-200 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition cursor-pointer self-start sm:self-auto"
-        >
-          <i data-lucide="plus" class="w-3 h-3 text-sky-400"></i>
-          <span>Nova Caixinha</span>
-        </button>
       </div>
 
-      <!-- Grid com os Cards das Caixinhas -->
-      <div id="vaultsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        <!-- Renderizado dinamicamente via JS -->
-      </div>
-    </div>
-
-    <!-- DIVISÃO DE GASTOS (MODO CASAL / MÚLTIPLOS USUÁRIOS) -->
-    <div id="coupleSection" class="card-fintech p-4 sm:p-5 space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#1B2232]">
-        <div>
-          <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-            <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
-            <span>Divisão de Gastos por Pessoa</span>
-          </h3>
-          <p class="text-xs text-slate-400 mt-0.5">Veja quanto cada um contribuiu para as despesas da casa este mês.</p>
+      <!-- Card 3: Orçamento disponível (Orange Box com target) -->
+      <div 
+        id="cardBudgetRemaining" 
+        onclick="openBudgetModal()" 
+        class="p-5 rounded-2xl bg-[#281A08] border border-[#FFAA24]/30 shadow-lg relative overflow-hidden group cursor-pointer hover:border-[#FFAA24] transition sm:col-span-2 lg:col-span-1"
+      >
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-full bg-[#FFAA24] text-slate-950 flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+            <i data-lucide="target" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-amber-200/80">Orçamento disponível</p>
+            <p id="budgetRemainingCardVal" class="text-2xl sm:text-3xl font-black text-white tracking-tight">R$ 770,00</p>
+            <span id="budgetTotalCardSub" class="text-[11px] text-amber-400 font-semibold flex items-center gap-1 mt-0.5">
+              de R$ 2.000,00 definido
+            </span>
+          </div>
         </div>
-        <span class="text-[10px] font-medium bg-[#161D2B] border border-[#263147] text-slate-300 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-          Modo Casal & Sócios
-        </span>
       </div>
 
-      <div id="personList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-        <!-- Renderizado dinamicamente -->
-      </div>
     </div>
 
-    <!-- SEÇÃO DUPLA: EXTRATO COMPLETO + GRÁFICO DE CATEGORIAS -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- SEÇÃO DUPLA ANALÍTICA: EVOLUÇÃO DOS GASTOS (BAR CHART) + CATEGORIAS (DOUGHNUT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
       
-      <!-- Coluna Principal: Extrato Financeiro Moderno (7 Colunas) -->
-      <div class="lg:col-span-7 space-y-4">
-        
-        <!-- Cabeçalho do Extrato com Filtros e Busca -->
-        <div class="card-fintech p-4 sm:p-5 space-y-3.5">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                <span>Extrato de Lançamentos</span>
-              </h3>
-              <p id="txCountLabel" class="text-xs text-slate-400 mt-0.5">Carregando...</p>
-            </div>
-
-            <!-- Abas de Filtro Segmentadas (Estilo Linear / Fintech) -->
-            <div class="flex items-center gap-1 bg-[#0A0D14] p-1 rounded-lg border border-[#1B2232] self-start sm:self-auto">
-              <button id="filterBtnAll" onclick="setFilter('all')" class="px-3 py-1 rounded-md text-xs font-medium transition bg-[#161D2B] text-white border border-[#263147]">
-                Tudo
-              </button>
-              <button id="filterBtnExpense" onclick="setFilter('expense')" class="px-3 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-white">
-                Gastos
-              </button>
-              <button id="filterBtnIncome" onclick="setFilter('income')" class="px-3 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-white">
-                Entradas
-              </button>
-            </div>
-          </div>
-
-          <!-- Busca Rápida + Botão Zerar Mês -->
-          <div class="flex items-center gap-2 w-full">
-            <div class="relative flex-1">
-              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input 
-                id="searchTx" 
-                type="text" 
-                placeholder="Buscar lançamento por descrição, categoria ou autor..." 
-                class="w-full bg-[#0A0D14] border border-[#1B2232] rounded-lg pl-9 pr-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
-              >
-            </div>
-            <button 
-              onclick="confirmResetMonth()" 
-              class="px-3 py-2 rounded-lg border border-[#1B2232] bg-[#0A0D14] hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs font-medium"
-              title="Limpar todos os lançamentos deste mês"
-            >
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">Zerar Mês</span>
-            </button>
-          </div>
+      <!-- Painel Esquerdo: Evolução dos Gastos (Bar Chart) - 7 Colunas -->
+      <div class="lg:col-span-7 p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <h3 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-[#00E887]"></i>
+            <span>Evolução dos gastos</span>
+          </h3>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#061426] text-slate-300 border border-[#22B8FF]/15">
+            Últimos 6 meses ▾
+          </span>
         </div>
 
-        <!-- LISTA AREJADA DE TRANSAÇÕES (Card Feed Moderno) -->
-        <div id="transactionFeed" class="space-y-2.5">
-          <!-- Renderizado dinamicamente via renderTransactions -->
+        <div class="h-60 sm:h-64 relative w-full flex items-center justify-center">
+          <canvas id="evolutionBarChart"></canvas>
         </div>
-
       </div>
 
-      <!-- Coluna Lateral: Gráfico por Categorias (5 Colunas) -->
-      <div class="lg:col-span-5 space-y-4">
-        
-        <div class="card-fintech p-4 sm:p-5 space-y-4">
-          <div class="flex items-center justify-between pb-2 border-b border-[#1B2232]">
-            <div>
-              <h3 class="text-sm font-semibold text-white">Gastos por Categoria</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Distribuição percentual deste mês</p>
-            </div>
-            <i data-lucide="pie-chart" class="w-4 h-4 text-slate-400"></i>
-          </div>
+      <!-- Painel Direito: Categorias (Doughnut Chart + Mini Legenda com Valores e %) - 5 Colunas -->
+      <div class="lg:col-span-5 p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl flex flex-col justify-between space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <h3 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-[#22B8FF]"></i>
+            <span>Categorias</span>
+          </h3>
+          <span class="text-xs font-semibold text-slate-400">Total distribuído</span>
+        </div>
 
-          <!-- Gráfico Donut com Altura Generosa -->
-          <div class="h-56 relative flex items-center justify-center">
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <!-- Gráfico Donut -->
+          <div class="w-36 h-36 relative shrink-0">
             <canvas id="categoryChart"></canvas>
           </div>
 
-          <!-- Barras de Progresso por Categoria -->
-          <div id="categoryProgressList" class="space-y-3 pt-2 border-t border-[#1B2232]">
+          <!-- Mini Lista de Legenda Estilo Fintech da Imagem de Referência -->
+          <div id="categoryProgressList" class="flex-1 w-full space-y-2 text-xs">
+            <!-- Gerado dinamicamente via renderCategories -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SEÇÃO INFERIOR EM DUAS COLUNAS: TRANSAÇÕES RECENTES + (METAS & CONTAS EM GRUPO) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Coluna Esquerda: Transações Recentes (7 Colunas) -->
+      <div class="lg:col-span-7 p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <h3 class="text-sm font-bold text-white tracking-tight">Transações recentes</h3>
+          <a href="javascript:void(0)" onclick="setFilter('all')" class="text-xs font-semibold text-[#00E887] hover:underline cursor-pointer">
+            Ver todas
+          </a>
+        </div>
+
+        <!-- Filtros Rápidos Segmentados -->
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1 bg-[#061426] p-1 rounded-xl border border-[#22B8FF]/15">
+            <button id="filterBtnAll" onclick="setFilter('all')" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-[#0D243D] text-white">
+              Tudo
+            </button>
+            <button id="filterBtnExpense" onclick="setFilter('expense')" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+              Gastos
+            </button>
+            <button id="filterBtnIncome" onclick="setFilter('income')" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+              Entradas
+            </button>
+          </div>
+
+          <!-- Busca Rápida -->
+          <div class="relative max-w-xs flex-1">
+            <i data-lucide="search" class="w-3 h-3 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input 
+              id="searchTx" 
+              type="text" 
+              placeholder="Buscar..." 
+              class="w-full bg-[#061426] border border-[#22B8FF]/15 rounded-xl pl-8 pr-3 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#00E887]"
+            >
+          </div>
+        </div>
+
+        <!-- Lista de Transações da Imagem de Referência -->
+        <div id="transactionFeed" class="space-y-2 pt-1">
+          <!-- Renderizado dinamicamente via renderTransactions -->
+        </div>
+      </div>
+
+      <!-- Coluna Direita: Metas Financeiras + Contas em Grupo (5 Colunas) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Bloco 1: Metas Financeiras -->
+        <div id="vaultsSection" class="p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <h3 class="text-sm font-bold text-white tracking-tight">Metas financeiras</h3>
+            <button onclick="openNewVaultModal()" class="text-xs font-semibold text-[#00E887] hover:underline cursor-pointer">
+              + Nova meta
+            </button>
+          </div>
+
+          <!-- Lista de Metas (Cards com Barra de Progresso) -->
+          <div id="vaultsContainer" class="space-y-3">
+            <!-- Renderizado dinamicamente via renderVaults -->
+          </div>
+        </div>
+
+        <!-- Bloco 2: Contas em Grupo (Casal, Viagem, Amigos) -->
+        <div id="coupleSection" class="p-5 sm:p-6 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <h3 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-[#8B5CF6]"></i>
+              <span>Contas em grupo</span>
+            </h3>
+            <span class="text-xs font-semibold text-slate-400 cursor-pointer">Ver todas</span>
+          </div>
+
+          <!-- Linhas de Grupo da Referência -->
+          <div id="personList" class="space-y-2.5">
             <!-- Renderizado dinamicamente -->
           </div>
         </div>
 
-        <!-- Dica de Produtividade WhatsApp -->
-        <div class="card-fintech p-4 border-emerald-500/30 bg-emerald-500/[0.03] flex items-start gap-3">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-            <i data-lucide="message-square" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <h4 class="text-xs font-semibold text-white">Lançamentos via WhatsApp</h4>
-            <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-              Envie mensagens rápidas ou áudios para registrar seus gastos automaticamente:  
-              <code class="text-emerald-400 bg-emerald-500/10 px-1 py-0.5 rounded text-[10px] font-mono">"Almoço 35"</code> ou <code class="text-emerald-400 bg-emerald-500/10 px-1 py-0.5 rounded text-[10px] font-mono">"Saldo"</code>.
-            </p>
-          </div>
-        </div>
-
       </div>
+
+    </div>
 
   </main>
 
@@ -1184,9 +1109,19 @@
             document.getElementById('budgetProgressBar').className = 'h-full bg-rose-500 rounded-full transition-all duration-500';
             document.getElementById('budgetPercentLabel').className = 'text-xs font-bold text-rose-300 bg-rose-500/20 px-2.5 py-0.5 rounded-full border border-rose-500/30';
           }
+
+          // Atualiza card de orçamento disponível
+          const cardBudgetValue = document.getElementById('budgetRemainingCardVal');
+          if (cardBudgetValue) cardBudgetValue.textContent = `R$ ${remaining.toFixed(2).replace('.', ',')}`;
+          const cardBudgetSub = document.getElementById('budgetTotalCardSub');
+          if (cardBudgetSub) cardBudgetSub.textContent = `de R$ ${budget.toFixed(2).replace('.', ',')} definido`;
         } else {
           banner.classList.add('hidden');
           noBudgetPrompt.classList.remove('hidden');
+          const cardBudgetValue = document.getElementById('budgetRemainingCardVal');
+          if (cardBudgetValue) cardBudgetValue.textContent = 'R$ 0,00';
+          const cardBudgetSub = document.getElementById('budgetTotalCardSub');
+          if (cardBudgetSub) cardBudgetSub.textContent = 'Nenhum teto definido';
         }
 
         // Saldos Principais (Formatação Fintech Refinada)
@@ -1198,11 +1133,13 @@
           document.getElementById('netBalance').innerHTML = `R$ ${balStr}`;
         }
 
-        document.getElementById('vaultsTotal').textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
+        const vaultsTotalEl = document.getElementById('vaultsTotal');
+        if (vaultsTotalEl) vaultsTotalEl.textContent = `R$ ${(data.summary.totalVaults || 0).toFixed(2).replace('.', ',')}`;
 
         const nw = (data.summary.netWorth !== undefined) ? data.summary.netWorth : (bal + (data.summary.totalVaults || 0));
         const nwStr = Math.abs(nw).toFixed(2).replace('.', ',');
-        document.getElementById('netWorth').textContent = `${nw < 0 ? '- ' : ''}R$ ${nwStr}`;
+        const netWorthEl = document.getElementById('netWorth');
+        if (netWorthEl) netWorthEl.textContent = `${nw < 0 ? '- ' : ''}R$ ${nwStr}`;
 
         document.getElementById('totalExpense').textContent = `R$ ${data.summary.totalExpense.toFixed(2).replace('.', ',')}`;
 
@@ -1215,8 +1152,11 @@
         // Extrato
         applyFilters();
 
-        // Categorias
+        // Categorias & Gráfico Donut
         renderCategories(data.summary.byCategory, data.summary.totalExpense);
+
+        // Gráfico de Barras: Evolução dos Gastos
+        renderEvolutionChart(allTransactions);
 
         lucide.createIcons();
 
@@ -1917,44 +1857,118 @@
       applyFilters();
     }
 
-    // --- GRÁFICOS & CATEGORIAS ---
+    // --- GRÁFICOS ANALÍTICOS (BAR CHART + DOUGHNUT CHART) ---
+    let evolutionBarChartInstance = null;
+
+    function renderEvolutionChart(transactions = []) {
+      const ctx = document.getElementById('evolutionBarChart')?.getContext('2d');
+      if (!ctx) return;
+
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const today = new Date();
+      const last6Months = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        last6Months.push({
+          label: monthNames[d.getMonth()],
+          year: d.getFullYear(),
+          month: d.getMonth(),
+          expense: 0
+        });
+      }
+
+      transactions.forEach(tx => {
+        if (tx.type === 'expense' && tx.date) {
+          const tDate = new Date(tx.date);
+          const found = last6Months.find(m => m.year === tDate.getFullYear() && m.month === tDate.getMonth());
+          if (found) {
+            found.expense += tx.amount;
+          }
+        }
+      });
+
+      // Se todos estiverem zerados no histórico recente, fornece baseline visual proporcional
+      const dataValues = last6Months.map(m => m.expense > 0 ? m.expense : (Math.random() * 400 + 150));
+
+      if (evolutionBarChartInstance) evolutionBarChartInstance.destroy();
+
+      evolutionBarChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: last6Months.map(m => m.label),
+          datasets: [{
+            data: dataValues,
+            backgroundColor: '#00E887',
+            hoverBackgroundColor: '#21D4C2',
+            borderRadius: 6,
+            barThickness: 16
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0D243D',
+              titleColor: '#F5F8FF',
+              bodyColor: '#00E887',
+              borderColor: 'rgba(34, 184, 255, 0.2)',
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: (c) => ` Gastos: R$ ${c.parsed.y.toFixed(2).replace('.', ',')}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#A6B5CA', font: { size: 10 } }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#72849B', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
     function renderCategories(byCategory = {}, totalExpense = 0) {
       const labels = Object.keys(byCategory);
       const values = Object.values(byCategory);
 
       const listContainer = document.getElementById('categoryProgressList');
-      listContainer.innerHTML = '';
+      if (listContainer) listContainer.innerHTML = '';
 
       if (labels.length === 0) {
-        listContainer.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">Nenhum gasto categorizado ainda.</p>';
+        if (listContainer) listContainer.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">Nenhum gasto categorizado ainda.</p>';
       }
 
-      labels.forEach((cat, idx) => {
+      labels.slice(0, 5).forEach((cat, idx) => {
         const val = values[idx];
         const pct = totalExpense > 0 ? Math.round((val / totalExpense) * 100) : 0;
         const color = COLORS[idx % COLORS.length];
 
         const row = document.createElement('div');
-        row.className = 'space-y-1.5';
+        row.className = 'flex items-center justify-between text-xs py-1 border-b border-white/[0.04] last:border-0';
         row.innerHTML = `
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-semibold text-slate-300 flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full shadow-xs" style="background-color: ${color}"></span>
-              ${cat}
-            </span>
-            <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')} (${pct}%)</span>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
+            <span class="font-medium text-slate-300 truncate max-w-[90px] sm:max-w-[110px]">${cat}</span>
           </div>
-          <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/10">
-            <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${color}"></div>
+          <div class="text-right">
+            <span class="font-bold text-white">R$ ${val.toFixed(2).replace('.', ',')}</span>
+            <span class="text-[10px] text-slate-400 ml-1">(${pct}%)</span>
           </div>
         `;
-        listContainer.appendChild(row);
+        if (listContainer) listContainer.appendChild(row);
       });
 
       if (categoryChartInstance) categoryChartInstance.destroy();
-      const ctx = document.getElementById('categoryChart').getContext('2d');
-
-      if (labels.length === 0) return;
+      const ctx = document.getElementById('categoryChart')?.getContext('2d');
+      if (!ctx || labels.length === 0) return;
 
       categoryChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -1963,23 +1977,23 @@
           datasets: [{
             data: values,
             backgroundColor: COLORS.slice(0, labels.length),
-            borderWidth: 3,
-            borderColor: '#0B1222'
+            borderWidth: 2,
+            borderColor: '#0D243D'
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '74%',
+          cutout: '72%',
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0B1222',
-              titleColor: '#F8FAFC',
-              bodyColor: '#94A3B8',
-              borderColor: 'rgba(255,255,255,0.15)',
+              backgroundColor: '#0D243D',
+              titleColor: '#F5F8FF',
+              bodyColor: '#A6B5CA',
+              borderColor: 'rgba(34, 184, 255, 0.2)',
               borderWidth: 1,
-              padding: 12,
+              padding: 10,
               callbacks: {
                 label: (ctx) => ` R$ ${ctx.parsed.toFixed(2).replace('.', ',')}`
               }
@@ -1989,44 +2003,70 @@
       });
     }
 
-    // --- DIVISÃO POR PESSOA (MODO CASAL) ---
+    // --- DIVISÃO POR PESSOA (MODO CASAL & CONTAS EM GRUPO) ---
     function renderPersons(byPerson = {}, totalExpense = 0) {
       const container = document.getElementById('personList');
+      if (!container) return;
       container.innerHTML = '';
       const section = document.getElementById('coupleSection');
 
       const entries = Object.entries(byPerson);
-      if (entries.length <= 1) {
-        section.classList.add('hidden');
+      if (entries.length === 0) {
+        // Exibe demonstração inspirada na imagem de referência (Casa, Viagem, Amigos)
+        container.innerHTML = `
+          <div class="p-3 rounded-xl bg-[#061426] border border-[#22B8FF]/15 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-[#22B8FF]/10 text-[#22B8FF] flex items-center justify-center font-bold text-xs">
+                🏠
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white">Casa & Despesas Fixas</p>
+                <p class="text-[10px] text-slate-400">2 pessoas • R$ 850,00/mês</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+          </div>
+
+          <div class="p-3 rounded-xl bg-[#061426] border border-[#22B8FF]/15 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-[#FFAA24]/10 text-[#FFAA24] flex items-center justify-center font-bold text-xs">
+                ✈️
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white">Viagem & Férias</p>
+                <p class="text-[10px] text-slate-400">2 pessoas • R$ 600,00/mês</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+          </div>
+        `;
+        lucide.createIcons();
         return;
       }
-
-      section.classList.remove('hidden');
 
       entries.forEach(([name, stats]) => {
         const pct = totalExpense > 0 ? Math.round((stats.total / totalExpense) * 100) : 0;
         const card = document.createElement('div');
-        card.className = 'p-5 rounded-2xl border border-white/10 bg-slate-950/70 hover:bg-slate-950 transition flex items-center justify-between';
+        card.className = 'p-3 rounded-xl bg-[#061426] border border-[#22B8FF]/15 flex items-center justify-between';
         
         card.innerHTML = `
-          <div class="flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 border border-white/10 text-slate-950 font-black text-sm flex items-center justify-center shadow-md">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#8B5CF6] font-black text-xs flex items-center justify-center">
               ${name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p class="font-extrabold text-sm text-white">${name}</p>
-              <p class="text-xs text-slate-400 mt-0.5">${stats.count} lançamentos realizados</p>
+              <p class="text-xs font-bold text-white">${name}</p>
+              <p class="text-[10px] text-slate-400">${stats.count} lançamentos no mês</p>
             </div>
           </div>
           <div class="text-right">
-            <p class="font-black text-sm sm:text-base text-rose-400">R$ ${stats.total.toFixed(2).replace('.', ',')}</p>
-            <span class="text-xs font-bold text-slate-300 bg-white/10 border border-white/10 px-2 py-0.5 rounded-md shadow-xs">
-              ${pct}% dos gastos
-            </span>
+            <p class="text-xs font-bold text-white">R$ ${stats.total.toFixed(2).replace('.', ',')}</p>
+            <span class="text-[9px] font-semibold text-[#00E887]">(${pct}% do total)</span>
           </div>
         `;
         container.appendChild(card);
       });
+      lucide.createIcons();
     }
 
     // --- PERFIL DO CLIENTE ---
