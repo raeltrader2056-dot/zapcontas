@@ -51,20 +51,53 @@ export class MessageAIParser {
             return { intent: 'help' };
         if (clean === 'btn_reset')
             return { intent: 'reset_balance' };
-        // 1. Saudações e Início de Conversa
-        const greetings = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'e ai', 'e aí', 'opa', 'salve', 'iniciar', 'começar'];
+        // 1. Palavras-Chave de Menu e Ajuda Imediata
+        const menuKeywords = ['menu', 'ajuda', 'help', 'comandos', 'opção', 'opções', 'opcao', 'opcoes', 'funcionalidades', 'como funciona', '?'];
+        if (menuKeywords.includes(clean)) {
+            return { intent: 'help' };
+        }
+        // 2. Saudações e Início de Conversa
+        const greetings = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'e ai', 'e aí', 'opa', 'salve', 'iniciar', 'começar', 'inicio', 'início', 'start'];
         if (greetings.includes(clean)) {
-            return {
-                intent: 'greeting'
-            };
+            return { intent: 'greeting' };
         }
-        // 2. Comandos de Dashboard / Link
-        if (clean.includes('dashboard') || clean.includes('painel') || clean.includes('link') || clean.includes('grafico') || clean.includes('gráfico')) {
-            return {
-                intent: 'dashboard_link'
-            };
+        // 3. Palavras-Chave de Consulta de Saldo / Resumo / Extrato
+        if (clean === 'saldo' ||
+            clean === 'resumo' ||
+            clean === 'extrato' ||
+            clean === 'balanco' ||
+            clean === 'balanço' ||
+            clean.startsWith('saldo') ||
+            clean.includes('quanto gastei') ||
+            clean.includes('quanto gastamos') ||
+            clean.includes('meu saldo')) {
+            let period = 'month';
+            if (clean.includes('hoje'))
+                period = 'today';
+            if (clean.includes('semana'))
+                period = 'week';
+            return { intent: 'balance_query', queryPeriod: period };
         }
-        // 2. Comandos de Assinatura / Planos / Pagamento
+        // 4. Palavras-Chave de Caixinhas / Cofrinho / Investimentos (sem valor para depósito)
+        if (clean === 'caixinha' ||
+            clean === 'caixinhas' ||
+            clean === 'cofrinho' ||
+            clean === 'investimento' ||
+            clean === 'investimentos' ||
+            clean === 'poupanca' ||
+            clean === 'poupança' ||
+            clean === 'reserva' ||
+            clean === 'guardar' ||
+            clean.includes('minhas caixinhas') ||
+            clean.includes('quanto guardei') ||
+            clean.includes('quanto tenho guardado')) {
+            return { intent: 'vault_query' };
+        }
+        // 5. Comandos de Dashboard / Link Web
+        if (clean === 'painel' || clean === 'dashboard' || clean === 'link' || clean === 'site' || clean.includes('dashboard') || clean.includes('painel') || clean.includes('grafico') || clean.includes('gráfico')) {
+            return { intent: 'dashboard_link' };
+        }
+        // 6. Comandos de Assinatura / Planos / Pagamento
         if (clean.includes('assinar') ||
             clean.includes('plano') ||
             clean.includes('planos') ||
@@ -72,31 +105,27 @@ export class MessageAIParser {
             clean.includes('pix pro') ||
             clean.includes('virar pro') ||
             clean === 'pro') {
-            return {
-                intent: 'subscribe'
-            };
+            return { intent: 'subscribe' };
         }
-        // 2. Zerar / Limpar Saldo
+        // 7. Zerar / Limpar Saldo do Mês
         if (clean.includes('zerar saldo') ||
             clean.includes('limpar saldo') ||
             clean.includes('resetar saldo') ||
             clean.includes('zerar gastos') ||
             clean === 'zerar' ||
+            clean === 'limpar' ||
             clean === 'resetar') {
-            return {
-                intent: 'reset_balance'
-            };
+            return { intent: 'reset_balance' };
         }
-        // 3. Desfazer / Apagar Último Gasto
+        // 8. Desfazer / Apagar Último Gasto
         if (clean.includes('desfazer') ||
             clean.includes('apagar ultimo') ||
             clean.includes('apagar último') ||
             clean.includes('cancelar ultimo') ||
+            clean.includes('cancelar último') ||
             clean.includes('apagar gasto') ||
             clean === 'desfazer') {
-            return {
-                intent: 'delete_last'
-            };
+            return { intent: 'delete_last' };
         }
         // 4. Adicionar Saldo Inicial / Ajuste ("definir saldo 2000", "meu saldo inicial é 3000", "adicionar saldo 500")
         if (clean.includes('adicionar saldo') ||

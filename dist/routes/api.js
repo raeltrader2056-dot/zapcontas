@@ -35,10 +35,19 @@ router.post('/webhook/whatsapp', async (req, res) => {
         const fullPhone = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
         // 4. Extração do nome de quem enviou
         const senderName = req.body.senderName || req.body.chatName || req.body.pushName || req.body.notifyName || 'Cliente';
-        // 5. Extração do conteúdo da mensagem (Z-API envia em buttonResponse, text.message ou message)
+        // 5. Extração abrangente do conteúdo da mensagem (texto, botões interativos Z-API)
         let messageText = '';
         if (req.body.buttonResponse) {
-            messageText = req.body.buttonResponse.referenceId || req.body.buttonResponse.label || '';
+            messageText = req.body.buttonResponse.referenceId || req.body.buttonResponse.selectedButtonId || req.body.buttonResponse.id || req.body.buttonResponse.label || '';
+        }
+        else if (req.body.buttonsResponseMessage) {
+            messageText = req.body.buttonsResponseMessage.selectedButtonId || req.body.buttonsResponseMessage.message || '';
+        }
+        else if (req.body.listResponseMessage) {
+            messageText = req.body.listResponseMessage.singleSelectReply?.selectedRowId || req.body.listResponseMessage.selectedRowId || req.body.listResponseMessage.title || '';
+        }
+        else if (req.body.interactive) {
+            messageText = req.body.interactive.button_reply?.id || req.body.interactive.button_reply?.title || req.body.interactive.list_reply?.id || '';
         }
         else if (typeof req.body.text === 'string') {
             messageText = req.body.text;
@@ -52,8 +61,12 @@ router.post('/webhook/whatsapp', async (req, res) => {
         else if (typeof req.body.body === 'string') {
             messageText = req.body.body;
         }
+        else if (typeof req.body.caption === 'string') {
+            messageText = req.body.caption;
+        }
+        messageText = messageText.trim();
         // Suporte a mensagens de áudio
-        const isAudio = Boolean(req.body.audio || req.body.audioUrl || req.body.type === 'audio');
+        const isAudio = Boolean(req.body.audio || req.body.audioUrl || req.body.type === 'audio' || req.body.isAudio);
         if (!messageText && isAudio) {
             messageText = 'audio_message';
         }
