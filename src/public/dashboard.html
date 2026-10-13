@@ -20,24 +20,24 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Plus Jakarta Sans", sans-serif;
-      background-color: #0A0D14;
-      color: #E2E8F0;
+      background-color: #061426;
+      color: #F5F8FF;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
     .card-fintech,
     .card-premium {
-      background: #101520;
-      border: 1px solid #1B2232;
-      border-radius: 0.75rem; /* 12px cantos retos e modernos, padrão fintech Stripe/Linear */
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-      transition: all 0.15s ease;
+      background: #0D243D;
+      border: 1px solid rgba(34, 184, 255, 0.12);
+      border-radius: 0.85rem;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card-fintech:hover,
     .card-premium:hover {
-      border-color: #263147;
+      border-color: rgba(34, 184, 255, 0.25);
     }
 
     .card-interactive {
@@ -48,25 +48,25 @@
     }
 
     .card-active-emerald {
-      border-color: #10B981 !important;
-      background: #0E1B18 !important;
+      border-color: #00E887 !important;
+      background: #08242A !important;
     }
 
     .card-active-rose {
       border-color: #F43F5E !important;
-      background: #1F1116 !important;
+      background: #25121E !important;
     }
 
     .card-active-all {
-      border-color: #38BDF8 !important;
-      background: #0F1B2B !important;
+      border-color: #22B8FF !important;
+      background: #0A223E !important;
     }
 
     /* Scrollbar discreta */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #0A0D14; }
-    ::-webkit-scrollbar-thumb { background: #1B2232; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #2A364F; }
+    ::-webkit-scrollbar-track { background: #061426; }
+    ::-webkit-scrollbar-thumb { background: #0D243D; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #15385C; }
 
     /* Animação suave de entrada */
     @keyframes fadeInSlide {
@@ -78,62 +78,73 @@
     }
   </style>
 </head>
-<body class="min-h-screen relative flex flex-col antialiased selection:bg-emerald-500/20 selection:text-emerald-300 bg-[#0A0D14]">
+<body class="min-h-screen relative flex flex-col antialiased selection:bg-[#00E887]/20 selection:text-[#00E887] bg-[#061426]">
 
   <!-- Header Superior Fixo e Espaçoso -->
-  <header class="sticky top-0 z-40 border-b border-white/[0.06] bg-[#080B12]/85 backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative z-10">
+  <header class="sticky top-0 z-40 border-b border-white/[0.08] bg-[#0A1D33]/90 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative z-10">
       
-      <!-- Logo e Identificação -->
+      <!-- Logo, Mobile Toggle e Identificação -->
       <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle -->
+        <button id="mobileMenuBtn" onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl bg-[#0D243D] border border-[#22B8FF]/15 text-slate-300 hover:text-white transition cursor-pointer" title="Menu de Navegação">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
         <a href="javascript:void(0)" onclick="window.location.reload()" class="flex items-center gap-2.5 group cursor-pointer" title="Recarregar Painel">
-          <div class="w-9 h-9 flex items-center justify-center shrink-0 rounded-xl bg-slate-900 border border-white/10 group-hover:border-emerald-500/30 transition shadow-sm">
+          <div class="w-9 h-9 flex items-center justify-center shrink-0 rounded-xl bg-[#0D243D] border border-[#22B8FF]/20 group-hover:border-[#00E887]/50 transition shadow-sm">
             <svg viewBox="0 0 40 40" class="w-5 h-5" fill="none">
-              <rect width="40" height="40" rx="10" fill="#0E1726"/>
+              <rect width="40" height="40" rx="10" fill="#0D243D"/>
               <path d="M14 15.5C11.5 15.5 9.5 17.5 9.5 20C9.5 22.5 11.5 24.5 14 24.5C16.8 24.5 18.8 22.2 20 20C21.2 17.8 23.2 15.5 26 15.5C28.5 15.5 30.5 17.5 30.5 20C30.5 22.5 28.5 24.5 26 24.5C23.2 24.5 21.2 22.2 20 20" 
-                    stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    stroke="#22B8FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M22 10.5L16.5 19.5H21.5L18 29.5L25.5 18H20.5L22 10.5Z" 
-                    fill="#10B981" fill-opacity="0.95"/>
+                    fill="#00E887" fill-opacity="0.95"/>
             </svg>
           </div>
           <div>
             <div class="flex items-center gap-2">
               <span class="font-bold text-base text-white tracking-tight">ZapContas</span>
-              <span id="accountTypePill" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.04] text-slate-400 border border-white/[0.08]">Pessoal</span>
+              <span id="accountTypePill" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#00E887]/10 text-[#00E887] border border-[#00E887]/20">Pessoal</span>
             </div>
-            <p id="accountName" class="text-xs text-slate-400 font-medium truncate max-w-[150px] sm:max-w-xs">Carregando carteira...</p>
+            <p id="accountName" class="text-xs text-slate-400 font-medium truncate max-w-[140px] sm:max-w-xs">Carregando carteira...</p>
           </div>
         </a>
       </div>
 
       <!-- Ações do Topo -->
-      <div class="flex items-center gap-2 sm:gap-2.5">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Data Atual Formatada em PT-BR -->
+        <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#22B8FF]/15 bg-[#0D243D]/60 text-xs text-slate-300">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#22B8FF]"></i>
+          <span id="headerCurrentDate">...</span>
+        </div>
+
         <!-- Exportar CSV -->
-        <button onclick="exportCSV()" class="hidden md:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-slate-300 transition cursor-pointer">
-          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
+        <button onclick="exportCSV()" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl border border-[#22B8FF]/15 bg-[#0D243D] hover:bg-[#0D243D]/80 text-slate-300 transition cursor-pointer">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-[#22B8FF]"></i>
           <span>Exportar CSV</span>
         </button>
 
         <!-- Botão de Perfil -->
-        <button id="btnUserProfile" onclick="openProfileModal()" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] transition group cursor-pointer">
+        <button id="btnUserProfile" onclick="openProfileModal()" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl border border-[#22B8FF]/15 bg-[#0D243D] hover:border-[#00E887]/40 transition group cursor-pointer">
           <div class="relative shrink-0">
-            <img id="headerUserAvatar" src="" alt="Avatar" class="w-7 h-7 rounded-full object-cover border border-emerald-500/30 hidden">
-            <div id="headerUserAvatarFallback" class="w-7 h-7 rounded-full bg-slate-800 text-white font-bold text-xs flex items-center justify-center border border-white/10">
+            <img id="headerUserAvatar" src="" alt="Avatar" class="w-7 h-7 rounded-full object-cover border border-[#00E887]/40 hidden">
+            <div id="headerUserAvatarFallback" class="w-7 h-7 rounded-full bg-[#061426] text-white font-bold text-xs flex items-center justify-center border border-[#22B8FF]/20">
               U
             </div>
-            <span id="headerPlanDot" class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#080B12]"></span>
+            <span id="headerPlanDot" class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00E887] ring-2 ring-[#0A1D33]"></span>
           </div>
           <div class="hidden sm:block text-left">
             <div class="flex items-center gap-1.5">
-              <span id="headerUserName" class="text-xs font-semibold text-white group-hover:text-emerald-400 transition max-w-[120px] truncate">Meu Perfil</span>
-              <span id="headerUserPlanBadge" class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PRO</span>
+              <span id="headerUserName" class="text-xs font-semibold text-white group-hover:text-[#00E887] transition max-w-[120px] truncate">Meu Perfil</span>
+              <span id="headerUserPlanBadge" class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00E887]/10 text-[#00E887] border border-[#00E887]/20">PRO</span>
             </div>
             <span class="text-[10px] text-slate-400">Configurações</span>
           </div>
         </button>
 
         <!-- Botão Sair -->
-        <button onclick="logoutUser()" class="inline-flex items-center justify-center p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-rose-500/10 hover:border-rose-500/20 text-slate-400 hover:text-rose-400 transition cursor-pointer" title="Sair da Conta">
+        <button onclick="logoutUser()" class="inline-flex items-center justify-center p-2 sm:px-2.5 sm:py-1.5 rounded-xl border border-[#22B8FF]/15 bg-[#0D243D] hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 transition cursor-pointer" title="Sair da Conta">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           <span class="hidden sm:inline text-xs font-medium ml-1.5">Sair</span>
         </button>
@@ -142,50 +153,134 @@
     </div>
   </header>
 
-  <!-- Container Principal -->
-  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full space-y-8 relative z-10">
+  <!-- Sidebar Lateral Gaveta (Drawer Desktop/Mobile) -->
+  <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
+  
+  <aside id="sidebarNav" class="fixed top-16 bottom-0 left-0 w-64 bg-[#0A1D33] border-r border-[#22B8FF]/10 z-40 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between p-4 overflow-y-auto">
+    <div class="space-y-6">
+      <!-- Navegação Principal -->
+      <div class="space-y-1">
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Comando</p>
+        
+        <a href="#overview" onclick="navigateSidebar('overview')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold bg-[#00E887]/15 text-[#00E887] border border-[#00E887]/25 transition">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Início</span>
+        </a>
 
-    <!-- BARRA DE CABEÇALHO & AÇÕES RÁPIDAS -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#1B2232]">
-      <div>
-        <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
-          Visão Geral
-        </h1>
-        <p class="text-xs text-slate-400 mt-0.5">
-          Acompanhamento financeiro em tempo real
-        </p>
+        <a href="#extrato" onclick="navigateSidebar('extrato')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="receipt" class="w-4 h-4 text-[#22B8FF]"></i>
+          <span>Transações</span>
+        </a>
+
+        <a href="#orcamento" onclick="navigateSidebar('orcamento')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="target" class="w-4 h-4 text-[#FFAA24]"></i>
+          <span>Orçamento</span>
+        </a>
+
+        <a href="#caixinhas" onclick="navigateSidebar('caixinhas')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="piggy-bank" class="w-4 h-4 text-sky-400"></i>
+          <span>Metas & Caixinhas</span>
+        </a>
+
+        <a href="#casal" onclick="navigateSidebar('casal')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="users" class="w-4 h-4 text-[#8B5CF6]"></i>
+          <span>Contas em Grupo</span>
+        </a>
+
+        <a href="javascript:void(0)" onclick="exportCSV()" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="file-text" class="w-4 h-4 text-teal-400"></i>
+          <span>Relatórios</span>
+        </a>
+
+        <a href="javascript:void(0)" onclick="openProfileModal()" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#0D243D] transition">
+          <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+          <span>Configurações</span>
+        </a>
       </div>
 
-      <!-- BOTÕES DE AÇÃO: MODERNOS, NÍTIDOS E COM BOM CONTRASTE -->
-      <div class="flex items-center gap-2 flex-wrap">
-        <!-- + Entrada -->
-        <button 
-          onclick="openTransactionModal('income')" 
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs transition cursor-pointer shadow-sm active:scale-95"
-        >
-          <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[2.5]"></i>
-          <span>Nova Entrada</span>
-        </button>
+      <!-- Widget WhatsApp Bot Rápido -->
+      <div class="p-3.5 rounded-2xl bg-[#0D243D] border border-[#22B8FF]/15 space-y-2">
+        <div class="flex items-center gap-2 text-xs font-bold text-[#00E887]">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span>Bot WhatsApp</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-snug">
+          Envie gastos por áudio ou texto: <br><span class="text-white font-mono text-[10px]">"Mercado 85,50"</span>
+        </p>
+        <span class="inline-block text-[9px] font-bold uppercase tracking-wider text-[#00E887] bg-[#00E887]/10 px-2 py-0.5 rounded border border-[#00E887]/20">
+          Ativo 24/7
+        </span>
+      </div>
+    </div>
 
-        <!-- — Gasto -->
-        <button 
-          onclick="openTransactionModal('expense')" 
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-medium text-xs transition cursor-pointer shadow-sm active:scale-95"
-        >
-          <i data-lucide="minus" class="w-3.5 h-3.5 stroke-[2.5]"></i>
-          <span>Novo Gasto</span>
-        </button>
-
-        <!-- 🏦 Guardar -->
-        <button 
-          onclick="openNewVaultModal()" 
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#161D2B] hover:bg-[#1E2638] text-slate-200 border border-[#263147] font-medium text-xs transition cursor-pointer active:scale-95"
-        >
-          <i data-lucide="piggy-bank" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span>Guardar Dinheiro</span>
+    <!-- Perfil no Rodapé da Sidebar -->
+    <div class="pt-4 border-t border-white/[0.08]">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="openProfileModal()">
+          <div class="w-8 h-8 rounded-full bg-[#061426] text-white font-bold text-xs flex items-center justify-center border border-[#22B8FF]/20">
+            <span id="sidebarUserLetter">U</span>
+          </div>
+          <div class="truncate max-w-[120px]">
+            <p id="sidebarUserName" class="text-xs font-bold text-white truncate">Usuário</p>
+            <p class="text-[10px] text-slate-400">Minha Conta</p>
+          </div>
+        </div>
+        <button onclick="logoutUser()" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer" title="Sair">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
         </button>
       </div>
     </div>
+  </aside>
+
+  <!-- Layout Wrapper com Sidebar Offset -->
+  <div class="lg:pl-64 flex-1 flex flex-col">
+
+    <!-- Container Principal -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-8 relative z-10">
+
+      <!-- BARRA DE CABEÇALHO COM SAUDAÇÃO PERSONALIZADA -->
+      <div id="overview" class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#22B8FF]/10">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Olá, <span id="welcomeUserName" class="text-transparent bg-clip-text bg-gradient-to-r from-[#00E887] to-[#22B8FF]">Israel</span> 👋
+            </h1>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Seu centro de inteligência financeira em tempo real.
+          </p>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO: MODERNOS, NÍTIDOS E COM BOM CONTRASTE -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- + Entrada -->
+          <button 
+            onclick="openTransactionModal('income')" 
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#00E887] hover:bg-[#00E887]/90 text-slate-950 font-black text-xs transition cursor-pointer shadow-lg shadow-[#00E887]/20 active:scale-95"
+          >
+            <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[3]"></i>
+            <span>+ Nova Entrada</span>
+          </button>
+
+          <!-- — Gasto -->
+          <button 
+            onclick="openTransactionModal('expense')" 
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition cursor-pointer shadow-md active:scale-95"
+          >
+            <i data-lucide="minus" class="w-3.5 h-3.5 stroke-[3]"></i>
+            <span>- Novo Gasto</span>
+          </button>
+
+          <!-- 🏦 Guardar -->
+          <button 
+            onclick="openNewVaultModal()" 
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0D243D] hover:bg-[#0D243D]/80 text-slate-200 border border-[#22B8FF]/20 font-bold text-xs transition cursor-pointer active:scale-95"
+          >
+            <i data-lucide="piggy-bank" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span>Guardar Dinheiro</span>
+          </button>
+        </div>
+      </div>
 
     <!-- META DE GASTOS / ORÇAMENTO -->
     <div id="budgetBanner" class="card-fintech p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3.5 hidden">
@@ -246,29 +341,37 @@
       </button>
     </div>
 
-    <!-- 4 CARDS DE INDICADORES (CLEAN FINTECH FLAT) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <!-- 4 CARDS DE INDICADORES (CLEAN FINTECH FLAT COM ACENTOS VIBRANTES) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
       <!-- Card 1: Saldo Livre -->
       <div 
         id="cardNetBalance" 
         onclick="setFilter('all')" 
-        class="card-fintech card-interactive p-4 space-y-1.5 group"
+        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
       >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">Saldo Livre</span>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-[#00E887]/10 border border-[#00E887]/20 flex items-center justify-center text-[#00E887]">
+              <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-300">Saldo Livre</span>
+          </div>
           <button 
             onclick="event.stopPropagation(); openBalanceModal()" 
-            class="text-[10px] font-medium text-slate-400 hover:text-white bg-[#161D2B] hover:bg-[#1E2638] border border-[#263147] px-2 py-0.5 rounded transition flex items-center gap-1 cursor-pointer"
+            class="text-[10px] font-semibold text-slate-300 hover:text-white bg-[#061426] hover:bg-[#061426]/80 border border-[#22B8FF]/20 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
             title="Ajustar saldo inicial da conta"
           >
-            <i data-lucide="sliders" class="w-2.5 h-2.5 text-slate-400"></i>
+            <i data-lucide="sliders" class="w-2.5 h-2.5 text-[#22B8FF]"></i>
             <span>Ajustar</span>
           </button>
         </div>
         <div>
-          <p id="netBalance" class="text-2xl font-bold text-white tracking-tight">R$ 0,00</p>
-          <p class="text-[11px] text-slate-500 mt-0.5">Disponível para o dia a dia</p>
+          <p id="netBalance" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
+          <div class="flex items-center gap-1 text-[11px] text-[#00E887] font-medium mt-1">
+            <i data-lucide="check-circle" class="w-3 h-3"></i>
+            <span>Disponível para o dia a dia</span>
+          </div>
         </div>
       </div>
 
@@ -276,36 +379,52 @@
       <div 
         id="cardVaults" 
         onclick="scrollToVaults()" 
-        class="card-fintech card-interactive p-4 space-y-1.5 group"
+        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
       >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">Caixinhas & Metas</span>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+              <i data-lucide="piggy-bank" class="w-3.5 h-3.5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-300">Caixinhas & Metas</span>
+          </div>
           <button 
             onclick="event.stopPropagation(); openNewVaultModal()" 
-            class="text-[10px] font-medium text-sky-400 hover:text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 px-2 py-0.5 rounded transition flex items-center gap-1 cursor-pointer"
+            class="text-[10px] font-bold text-sky-400 hover:text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
           >
             <i data-lucide="plus" class="w-2.5 h-2.5"></i>
             <span>Nova</span>
           </button>
         </div>
         <div>
-          <p id="vaultsTotal" class="text-2xl font-bold text-white tracking-tight">R$ 0,00</p>
-          <p class="text-[11px] text-slate-500 mt-0.5">Total reservado em metas</p>
+          <p id="vaultsTotal" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
+          <div class="flex items-center gap-1 text-[11px] text-sky-400 font-medium mt-1">
+            <i data-lucide="target" class="w-3 h-3"></i>
+            <span>Total guardado em metas</span>
+          </div>
         </div>
       </div>
 
-      <!-- Card 3: Patrimônio Total (COM WHITESPACE-NOWRAP PARA NUNCA QUEBRAR EM TO TAL!) -->
+      <!-- Card 3: Patrimônio Total -->
       <div 
         id="cardNetWorth" 
-        class="card-fintech p-4 space-y-1.5"
+        class="card-fintech p-5 space-y-2 relative overflow-hidden"
       >
         <div class="flex items-center justify-between gap-1">
-          <span class="text-xs font-medium text-slate-400 whitespace-nowrap">Patrimônio Geral</span>
-          <span class="text-[10px] text-slate-500 bg-[#161D2B] px-1.5 py-0.5 rounded border border-[#263147] whitespace-nowrap shrink-0">Livre + Caixas</span>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-[#22B8FF]/10 border border-[#22B8FF]/20 flex items-center justify-center text-[#22B8FF]">
+              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Patrimônio Geral</span>
+          </div>
+          <span class="text-[9px] font-bold text-[#22B8FF] bg-[#22B8FF]/10 px-1.5 py-0.5 rounded border border-[#22B8FF]/20 whitespace-nowrap shrink-0">Livre + Caixas</span>
         </div>
         <div>
-          <p id="netWorth" class="text-2xl font-bold text-white tracking-tight">R$ 0,00</p>
-          <p class="text-[11px] text-slate-500 mt-0.5">Capital total acumulado</p>
+          <p id="netWorth" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
+          <div class="flex items-center gap-1 text-[11px] text-slate-400 font-medium mt-1">
+            <i data-lucide="shield" class="w-3 h-3 text-[#22B8FF]"></i>
+            <span>Capital total acumulado</span>
+          </div>
         </div>
       </div>
 
@@ -313,20 +432,28 @@
       <div 
         id="cardTotalExpense" 
         onclick="setFilter('expense')" 
-        class="card-fintech card-interactive p-4 space-y-1.5 group"
+        class="card-fintech card-interactive p-5 space-y-2 group relative overflow-hidden"
       >
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">Despesas do Mês</span>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-300">Despesas do Mês</span>
+          </div>
           <button 
             onclick="event.stopPropagation(); openTransactionModal('expense')" 
-            class="text-[10px] font-medium text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2 py-0.5 rounded transition cursor-pointer"
+            class="text-[10px] font-bold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2 py-0.5 rounded-lg transition cursor-pointer"
           >
             + Lançar
           </button>
         </div>
         <div>
-          <p id="totalExpense" class="text-2xl font-bold text-white tracking-tight">R$ 0,00</p>
-          <p class="text-[11px] text-slate-500 mt-0.5">Total de despesas no mês</p>
+          <p id="totalExpense" class="text-2xl font-black text-white tracking-tight">R$ 0,00</p>
+          <div class="flex items-center gap-1 text-[11px] text-rose-400 font-medium mt-1">
+            <i data-lucide="activity" class="w-3 h-3"></i>
+            <span>Total de saídas no mês</span>
+          </div>
         </div>
       </div>
 
@@ -548,6 +675,7 @@
 
     </div>
   </footer>
+  </div>
 
   <!-- MODAL DE NOVO LANÇAMENTO & EDIÇÃO (100% FUNCIONAL) -->
   <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
@@ -1906,18 +2034,28 @@
       if (!currentUser) return;
       const isPro = currentUser.plan === 'pro' || (currentAccount && currentAccount.subscriptionStatus === 'active');
 
-      document.getElementById('headerUserName').textContent = currentUser.name || 'Meu Perfil';
+      const userNameStr = currentUser.name || 'Usuário';
+      document.getElementById('headerUserName').textContent = userNameStr;
+
+      const welcomeEl = document.getElementById('welcomeUserName');
+      if (welcomeEl) welcomeEl.textContent = userNameStr.split(' ')[0] || userNameStr;
+
+      const sidebarNameEl = document.getElementById('sidebarUserName');
+      if (sidebarNameEl) sidebarNameEl.textContent = userNameStr;
+
+      const sidebarLetterEl = document.getElementById('sidebarUserLetter');
+      if (sidebarLetterEl) sidebarLetterEl.textContent = userNameStr.charAt(0).toUpperCase();
 
       const badge = document.getElementById('headerUserPlanBadge');
       const dot = document.getElementById('headerPlanDot');
       if (isPro) {
         badge.textContent = 'PRO';
-        badge.className = 'text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#080B12]';
+        badge.className = 'text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00E887]/10 text-[#00E887] border border-[#00E887]/25';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00E887] ring-2 ring-[#0A1D33]';
       } else {
         badge.textContent = 'MEMBRO';
         badge.className = 'text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-white/[0.06] text-slate-300 border border-white/[0.08]';
-        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#080B12]';
+        dot.className = 'absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00E887] ring-2 ring-[#0A1D33]';
       }
 
       const img = document.getElementById('headerUserAvatar');
@@ -1929,7 +2067,7 @@
       } else {
         img.classList.add('hidden');
         fallback.classList.remove('hidden');
-        fallback.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+        fallback.textContent = userNameStr.charAt(0).toUpperCase();
       }
     }
 
@@ -2111,6 +2249,39 @@
       a.download = `ZapContas_Extrato_${new Date().toISOString().substring(0, 10)}.csv`;
       a.click();
     }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebarNav');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function navigateSidebar(sectionId) {
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Atualiza a data no header superior
+    function updateHeaderDate() {
+      const dateEl = document.getElementById('headerCurrentDate');
+      if (dateEl) {
+        const now = new Date();
+        const options = { weekday: 'short', day: 'numeric', month: 'short' };
+        dateEl.textContent = now.toLocaleDateString('pt-BR', options);
+      }
+    }
+    updateHeaderDate();
 
     function showToast(message) {
       const toast = document.getElementById('toastNotification');

@@ -12,18 +12,19 @@
 
   <style>
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #080D1A;
-      color: #F8FAFC;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+      background-color: #061426;
+      color: #F5F8FF;
+      -webkit-font-smoothing: antialiased;
     }
     .checkout-card {
-      background: #0E1526;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      background: #0D243D;
+      border: 1px solid rgba(34, 184, 255, 0.15);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-[#061426]">
 
   <!-- Container do Checkout -->
   <div class="w-full max-w-md checkout-card rounded-3xl p-6 sm:p-8 space-y-6">
@@ -61,21 +62,21 @@
     </div>
 
     <!-- Resumo do Pedido -->
-    <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-4 space-y-2">
+    <div class="bg-[#061426] border border-[#22B8FF]/20 rounded-2xl p-4 space-y-2">
       <div class="flex justify-between items-center">
         <span id="planName" class="font-bold text-sm text-white">ZapContas Pro Individual</span>
-        <span id="planPrice" class="font-black text-lg text-emerald-400">R$ 14,90</span>
+        <span id="planPrice" class="font-black text-lg text-[#00E887]">R$ 14,90</span>
       </div>
       <p class="text-xs text-slate-400">Assinatura mensal recorrente • Cancele quando quiser</p>
     </div>
 
     <!-- Abas PIX e Cartão -->
     <div class="space-y-4">
-      <div class="flex rounded-xl bg-slate-900 p-1 border border-white/10 text-xs font-semibold">
-        <button id="tabPix" class="flex-1 py-2 rounded-lg bg-emerald-600 text-white font-bold transition flex items-center justify-center gap-1.5">
+      <div class="flex rounded-xl bg-[#061426] p-1 border border-[#22B8FF]/20 text-xs font-semibold">
+        <button id="tabPix" class="flex-1 py-2 rounded-lg bg-[#00E887] text-slate-950 font-black transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i data-lucide="qr-code" class="w-3.5 h-3.5"></i> PIX Instantâneo
         </button>
-        <button id="tabCard" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+        <button id="tabCard" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i data-lucide="credit-card" class="w-3.5 h-3.5"></i> Cartão de Crédito
         </button>
       </div>
@@ -88,11 +89,11 @@
         <p class="text-xs text-slate-400">Escaneie o QR Code com o app do seu banco para ativar na hora.</p>
 
         <div class="space-y-2">
-          <button id="btnCopyPix" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Código PIX Copia e Cola
+          <button id="btnCopyPix" class="w-full py-2.5 px-4 bg-[#061426] hover:bg-[#061426]/80 text-slate-200 border border-[#22B8FF]/25 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5 text-[#22B8FF]"></i> Copiar Código PIX Copia e Cola
           </button>
           
-          <button id="btnSimulateApprove" class="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg shadow-emerald-500/20">
+          <button id="btnSimulateApprove" class="w-full py-3 px-4 bg-gradient-to-r from-[#00E887] to-[#22B8FF] hover:brightness-110 text-slate-950 font-black rounded-xl text-xs transition shadow-lg shadow-[#00E887]/25 cursor-pointer">
             ⚡ Simular Aprovação Imediata do Pagamento
           </button>
         </div>
@@ -100,14 +101,14 @@
 
       <!-- Área Cartão (Simulado) -->
       <div id="cardArea" class="space-y-3 hidden">
-        <input type="text" placeholder="Número do Cartão" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" value="4532 •••• •••• 8842">
+        <input type="text" placeholder="Número do Cartão" class="w-full bg-[#061426] border border-[#22B8FF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#00E887]" value="4532 •••• •••• 8842">
         <div class="grid grid-cols-2 gap-2">
-          <input type="text" placeholder="MM/AA" class="bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" value="12/29">
-          <input type="text" placeholder="CVV" class="bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" value="742">
+          <input type="text" placeholder="MM/AA" class="bg-[#061426] border border-[#22B8FF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#00E887]" value="12/29">
+          <input type="text" placeholder="CVV" class="bg-[#061426] border border-[#22B8FF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#00E887]" value="742">
         </div>
-        <input type="text" placeholder="Nome Impresso no Cartão" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" value="JOAO DA SILVA">
+        <input type="text" placeholder="Nome Impresso no Cartão" class="w-full bg-[#061426] border border-[#22B8FF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#00E887]" value="JOAO DA SILVA">
         
-        <button id="btnPayCard" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">
+        <button id="btnPayCard" class="w-full py-3 px-4 bg-[#00E887] hover:bg-[#00E887]/90 text-slate-950 font-black rounded-xl text-xs transition cursor-pointer">
           Confirmar Assinatura Mensal (R$ 14,90)
         </button>
       </div>

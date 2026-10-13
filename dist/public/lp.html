@@ -24,13 +24,17 @@
           },
           colors: {
             brand: {
-              dark: '#060A14',
-              surface: '#0B1222',
-              card: '#0F182E',
-              border: 'rgba(255, 255, 255, 0.08)',
-              emerald: '#10B981',
-              emeraldHover: '#059669',
-              teal: '#14B8A6'
+              dark: '#061426',
+              surface: '#0A1D33',
+              card: '#0D243D',
+              border: 'rgba(34, 184, 255, 0.12)',
+              green: '#00E887',
+              whatsapp: '#25D366',
+              blue: '#22B8FF',
+              purple: '#8B5CF6',
+              orange: '#FFAA24',
+              emerald: '#00E887',
+              emeraldHover: '#00C874'
             }
           }
         }
@@ -40,8 +44,8 @@
 
   <style>
     body {
-      background-color: #060A14;
-      color: #F8FAFC;
+      background-color: #061426;
+      color: #F5F8FF;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
@@ -157,12 +161,12 @@
       </a>
 
       <!-- Menu de Navegação -->
-      <nav class="hidden md:flex items-center gap-7 text-xs font-semibold text-slate-400">
-        <a href="#demo-ao-vivo" class="hover:text-white transition">Simulador</a>
-        <a href="#como-funciona" class="hover:text-white transition">Como Funciona</a>
-        <a href="#recursos" class="hover:text-white transition">Vantagens</a>
-        <a href="#seguranca" class="hover:text-white transition">Segurança</a>
-        <a href="#precos" class="hover:text-white transition">Planos</a>
+      <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-300">
+        <a href="#inicio" class="hover:text-emerald-400 transition">Início</a>
+        <a href="#recursos" class="hover:text-emerald-400 transition">Funcionalidades</a>
+        <a href="#como-funciona" class="hover:text-emerald-400 transition">Como Funciona</a>
+        <a href="#precos" class="hover:text-emerald-400 transition">Planos</a>
+        <a href="#faq" class="hover:text-emerald-400 transition">FAQ</a>
       </nav>
 
       <!-- Ações do Cabeçalho -->
@@ -181,7 +185,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="relative z-10 pt-12 pb-14 sm:pt-20 sm:pb-24 max-w-6xl mx-auto px-4 sm:px-6">
+  <section id="inicio" class="relative z-10 pt-12 pb-14 sm:pt-20 sm:pb-24 max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center max-w-3xl mx-auto space-y-4 sm:space-y-6">
       
       <!-- Badge de Destaque -->
@@ -192,24 +196,24 @@
 
       <!-- Título Principal -->
       <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12]">
-        O controle financeiro que você <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">não desiste de usar</span> no 4º dia.
+        Controle suas contas de um jeito <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">simples, rápido e inteligente.</span>
       </h1>
 
       <!-- Subtítulo -->
-      <p class="text-sm sm:text-base md:text-lg text-slate-400 font-normal leading-relaxed max-w-2xl mx-auto">
-        Envie um áudio de 3 segundos na padaria, divida despesas em casal automaticamente e consulte seu saldo livre na hora. Sem planilhas chatas e <strong>zero senhas de banco</strong>.
+      <p class="text-sm sm:text-base md:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
+        Registre seus gastos por texto ou áudio no WhatsApp, acompanhe seu orçamento e organize suas finanças sem complicação.
       </p>
 
       <!-- Botões de Ação -->
       <div class="pt-2 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto">
         <a href="#precos" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm transition-all shadow-xl shadow-emerald-500/25">
           <i data-lucide="message-circle" class="w-5 h-5 fill-slate-950"></i>
-          <span>Experimentar 7 Dias Grátis</span>
+          <span>Comece grátis agora</span>
         </a>
 
-        <a href="#demo-ao-vivo" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-white font-semibold text-sm transition">
+        <a href="#como-funciona" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-white font-semibold text-sm transition">
           <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
-          <span>Ver Demonstração</span>
+          <span>Ver como funciona</span>
         </a>
       </div>
 
@@ -428,31 +432,42 @@
     </div>
   </section>
 
-  <!-- Como Funciona em 3 Passos -->
+  <!-- Como Funciona em 4 Passos -->
   <section id="como-funciona" class="relative z-10 py-16 sm:py-20 border-t border-white/[0.08] bg-[#070D1C]/60">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
         <span class="text-xs font-bold text-emerald-400 tracking-wider uppercase">Passo a Passo</span>
-        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Simples como mandar mensagem para um amigo</h2>
+        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Como o ZapContas funciona na prática</h2>
+        <p class="text-slate-400 text-sm">Sem aplicativos pesados. Você usa direto no WhatsApp que já tem no celular.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
-          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">1</div>
-          <h4 class="text-base font-bold text-white">Inicie pelo WhatsApp</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">Basta digitar seu número e receber o código seguro de acesso em segundos. Sem formulários longos.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Passo 1 -->
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative hover:border-emerald-500/30 transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xs">1</div>
+          <h4 class="text-sm font-bold text-white">Cadastre-se</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Informe seu WhatsApp e receba seu código de acesso seguro em menos de 10 segundos.</p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
-          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">2</div>
-          <h4 class="text-base font-bold text-white">Mande seus gastos na hora</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">Gastou no almoço ou no mercado? Mande um texto ou áudio rápido e deixe a IA categorizar tudo.</p>
+        <!-- Passo 2 -->
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative hover:border-emerald-500/30 transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xs">2</div>
+          <h4 class="text-sm font-bold text-white">Conecte-se ao WhatsApp</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Nosso bot oficial inicia sua conversa privada e libera 7 dias de degustação completa.</p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative">
-          <div class="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-sm">3</div>
-          <h4 class="text-base font-bold text-white">Assuma o controle</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">Consulte seu saldo a qualquer instante e abra sua dashboard privada para ver gráficos e médias.</p>
+        <!-- Passo 3 -->
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative hover:border-emerald-500/30 transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xs">3</div>
+          <h4 class="text-sm font-bold text-white">Registre e acompanhe</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Envie áudios ou textos rápidos na hora de cada despesa. O saldo recalcula automaticamente.</p>
+        </div>
+
+        <!-- Passo 4 -->
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-white/10 space-y-3 relative hover:border-emerald-500/30 transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xs">4</div>
+          <h4 class="text-sm font-bold text-white">Organize e compartilhe</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">Acompanhe pelo Painel Web, crie caixinhas para metas e divida contas com parceiro ou sócio.</p>
         </div>
       </div>
     </div>
@@ -594,6 +609,82 @@
 
       </div>
 
+    </div>
+  <!-- FAQ Interativo Elegante -->
+  <section id="faq" class="relative z-10 py-16 sm:py-24 max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
+      <span class="text-xs font-bold text-emerald-400 tracking-wider uppercase">Dúvidas Frequentes</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Tudo o que você precisa saber</h2>
+      <p class="text-slate-400 text-sm">Transparência total sobre como o ZapContas organiza suas contas.</p>
+    </div>
+
+    <div class="space-y-3.5" id="faqAccordion">
+      <!-- FAQ 1 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>Como o ZapContas funciona no dia a dia?</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          Você conversa com o ZapContas exatamente como conversa com um contato no WhatsApp. Ao fazer qualquer gasto (padaria, almoço, combustível), você manda uma mensagem de texto rápida ou um áudio de 3 segundos (ex: <em>"Almoço 35 no débito"</em>). O robô interpreta o valor, a categoria e a forma de pagamento, salva no seu extrato e atualiza seu saldo imediatamente.
+        </p>
+      </details>
+
+      <!-- FAQ 2 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>Preciso fornecer a senha do meu banco ou cartão?</span>
+          <summary-icon></summary-icon>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          <strong>Absolutamente não!</strong> O ZapContas nunca pede senhas bancárias, chaves de segurança ou tokens de acesso. Você tem total controle dos gastos que envia pelo WhatsApp, sem nenhum risco de invasão à sua conta bancária.
+        </p>
+      </details>
+
+      <!-- FAQ 3 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>Como funciona a divisão de contas para casal ou sócios?</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          No plano Casal & Sócios PRO, você conecta 2 números de WhatsApp na mesma carteira. Cada pessoa envia seus próprios gastos do seu WhatsApp pessoal. No painel e no resumo, o ZapContas mostra quem gastou o quê, a porcentagem de cada um e quanto cada um contribuiu no mês.
+        </p>
+      </details>
+
+      <!-- FAQ 4 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>O que acontece se eu digitar um valor errado?</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          Basta enviar a palavra <strong>"desfazer"</strong> no WhatsApp e o último lançamento é apagado instantaneamente. Além disso, no Painel Web você tem botões de editar e excluir em qualquer lançamento com um clique.
+        </p>
+      </details>
+
+      <!-- FAQ 5 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>Como funciona o período de 7 dias grátis?</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          Ao iniciar sua conta pelo WhatsApp ou pelo site, você ganha 7 dias de acesso total e irrestrito a todos os recursos. Não há cobrança antecipada. Após os 7 dias, caso queira continuar, basta ativar seu plano via PIX ou Cartão por apenas R$ 14,90/mês.
+        </p>
+      </details>
+
+      <!-- FAQ 6 -->
+      <details class="glass-card rounded-2xl p-5 group cursor-pointer transition">
+        <summary class="font-bold text-sm text-white flex items-center justify-between list-none">
+          <span>Posso cancelar a assinatura quando quiser?</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-emerald-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+        </summary>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed pt-3 border-t border-white/[0.06]">
+          Sim, sem multa, sem carência e sem fidelidade. O cancelamento pode ser feito a qualquer momento diretamente no seu painel ou enviando uma mensagem no suporte.
+        </p>
+      </details>
     </div>
   </section>
 
